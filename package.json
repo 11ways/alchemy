@@ -24,7 +24,7 @@
     "mv": "0.0.x",
     "hawkejs": "0.0.x",
 		"mkdirp": "0.3.x",
-		"inflect": "0.3.x"
+		"inflection": "1.2.x"
   },
 	"devDependencies": {
 		"benchmark": "1.0.x",
