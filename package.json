@@ -24,7 +24,8 @@
     "mv": "0.0.x",
     "hawkejs": "0.0.x",
 		"mkdirp": "0.3.x",
-		"expirable": "0.0.x"
+		"expirable": "0.0.x",
+		"colors": "0.6.x"
   },
 	"devDependencies": {
 		"benchmark": "1.0.x",
