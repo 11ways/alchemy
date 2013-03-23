@@ -1,1 +1,1 @@
-module.exports = require('./lib/alchemy');
+module.exports = require('./lib/bootstrap');
