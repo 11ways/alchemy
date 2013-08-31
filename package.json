@@ -12,7 +12,7 @@
     "socket.io": "0.9.x",
     "mongoose": "3.7.x",
     "mongoose-validator": "*",
-    "less": "1.3.x",
+    "less": "1.4.x",
     "less-middleware": "*",
     "swig": "0.12.x",
     "bcrypt": "*",
