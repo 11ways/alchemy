@@ -25,7 +25,8 @@
     "hawkejs": "0.0.x",
 		"mkdirp": "0.3.x",
 		"expirable": "0.0.x",
-		"colors": "0.6.x"
+		"colors": "0.6.x",
+    "ncp": "0.4.2"
   },
 	"devDependencies": {
 		"benchmark": "1.0.x",
