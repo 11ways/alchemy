@@ -15,7 +15,7 @@
     "less": "1.4.x",
     "less-middleware": "*",
     "swig": "0.12.x",
-    "bcrypt": "*",
+    "bcrypt": "0.7.x",
     "moment": "*",
     "email": "*",
     "jquery": "1.8.x",
@@ -26,7 +26,8 @@
 		"mkdirp": "0.3.x",
 		"expirable": "0.0.x",
 		"colors": "0.6.x",
-    "ncp": "0.4.2"
+    "ncp": "0.4.2",
+    "connect-mongo": "0.3.x"
   },
 	"devDependencies": {
 		"benchmark": "1.0.x",
