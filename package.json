@@ -1,5 +1,5 @@
 {
-	"name": "alchemy",
+	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
 	"version": "0.0.1",
 	"repository": {
