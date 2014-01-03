@@ -30,7 +30,8 @@
 		"connect-mongo": "0.3.x",
 		"nuclei": "0.2.x",
 		"eventflow": "0.0.x",
-		"toobusy": "0.2.x"
+		"toobusy": "0.2.x",
+		"continuation": "0.1.x"
 	},
 	"devDependencies": {
 		"benchmark": "1.0.x",
