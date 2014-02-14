@@ -32,7 +32,8 @@
 		"eventflow": "0.0.x",
 		"toobusy": "0.2.x",
 		"continuation": "0.1.x",
-		"chokidar": "0.8.x"
+		"chokidar": "0.8.x",
+		"fuery": "0.0.x"
 	},
 	"devDependencies": {
 		"benchmark": "1.0.x",
