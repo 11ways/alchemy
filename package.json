@@ -36,7 +36,8 @@
 		"fuery": "0.0.x",
 		"mmmagic": "0.3.x",
 		"mime": "1.2.x",
-		"useragent": "2.0.x"
+		"useragent": "2.0.x",
+		"bson": "0.2.x"
 	},
 	"devDependencies": {
 		"benchmark": "1.0.x",
