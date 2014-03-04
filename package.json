@@ -23,7 +23,7 @@
 		"mkdirp": "0.3.x",
 		"expirable": "0.0.x",
 		"colors": "0.6.x",
-		"ncp": "0.5.0",
+		"ncp": "0.4.2",
 		"connect-mongo": "0.4.x",
 		"nuclei": "0.2.x",
 		"eventflow": "0.0.x",
