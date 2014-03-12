@@ -19,7 +19,7 @@
 		"email": "0.2.x",
 		"async": "0.2.x",
 		"randomstring": "1.0.x",
-		"hawkejs": "0.0.x",
+		"hawkejs": "0.1.x",
 		"mkdirp": "0.3.x",
 		"expirable": "0.0.x",
 		"colors": "0.6.x",
