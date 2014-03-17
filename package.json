@@ -34,7 +34,8 @@
 		"mmmagic": "0.3.x",
 		"mime": "1.2.x",
 		"useragent": "2.0.x",
-		"bson": "0.2.x"
+		"bson": "0.2.x",
+		"jsondiffpatch": "0.1.5"
 	},
 	"devDependencies": {
 		"benchmark": "1.0.x",
