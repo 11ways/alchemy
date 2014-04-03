@@ -10,6 +10,8 @@
 		"express": "3.x",
 		"sputnik": "0.0.x",
 		"socket.io": "0.9.x",
+		"socket.io-stream": "0.5.x",
+		"yenc-stream": "0.0.x",
 		"mongoose": "3.8.x",
 		"mongoose-validator": "0.2.x",
 		"less": "1.6.x",
