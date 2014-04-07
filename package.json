@@ -10,6 +10,8 @@
 		"express": "3.x",
 		"sputnik": "0.0.x",
 		"socket.io": "0.9.x",
+		"socket.io-stream": "0.5.x",
+		"yenc-stream": "0.0.x",
 		"mongoose": "3.8.x",
 		"mongoose-validator": "0.2.x",
 		"less": "1.6.x",
@@ -20,7 +22,6 @@
 		"async": "0.2.x",
 		"randomstring": "1.0.x",
 		"hawkejs": "0.1.x",
-		"mkdirp": "0.3.x",
 		"expirable": "0.0.x",
 		"colors": "0.6.x",
 		"ncp": "0.4.2",
@@ -34,7 +35,6 @@
 		"mmmagic": "0.3.x",
 		"mime": "1.2.x",
 		"useragent": "2.0.x",
-		"bson": "0.2.x",
 		"jsondiffpatch": "0.1.5"
 	},
 	"devDependencies": {
