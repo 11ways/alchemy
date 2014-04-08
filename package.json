@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/skerit/alchemy.git"
@@ -12,8 +12,7 @@
 		"socket.io": "0.9.x",
 		"socket.io-stream": "0.5.x",
 		"yenc-stream": "0.0.x",
-		"mongoose": "3.8.x",
-		"mongoose-validator": "0.2.x",
+		"mongodb": "1.4.x",
 		"less": "1.6.x",
 		"less-middleware": "0.1.x",
 		"bcrypt": "0.7.x",
