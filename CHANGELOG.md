@@ -13,6 +13,8 @@
   array of indexes allowed to be looked through for existing records.
   If it's an empty array, only the _id will be used. If it's false, every index
   is used.
+* Add 'divide' method to Object, which creates a new array where every key-value
+  pair is a new object
 
 ## 0.0.1 (2014-04-04)
 
