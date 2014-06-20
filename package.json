@@ -7,6 +7,7 @@
 		"url": "git://github.com/skerit/alchemy.git"
 	},
 	"dependencies": {
+		"protoblast": "0.1.x",
 		"express": "3.x",
 		"sputnik": "0.0.x",
 		"socket.io": "0.9.x",
