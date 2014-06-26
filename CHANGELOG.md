@@ -16,6 +16,7 @@
 * Add 'divide' method to Object, which creates a new array where every key-value
   pair is a new object
 * Spin off prototype & inflections to new module: protoblast
+* Added publishable behaviour
 
 ## 0.0.1 (2014-04-04)
 
