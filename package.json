@@ -19,7 +19,7 @@
 		"bcrypt": "0.7.x",
 		"moment": "2.5.x",
 		"email": "0.2.x",
-		"async": "0.2.x",
+		"async": "0.9.x",
 		"randomstring": "1.0.x",
 		"hawkejs": "0.1.x",
 		"expirable": "0.0.x",
@@ -42,7 +42,11 @@
 	"devDependencies": {
 		"benchmark": "1.0.x",
 		"microtime": "0.5.x",
-		"node-inspector": "0.7.x"
+		"node-inspector": "0.7.x",
+		"mocha": "1.20.x"
+	},
+	"scripts": {
+		"test": "node_modules/.bin/mocha --reporter spec"
 	},
 	"license": "MIT",
 	"engines": {
