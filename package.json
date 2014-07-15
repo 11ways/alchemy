@@ -22,7 +22,7 @@
 		"async": "0.9.x",
 		"randomstring": "1.0.x",
 		"hawkejs": "0.1.x",
-		"expirable": "0.0.x",
+		"expirable": "0.1.x",
 		"colors": "0.6.x",
 		"ncp": "0.4.2",
 		"connect-mongo": "0.4.x",
