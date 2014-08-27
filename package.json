@@ -15,7 +15,7 @@
 		"yenc-stream": "0.0.x",
 		"mongodb": "1.4.x",
 		"less": "1.6.x",
-		"less-middleware": "0.1.x",
+		"less-middleware": "1.0.4",
 		"bcrypt": "0.7.x",
 		"moment": "2.5.x",
 		"email": "0.2.x",
