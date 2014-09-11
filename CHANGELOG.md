@@ -1,3 +1,7 @@
+## 0.2.0 (WIP)
+
+* Switch to Hawkejs v1
+
 ## 0.1.0 (WIP)
 
 * Remove mongoose & MongoDB eval code (still need to add validation support)

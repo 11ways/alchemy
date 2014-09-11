@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "0.1.0",
+	"version": "0.2.0-alpha",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/skerit/alchemy.git"
@@ -21,7 +21,7 @@
 		"email": "0.2.x",
 		"async": "0.9.x",
 		"randomstring": "1.0.x",
-		"hawkejs": "0.1.x",
+		"hawkejs": "1.0.x",
 		"expirable": "0.1.x",
 		"colors": "0.6.x",
 		"ncp": "0.4.2",
