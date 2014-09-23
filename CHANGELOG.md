@@ -1,6 +1,7 @@
 ## 0.2.0 (WIP)
 
 * Switch to Hawkejs v1
+* Removed old code (continuation, code moved to protoblast, ...)
 
 ## 0.1.0 (WIP)
 
