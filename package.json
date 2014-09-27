@@ -13,19 +13,16 @@
 		"mime": "1.2.x",
 		"mmmagic": "0.3.x",
 		"temp": "0.8.1",
+		"less": "1.7.x",
 
-		"express": "3.x",
 		"sputnik": "0.0.x",
 		"socket.io": "0.9.x",
 		"socket.io-stream": "0.5.x",
 		"yenc-stream": "0.0.x",
 		"mongodb": "1.4.x",
-		"less": "1.6.x",
-		"less-middleware": "1.0.4",
 		"bcrypt": "0.7.x",
 		"moment": "2.5.x",
 		"email": "0.2.x",
-		"async": "0.9.x",
 		"randomstring": "1.0.x",
 		"expirable": "0.1.x",
 		"colors": "0.6.x",
@@ -53,6 +50,6 @@
 	},
 	"license": "MIT",
 	"engines": {
-		"node": ">=0.8"
+		"node": ">=0.10"
 	}
 }
