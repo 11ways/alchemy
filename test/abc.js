@@ -1,4 +1,4 @@
-var assert   = require('assert');
+var assert = require('assert');
 require('alchemymvc');
 
 describe('Alchemy Init', function() {
