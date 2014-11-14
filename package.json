@@ -17,6 +17,7 @@
 		"body": "4.5.x",
 		"formidable": "1.0.x",
 		"useragent": "2.1.x",
+		"slug": "0.8.x",
 
 		"sputnik": "0.0.x",
 		"socket.io": "0.9.x",
@@ -38,7 +39,6 @@
 		"fuery": "0.1.x",
 		"jsondiffpatch": "0.1.5",
 		"murmurhash3": "0.2.x",
-		"slug": "0.4.x",
 		"ansi-256-colors": "1.0.x"
 	},
 	"devDependencies": {
