@@ -18,13 +18,17 @@
 		"formidable": "1.0.x",
 		"useragent": "2.1.x",
 		"slug": "0.8.x",
+		"toobusy-js": "0.3.x",
+
+		"bcrypt": "0.8.x",
+		"murmurhash3js": "3.0.x",
 
 		"sputnik": "0.0.x",
 		"socket.io": "0.9.x",
 		"socket.io-stream": "0.5.x",
 		"yenc-stream": "0.0.x",
 		"mongodb": "1.4.x",
-		"bcrypt": "0.7.x",
+		
 		"moment": "2.5.x",
 		"email": "0.2.x",
 		"randomstring": "1.0.x",
@@ -34,11 +38,10 @@
 		"connect-mongo": "0.4.x",
 		"nuclei": "0.2.x",
 		"eventflow": "0.0.x",
-		"toobusy": "0.2.x",
 		"chokidar": "0.8.x",
 		"fuery": "0.1.x",
 		"jsondiffpatch": "0.1.5",
-		"murmurhash3": "0.2.x",
+		
 		"ansi-256-colors": "1.0.x"
 	},
 	"devDependencies": {
