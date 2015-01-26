@@ -37,7 +37,8 @@
 		"useragent": "2.0.x",
 		"jsondiffpatch": "0.1.5",
 		"murmurhash3": "0.2.x",
-		"slug": "0.4.x"
+		"slug": "0.4.x",
+		"janeway": "0.1.2"
 	},
 	"devDependencies": {
 		"benchmark": "1.0.x",
