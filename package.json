@@ -20,6 +20,7 @@
 		"slug": "0.8.x",
 		"toobusy-js": "0.3.x",
 		"body-parser": "1.12.x",
+		"qs": "2.4.x",
 
 		"bcrypt": "0.8.x",
 		"murmurhash3js": "3.0.x",
