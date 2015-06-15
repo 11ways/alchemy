@@ -12,6 +12,12 @@
 # Ignore log files
 npm-debug.log
 v8.log
+*.cpuprofile
+callgrind*
+*.wtf-trace
+
+# Ignore report files
+plato/
 
 # Ignore node modules
 /node_modules/

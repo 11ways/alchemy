@@ -1,7 +1,15 @@
-## 0.2.0 (WIP)
+## 1.0.0 (WIP)
 
-* Switch to Hawkejs v1
-* Removed old code (continuation, code moved to protoblast, ...)
+* Switched to Hawkejs v1.0.0
+* Removed cruft (continuation, ...)
+* Removed old Nuclei-way of defining classes
+* Added new classes:
+  - Conduit
+  - Schema
+  - Router
+  - Route
+  - FieldType
+  - Datasource
 
 ## 0.1.0 (WIP)
 
