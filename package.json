@@ -8,7 +8,7 @@
 	},
 	"dependencies": {
 		"protoblast": "0.1.x",
-		"hawkejs": "1.0.x",
+		
 		"path-to-regexp": "1.0.x",
 		"mime": "1.2.x",
 		"mmmagic": "0.3.x",
@@ -36,8 +36,6 @@
 		"expirable": "0.1.x",
 		"colors": "0.6.x",
 		"ncp": "0.4.2",
-		"nuclei": "0.2.x",
-		"eventflow": "0.0.x",
 		"chokidar": "0.8.x",
 		"fuery": "0.1.x",
 		"jsondiffpatch": "0.1.5",
@@ -46,11 +44,12 @@
 	},
 	"optionalDependencies": {
 		"less": "1.7.x",
-		"node-sass": "3.1.x"
+		"node-sass": "3.1.x",
+		"janeway": "0.1.x"
 	},
 	"devDependencies": {
 		"benchmark": "1.0.x",
-		"microtime": "0.5.x",
+		"microtime": "1.4.x",
 		"node-inspector": "0.7.x",
 		"mocha": "1.20.x"
 	},
