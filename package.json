@@ -57,6 +57,7 @@
 	"scripts": {
 		"test": "node_modules/.bin/mocha --reporter spec"
 	},
+	"main": "lib/bootstrap.js",
 	"license": "MIT",
 	"engines": {
 		"node": ">0.10"
