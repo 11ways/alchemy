@@ -1,0 +1,119 @@
+html {
+	font-family: sans-serif; /* 1 */
+	-ms-text-size-adjust: 100%; /* 2 */
+	-webkit-text-size-adjust: 100%; /* 2 */
+	font-size: 14px;
+	// border-box makes `width` include padding & borders
+	box-sizing: border-box;
+}
+
+* {
+	box-sizing: inherit;
+}
+
+body {
+	background: #ffffff;
+	color: #031634;
+	padding: 0;
+	margin: 0;
+	font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	position: relative;
+	cursor: default;
+}
+
+.row {
+	display: flex;
+	margin-bottom: 2rem;
+}
+
+.col {
+	flex: 1 0 auto;
+	background: #E8F3F8;
+}
+
+.col:not(:last-child) {
+	margin-right: 2rem;
+}
+
+.header-image {
+	box-shadow: #000 1px 1px 3px;
+	background: #0B486B;
+	display: flex;
+	justify-content: center;
+	padding: 2rem;
+	color: white;
+
+	.alchemy-logo {
+		width: 10rem;
+		height: 10rem;
+		margin-right: 1rem;
+	}
+
+	.alchemy-name {
+		align-self: center;
+		text-align: center;
+	}
+}
+
+.table-wrap {
+	-webkit-column-count: 3;
+	-moz-column-count: 3;
+	column-count: 3;
+}
+
+.content {
+	padding: 2rem 10rem;
+
+	article {
+		padding: 2rem;
+		border-radius: 3px;
+		box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.24);
+
+		h1 {
+			margin-top: 0;
+		}
+	}
+}
+
+.engine {
+	background: #0B486B;
+	font-size: 2rem;
+	color: white;
+	text-align: center;
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
+
+	span {
+		flex: 0 0 auto;
+	}
+}
+
+.modules {
+	flex: 1 0 auto;
+
+	td {
+		padding-right: 1rem;
+	}
+
+	.failed {
+		text-decoration: line-through;
+		font-weight: bold;
+		color: #80061C;
+	}
+}
+
+.settings {
+	max-width: 50%;
+
+	th {
+		text-align: left;
+		border-bottom: 1px solid black;
+	}
+
+	table {
+		width: 100%;
+	}
+}
