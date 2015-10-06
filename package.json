@@ -10,7 +10,7 @@
 		"ansi-256-colors": "1.1.x",
 		"bcrypt": "0.8.x",
 		"body": "5.1.x",
-		"body-parser": "1.13.x",
+		"body-parser": "1.14.x",
 		"chokidar": "1.1.x",
 		"colors": "1.1.x",
 		"expirable": "0.1.x",
