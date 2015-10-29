@@ -31,7 +31,7 @@
 		"toobusy-js": "0.4.x",
 		"chokidar": "0.8.x",
 		"fuery": "0.1.x",
-		"mmmagic": "0.3.x",
+		"mmmagic": "~0.4.1",
 		"mime": "1.2.x",
 		"useragent": "2.1.x",
 		"jsondiffpatch": "0.1.5",
