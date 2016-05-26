@@ -1,4 +1,4 @@
-## 1.0.0 (WIP)
+## 0.2.0 (2016-05-26)
 
 * Switched to Hawkejs v1.0.0
 * Removed cruft (continuation, ...)
@@ -11,7 +11,7 @@
   - FieldType
   - Datasource
 
-## 0.1.0 (WIP)
+## 0.1.0 (2014-09-10)
 
 * Remove mongoose & MongoDB eval code (still need to add validation support)
 * Added sluggable behaviour
