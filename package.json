@@ -1,7 +1,13 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "0.2.0",
+	"version": "0.2.1-alpha",
+	"author": "Jelle De Loecker <jelle@develry.be>",
+	"keywords": [
+		"alchemy",
+		"alchemymvc",
+		"mvc"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/skerit/alchemy.git"
@@ -54,6 +60,7 @@
 	"main": "lib/bootstrap.js",
 	"license": "MIT",
 	"engines": {
-		"node": "~4.4.0"
-	}
+		"node": ">=4.4.0"
+	},
+	"private": true
 }

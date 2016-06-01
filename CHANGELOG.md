@@ -1,3 +1,7 @@
+## 0.2.1 (WIP)
+
+* ClientSocket now has an `offset` and `latency` property plus `now()` timestamp method
+
 ## 0.2.0 (2016-05-26)
 
 * Switched to Hawkejs v1.0.0
