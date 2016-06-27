@@ -1,6 +1,8 @@
-## 0.2.1 (WIP)
+## 0.2.1 (2016-05-27)
 
 * ClientSocket now has an `offset` and `latency` property plus `now()` timestamp method
+* SocketConduit now has an `ip` property
+* `ModelDocument` now has an `init` method that gets called on creation
 
 ## 0.2.0 (2016-05-26)
 
