@@ -1,3 +1,5 @@
+## 0.2.2 (WIP)
+
 ## 0.2.1 (2016-05-27)
 
 * ClientSocket now has an `offset` and `latency` property plus `now()` timestamp method
