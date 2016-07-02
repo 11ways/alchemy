@@ -1,17 +1,17 @@
-## 0.2.2 (WIP)
+## 0.2.2 (2016-07-02)
 
 * Update socket.io dependencies, fixing reconnection issues
 * Added `log.once(id, ...)` to log a specific message only once
 * Added `log.less(id, ...)` to log messages only once per second
 * Added `log.setLessConfig` if you want to set specific limit for log.less
 
-## 0.2.1 (2016-05-27)
+## 0.2.1 (2016-06-27)
 
 * ClientSocket now has an `offset` and `latency` property plus `now()` timestamp method
 * SocketConduit now has an `ip` property
 * `ModelDocument` now has an `init` method that gets called on creation
 
-## 0.2.0 (2016-05-26)
+## 0.2.0 (2016-06-26)
 
 * Switched to Hawkejs v1.0.0
 * Removed cruft (continuation, ...)
