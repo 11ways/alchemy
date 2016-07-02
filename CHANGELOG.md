@@ -1,3 +1,5 @@
+## 0.2.3 (WIP)
+
 ## 0.2.2 (2016-07-02)
 
 * Update socket.io dependencies, fixing reconnection issues
