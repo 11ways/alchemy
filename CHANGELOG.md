@@ -1,6 +1,9 @@
 ## 0.2.2 (WIP)
 
 * Update socket.io dependencies, fixing reconnection issues
+* Added `log.once(id, ...)` to log a specific message only once
+* Added `log.less(id, ...)` to log messages only once per second
+* Added `log.setLessConfig` if you want to set specific limit for log.less
 
 ## 0.2.1 (2016-05-27)
 
