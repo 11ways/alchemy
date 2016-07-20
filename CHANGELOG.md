@@ -1,5 +1,9 @@
 ## 0.2.3 (WIP)
 
+* Added Command class
+* Associated record data will now also be saved
+* Sluggable behaviour has been fixed
+
 ## 0.2.2 (2016-07-02)
 
 * Update socket.io dependencies, fixing reconnection issues
