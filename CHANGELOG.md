@@ -3,6 +3,7 @@
 * Added Command class
 * Associated record data will now also be saved
 * Sluggable behaviour has been fixed
+* Add `file_path` property to `useOnce` require errors
 
 ## 0.2.2 (2016-07-02)
 
