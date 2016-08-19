@@ -1,5 +1,7 @@
-## 0.2.3 (WIP)
+## 0.3.0 (WIP)
 
+* Added Base class in Alchemy namespace
+* `alchemy.classes` has been removed in favor of `Classes`
 * Added Command class
 * Associated record data will now also be saved
 * Sluggable behaviour has been fixed
