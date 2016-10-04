@@ -1,4 +1,4 @@
-## 0.3.0 (WIP)
+## 0.3.0 (2016-10-04)
 
 * Added Base class in Alchemy namespace
 * `alchemy.classes` has been removed in favor of `Classes`
@@ -7,6 +7,9 @@
 * Sluggable behaviour has been fixed
 * Add `file_path` property to `useOnce` require errors
 * Bugfixes in the Router helper
+* Allow registering modules as null
+* Load mmmagic on-the-fly, don't preload bcrypt and chokidar
+* Add `alchemy.broadcast` which broadcasts to every connected websocket scene
 
 ## 0.2.2 (2016-07-02)
 
