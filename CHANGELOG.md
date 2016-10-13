@@ -1,3 +1,8 @@
+## 0.3.1 (WIP)
+
+* Upgraded NPM packages
+* Fixed inheritance issues
+
 ## 0.3.0 (2016-10-04)
 
 * Added Base class in Alchemy namespace
