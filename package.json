@@ -28,6 +28,7 @@
 		"mkdirp"            : "~0.5.1",
 		"mmmagic"           : "~0.4.5",
 		"mongodb"           : "~2.2.10",
+		"nedb"              : "~1.8.0",
 		"ncp"               : "~2.0.0",
 		"path-to-regexp"    : "~1.6.0",
 		"protoblast"        : "~0.3.2",
