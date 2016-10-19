@@ -1,7 +1,10 @@
-## 0.3.1 (WIP)
+## 0.3.1 (2016-10-19)
 
 * Upgraded NPM packages
+* Set terminal title using Janeway
 * Fixed inheritance issues
+* Janeway can now also be disabled by setting the DISABLE_JANEWAY env to 1
+* Setting `alchemy.settings.silent` to true will disable the custom `log` calls
 
 ## 0.3.0 (2016-10-04)
 
