@@ -1,4 +1,6 @@
-## 0.3.2 (WIP)
+## 0.3.2 (2016-10-19)
+
+* Forgot to upgrade the Janeway package
 
 ## 0.3.1 (2016-10-19)
 

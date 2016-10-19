@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "0.3.2-alpha",
+	"version": "0.3.2",
 	"author": "Jelle De Loecker <jelle@develry.be>",
 	"keywords": [
 		"alchemy",
@@ -42,7 +42,7 @@
 		"useragent"         : "~2.1.9"
 	},
 	"optionalDependencies": {
-		"janeway"           : "~0.1.6",
+		"janeway"           : "~0.2.1",
 		"less"              : "~2.7.1",
 		"node-sass"         : "~3.10.1",
 		"socket.io-client"  : "~1.4.8"
@@ -57,6 +57,5 @@
 	"license": "MIT",
 	"engines": {
 		"node": ">=6.6.0"
-	},
-	"private": true
+	}
 }
