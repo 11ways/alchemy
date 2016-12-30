@@ -1,3 +1,9 @@
+## 0.3.3 (WIP)
+
+* Fix $or grouping during normalization of `Query` conditions
+* Further split up the `Conduit` class
+* Fix some `Resource` issues in the alchemy helper
+
 ## 0.3.2 (2016-10-19)
 
 * Forgot to upgrade the Janeway package
