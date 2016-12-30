@@ -5,6 +5,7 @@
 * Fix some `Resource` issues in the alchemy helper
 * Add a `Document#toArray()` method
 * Put non-translated, orphaned, strings in a '__' prefix when fetched from server
+* Optimize `Model#ensureIds`
 
 ## 0.3.2 (2016-10-19)
 
