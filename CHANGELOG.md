@@ -7,6 +7,8 @@
 * Put non-translated, orphaned, strings in a '__' prefix when fetched from server
 * Optimize `Model#ensureIds`
 * Add router section identifiers (for in selects, ...)
+* Add `conduit` property getter to `Document`
+* Fix new cookies being ignored on a redirect
 
 ## 0.3.2 (2016-10-19)
 
