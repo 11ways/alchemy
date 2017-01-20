@@ -9,6 +9,8 @@
 * Add router section identifiers (for in selects, ...)
 * Add `conduit` property getter to `Document`
 * Fix new cookies being ignored on a redirect
+* Set option `set_updated` to false during saving so the `updated` field won't be changed
+* Add `of_group_name` static property to classes
 
 ## 0.3.2 (2016-10-19)
 
