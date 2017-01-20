@@ -14,6 +14,8 @@
 * Add `count` as find option
 * Add `Model#beforeSave` callback support
 * Pass query options to `Document`
+* Set `x-history-url` on internal redirect (and expose to hawkejs)
+* Change cache-control to cache for max 1 hour (in stead of 1 year)
 
 ## 0.3.2 (2016-10-19)
 
