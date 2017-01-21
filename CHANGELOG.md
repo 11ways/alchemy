@@ -19,6 +19,8 @@
 * Add options to the `Document#save` method
 * Find next batch of limited find results using `Document#findNextBatch`
 * No longer die when trying to use a "priviliged" port
+* Upgrade protoblast to version 0.3.4
+* Upgrade hawkejs to version 1.1.2
 
 ## 0.3.2 (2016-10-19)
 
