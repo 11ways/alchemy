@@ -1,4 +1,4 @@
-## 0.3.3 (WIP)
+## 0.3.3 (2017-01-21)
 
 * Fix $or grouping during normalization of `Query` conditions
 * Further split up the `Conduit` class
