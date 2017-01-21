@@ -16,6 +16,9 @@
 * Pass query options to `Document`
 * Set `x-history-url` on internal redirect (and expose to hawkejs)
 * Change cache-control to cache for max 1 hour (in stead of 1 year)
+* Add options to the `Document#save` method
+* Find next batch of limited find results using `Document#findNextBatch`
+* No longer die when trying to use a "priviliged" port
 
 ## 0.3.2 (2016-10-19)
 
