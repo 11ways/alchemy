@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "0.3.4-alpha",
+	"version": "0.4.0-alpha",
 	"author": "Jelle De Loecker <jelle@develry.be>",
 	"keywords": [
 		"alchemy",
@@ -31,7 +31,7 @@
 		"nedb"              : "~1.8.0",
 		"ncp"               : "~2.0.0",
 		"path-to-regexp"    : "~1.6.0",
-		"protoblast"        : "~0.3.4",
+		"protoblast"        : "~0.4.0",
 		"slug"              : "~0.9.1",
 		"socket.io"         : "~1.4.8",
 		"socket.io-stream"  : "~0.9.0",

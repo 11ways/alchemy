@@ -1,4 +1,9 @@
-## 0.3.4 (WIP)
+## 0.4.0 (WIP)
+
+* Fixed router issue in the Alchemy helper
+* `PATH_*` globals are now constants
+* Removed `APP_ROOT`, `PATH_APP` has been available for years
+* The version of your app and alchemy itself are added to `process.versions`
 
 ## 0.3.3 (2017-01-21)
 
@@ -21,7 +26,7 @@
 * Add options to the `Document#save` method
 * Find next batch of limited find results using `Document#findNextBatch`
 * No longer die when trying to use a "priviliged" port
-* Upgrade protoblast to version 0.3.4
+* Upgrade protoblast to version 0.4.0
 * Upgrade hawkejs to version 1.1.2
 
 ## 0.3.2 (2016-10-19)
