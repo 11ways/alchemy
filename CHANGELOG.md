@@ -5,7 +5,7 @@
 * Removed `APP_ROOT`, `PATH_APP` has been available for years
 * The version of your app and alchemy itself are added to `process.versions`
 * The global `alchemy` object is now an instance of the `Alchemy` class
-* Added `use strict` to most modules
+* Added `Alchemy#makeNextRequireStrict()` which adds `use strict` to the next required module
 
 ## 0.3.3 (2017-01-21)
 
