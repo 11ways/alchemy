@@ -6,6 +6,8 @@
 * The version of your app and alchemy itself are added to `process.versions`
 * The global `alchemy` object is now an instance of the `Alchemy` class
 * Added `Alchemy#makeNextRequireStrict()` which adds `use strict` to the next required module
+* Fixed adding indexes to nested fields
+* Automatically add 2dsphere index to Geopoint fields
 
 ## 0.3.3 (2017-01-21)
 
