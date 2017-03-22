@@ -8,6 +8,7 @@
 * Added `Alchemy#makeNextRequireStrict()` which adds `use strict` to the next required module
 * Fixed adding indexes to nested fields
 * Automatically add 2dsphere index to Geopoint fields
+* Added `qs` dependency so nested GET parameters can be decoded properly
 
 ## 0.3.3 (2017-01-21)
 
