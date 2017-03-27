@@ -10,6 +10,7 @@
 * Automatically add 2dsphere index to Geopoint fields
 * Added `qs` dependency so nested GET parameters can be decoded properly
 * Add cache method to client-side `alchemy#fetch` method
+* A model's Document class will now inherit from that model's parent's document class
 
 ## 0.3.3 (2017-01-21)
 
