@@ -11,6 +11,7 @@
 * Added `qs` dependency so nested GET parameters can be decoded properly
 * Add cache method to client-side `alchemy#fetch` method
 * A model's Document class will now inherit from that model's parent's document class
+* Self-referencing Schema fields are no longer queried for now, this causes deadlocks to occur
 
 ## 0.3.3 (2017-01-21)
 
