@@ -14,6 +14,8 @@
 * Self-referencing Schema fields are no longer queried for now, this causes deadlocks to occur
 * Add `alchemy.__` to client-side javascript
 * Also emit the full linkup packets as a 'linkup_packet' event
+* Base class fixes
+* Add hawkejs multiple-template serving middleware
 
 ## 0.3.3 (2017-01-21)
 
