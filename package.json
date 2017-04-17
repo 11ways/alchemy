@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "0.4.0-alpha",
+	"version": "0.4.0",
 	"author": "Jelle De Loecker <jelle@develry.be>",
 	"keywords": [
 		"alchemy",
@@ -21,7 +21,7 @@
 		"expirable"         : "~0.1.0",
 		"formidable"        : "~1.1.1",
 		"graceful-fs"       : "~4.1.9",
-		"hawkejs"           : "~1.1.2",
+		"hawkejs"           : "~1.1.3",
 		"jsondiffpatch"     : "~0.2.4",
 		"mime"              : "~1.3.4",
 		"minimist"          : "~1.2.0",
@@ -31,7 +31,7 @@
 		"nedb"              : "~1.8.0",
 		"ncp"               : "~2.0.0",
 		"path-to-regexp"    : "~1.7.0",
-		"protoblast"        : "~0.3.5",
+		"protoblast"        : "~0.3.6",
 		"qs"                : "~6.3.1",
 		"slug"              : "~0.9.1",
 		"socket.io"         : "~1.4.8",
@@ -58,6 +58,5 @@
 	"license": "MIT",
 	"engines": {
 		"node": ">=6.6.0"
-	},
-	"private": true
+	}
 }

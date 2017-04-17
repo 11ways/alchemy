@@ -1,4 +1,4 @@
-## 0.4.0 (WIP)
+## 0.4.0 (2017-04-17)
 
 * Fixed router issue in the Alchemy helper
 * `PATH_*` globals are now constants
