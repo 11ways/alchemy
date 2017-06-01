@@ -1,6 +1,7 @@
 ## 0.4.1 (WIP)
 
 * Setting `sort` to false will now actually disable sorting
+* Fallback translations `__` will now be picked
 
 ## 0.4.0 (2017-04-17)
 
