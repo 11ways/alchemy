@@ -3,6 +3,7 @@
 * Setting `sort` to false will now actually disable sorting
 * Fallback translations `__` will now be picked
 * Send hawkejs templates using regular JSON, not JSON-dry
+* Fix urls not being generated properly when using prefixes
 
 ## 0.4.0 (2017-04-17)
 
