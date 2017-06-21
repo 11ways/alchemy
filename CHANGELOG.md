@@ -4,6 +4,7 @@
 * Fallback translations `__` will now be picked
 * Send hawkejs templates using regular JSON, not JSON-dry
 * Fix urls not being generated properly when using prefixes
+* Add `Controller#renderDialogIn` so dialogs can be rendered from the server side, too
 
 ## 0.4.0 (2017-04-17)
 
