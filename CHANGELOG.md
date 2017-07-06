@@ -6,6 +6,8 @@
 * Fix urls not being generated properly when using prefixes
 * Add `Controller#renderDialogIn` so dialogs can be rendered from the server side, too
 * Let the Mongo datasource retry to reconnect a near infinite amount of times
+* `Alchemy#downloadFile` now uses `Blast#fetch`
+* Alchemy will now exit when the parent process does
 
 ## 0.4.0 (2017-04-17)
 
