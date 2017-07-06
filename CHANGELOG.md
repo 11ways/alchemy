@@ -8,6 +8,8 @@
 * Let the Mongo datasource retry to reconnect a near infinite amount of times
 * `Alchemy#downloadFile` now uses `Blast#fetch`
 * Alchemy will now exit when the parent process does
+* Add languageSwitcher
+* Number fields with value null won't be cast to 0 anymore
 
 ## 0.4.0 (2017-04-17)
 
