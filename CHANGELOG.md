@@ -10,6 +10,12 @@
 * Alchemy will now exit when the parent process does
 * Add languageSwitcher
 * Number fields with value null won't be cast to 0 anymore
+* `Conduit#redirect` now uses temporary (301) redirects by default
+* Disabling a find's `recursive` will now also apply to a subschema
+* Hidden files (starting with ".") or the "empty" file will no longer be loaded
+* You can now set parameters using `Conduit#param(name, value)`
+* `Conduit#param(name)` will now also look in the cookies
+* Add support for `assume_https` config and `x-forwarded-proto` header
 
 ## 0.4.0 (2017-04-17)
 
