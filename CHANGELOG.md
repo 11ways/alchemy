@@ -16,6 +16,7 @@
 * You can now set parameters using `Conduit#param(name, value)`
 * `Conduit#param(name)` will now also look in the cookies
 * Add support for `assume_https` config and `x-forwarded-proto` header
+* Alchemy won't listen to multicast address by default
 
 ## 0.4.0 (2017-04-17)
 
