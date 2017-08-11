@@ -1,3 +1,5 @@
+## 0.4.2 (WIP)
+
 ## 0.4.1 (2017-08-11)
 
 * Setting `sort` to false will now actually disable sorting
