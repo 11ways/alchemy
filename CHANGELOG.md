@@ -4,6 +4,7 @@
 * Add `Controller#safeSet`, which uses `encodeHTML` to set strings
 * The session cookie has `httpOnly` enabled
 * Add `Conduit#is_secure` property
+* Enable the `secure` option by default when setting a cookie on a secure connection
 
 ## 0.4.1 (2017-08-11)
 
