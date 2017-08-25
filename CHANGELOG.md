@@ -3,7 +3,7 @@
 * Remove quotes from `content-type`'s UTF-8
 * Add `Controller#safeSet`, which uses `encodeHTML` to set strings
 * The session cookie has `httpOnly` enabled
-* 
+* Add `Conduit#is_secure` property
 
 ## 0.4.1 (2017-08-11)
 
