@@ -1,5 +1,10 @@
 ## 0.4.2 (WIP)
 
+* Remove quotes from `content-type`'s UTF-8
+* Add `Controller#safeSet`, which uses `encodeHTML` to set strings
+* The session cookie has `httpOnly` enabled
+* 
+
 ## 0.4.1 (2017-08-11)
 
 * Setting `sort` to false will now actually disable sorting
