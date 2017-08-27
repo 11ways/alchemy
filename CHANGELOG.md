@@ -6,6 +6,7 @@
 * Add `Conduit#is_secure` property
 * Enable the `secure` option by default when setting a cookie on a secure connection
 * Fix path traversal security bug in `findAssetPath`
+* The `scene_start_` cookie will only live for 15s in stead of 10 minutes
 
 ## 0.4.1 (2017-08-11)
 
