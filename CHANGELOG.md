@@ -1,4 +1,4 @@
-## 0.4.2 (WIP)
+## 0.4.2 (2017-08-27)
 
 * Remove quotes from `content-type`'s UTF-8
 * Add `Controller#safeSet`, which uses `encodeHTML` to set strings
