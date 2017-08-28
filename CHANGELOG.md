@@ -1,6 +1,7 @@
 ## 0.4.3 (WIP)
 
 * Fix: don't set gutter on `Janeway#print` output when Janeway is not active
+* Fix: Client-side `Alchemy#switchLanguage` will now work when there are get queries
 
 ## 0.4.2 (2017-08-27)
 
