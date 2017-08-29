@@ -5,6 +5,7 @@
 * Add `use_found_prefix` to model search options. This used to be hard-coded yes, but now it is false by default
 * Calculate etag using `Object.checksum`, as fowler has too many collisions
 * Set the current active prefix using `internal` and `expose` as 'active_prefix'
+* If header `x-alchemy-default-prefix` is set, use that as *default* prefix. This differs from `x-alchemy-prefix`, as that is a hard override.
 
 ## 0.4.2 (2017-08-27)
 
