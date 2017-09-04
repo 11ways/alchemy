@@ -8,6 +8,7 @@
 * If header `x-alchemy-default-prefix` is set, use that as *default* prefix. This differs from `x-alchemy-prefix`, as that is a hard override.
 * Fix `useragent` not having the `satisfies` method
 * Fix `socket.io.js` not being served
+* Only create a dgram socket when it is needed
 
 ## 0.4.2 (2017-08-27)
 
