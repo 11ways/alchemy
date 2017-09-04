@@ -7,6 +7,7 @@
 * Set the current active prefix using `internal` and `expose` as 'active_prefix' (`Conduit#prefix` will not be set, because that is only used when it's in the path!)
 * If header `x-alchemy-default-prefix` is set, use that as *default* prefix. This differs from `x-alchemy-prefix`, as that is a hard override.
 * Fix `useragent` not having the `satisfies` method
+* Fix `socket.io.js` not being served
 
 ## 0.4.2 (2017-08-27)
 
