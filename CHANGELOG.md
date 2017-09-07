@@ -1,3 +1,5 @@
+## 0.4.4 (WIP)
+
 ## 0.4.3 (2017-09-07)
 
 * Fix: don't set gutter on `Janeway#print` output when Janeway is not active
