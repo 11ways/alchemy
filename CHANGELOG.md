@@ -1,4 +1,4 @@
-## 0.4.3 (WIP)
+## 0.4.3 (2017-09-07)
 
 * Fix: don't set gutter on `Janeway#print` output when Janeway is not active
 * Fix: Client-side `Alchemy#switchLanguage` will now work when there are get queries
@@ -10,6 +10,7 @@
 * Fix `socket.io.js` not being served
 * Only create a dgram socket when it is needed
 * `getResource` of the `Alchemy` helper will now always add the data object as the second argument (it used to do 2 different things on loopback or client)
+* Upgrade `protoblast` dependency to 0.3.10
 
 ## 0.4.2 (2017-08-27)
 
