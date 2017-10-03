@@ -2,6 +2,7 @@
 
 * Wait for `Blast` to load before starting the `startServer` stage
 * `usePath` will now always first load in files and THEN directories
+* Renamed the `Alchemy.Command` class to `Alchemy.Task`
 
 ## 0.4.3 (2017-09-07)
 
