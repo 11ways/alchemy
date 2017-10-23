@@ -1,10 +1,11 @@
-## 0.4.4 (WIP)
+## 0.5.0 (WIP)
 
 * Wait for `Blast` to load before starting the `startServer` stage
 * `usePath` will now always first load in files and THEN directories
 * Renamed the `Alchemy.Command` class to `Alchemy.Task`
 * Added `applyButton` to `Pagination` helper
 * You can now set multiple `Pagination` filters
+* Helpers are now under the Hawkejs namespace
 
 ## 0.4.3 (2017-09-07)
 
