@@ -6,6 +6,7 @@
 * Added `applyButton` to `Pagination` helper
 * You can now set multiple `Pagination` filters
 * Helpers are now under the Hawkejs namespace
+* Added `Model#eachRecord(options, task, callback)`, which returns a `Pledge`
 
 ## 0.4.3 (2017-09-07)
 
