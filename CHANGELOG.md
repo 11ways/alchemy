@@ -7,6 +7,7 @@
 * You can now set multiple `Pagination` filters
 * Helpers are now under the Hawkejs namespace
 * Added `Model#eachRecord(options, task, callback)`, which returns a `Pledge`
+* Setting `store_units` option on a Date field will store its unit info along with it
 
 ## 0.4.3 (2017-09-07)
 
