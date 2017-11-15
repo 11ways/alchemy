@@ -12,6 +12,7 @@
 * Calls to `Conduit#error` will now also be emitted as a `conduit_error` event on the main `alchemy` instance
 * A `Route`'s options will now be stored in the `options` property
 * `Route#generateUrl` can now also accept a regular options object instead of a `Conduit`
+* Don't use `let` in the `Alchemy.Base` class, since it's also used in the browser
 
 ## 0.4.3 (2017-09-07)
 
