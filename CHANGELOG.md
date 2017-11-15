@@ -8,6 +8,8 @@
 * Helpers are now under the Hawkejs namespace
 * Added `Model#eachRecord(options, task, callback)`, which returns a `Pledge`
 * Setting `store_units` option on a Date field will store its unit info along with it
+* Parse useragents using the `useragent#lookup` method, which caches strings
+* Calls to `Conduit#error` will now also be emitted as a `conduit_error` event on the main `alchemy` instance
 
 ## 0.4.3 (2017-09-07)
 
