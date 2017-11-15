@@ -13,6 +13,7 @@
 * A `Route`'s options will now be stored in the `options` property
 * `Route#generateUrl` can now also accept a regular options object instead of a `Conduit`
 * Don't use `let` in the `Alchemy.Base` class, since it's also used in the browser
+* If a minified cached asset (stylesheet or script) gets deleted, re-minify it instead of blocking the request
 
 ## 0.4.3 (2017-09-07)
 
