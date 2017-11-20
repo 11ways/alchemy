@@ -15,6 +15,7 @@
 * Don't use `let` in the `Alchemy.Base` class, since it's also used in the browser
 * If a minified cached asset (stylesheet or script) gets deleted, re-minify it instead of blocking the request
 * The session store is now stored under `alchemy.sessions`
+* Request URLs ending with only a prefix, and no slash, will now also work
 
 ## 0.4.3 (2017-09-07)
 
