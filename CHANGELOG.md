@@ -16,6 +16,8 @@
 * If a minified cached asset (stylesheet or script) gets deleted, re-minify it instead of blocking the request
 * The session store is now stored under `alchemy.sessions`
 * Request URLs ending with only a prefix, and no slash, will now also work
+* `Route#match` will now use `decodeURIComponent` when extracting url parameters
+* The helper `Router#printRoute` can now be used to only print an opening anchor when used in combination with `Router#closeRoute`
 
 ## 0.4.3 (2017-09-07)
 
