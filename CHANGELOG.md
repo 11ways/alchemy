@@ -18,6 +18,7 @@
 * Request URLs ending with only a prefix, and no slash, will now also work
 * `Route#match` will now use `decodeURIComponent` when extracting url parameters
 * The helper `Router#printRoute` can now be used to only print an opening anchor when used in combination with `Router#closeRoute`
+* Added `PostCSS` and `autoprefixer` package
 
 ## 0.4.3 (2017-09-07)
 
