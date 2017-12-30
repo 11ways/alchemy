@@ -19,6 +19,8 @@
 * `Route#match` will now use `decodeURIComponent` when extracting url parameters
 * The helper `Router#printRoute` can now be used to only print an opening anchor when used in combination with `Router#closeRoute`
 * Added `PostCSS` and `autoprefixer` package
+* `Alchemy#pickTranslation` will give correct results when given prefix is falsy
+* The `StringFieldType` will now pick a translation in case the database value was an object 
 
 ## 0.4.3 (2017-09-07)
 
