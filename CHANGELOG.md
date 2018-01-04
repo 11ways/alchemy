@@ -22,6 +22,8 @@
 * `Alchemy#pickTranslation` will give correct results when given prefix is falsy
 * The `StringFieldType` will now pick a translation in case the database value was an object
 * Add "segments", view blocks that have a specific route
+* Make `Model.find` return a `Pledge`
+* Mark the `Model` class as being an abstract class
 
 ## 0.4.3 (2017-09-07)
 
