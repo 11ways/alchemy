@@ -24,6 +24,7 @@
 * Add "segments", view blocks that have a specific route
 * Make `Model.find` return a `Pledge`
 * Mark the `Model` class as being an abstract class
+* Add UglifyJS global_defs for `Blast.isNode` and `Blast.isBrowser`
 
 ## 0.4.3 (2017-09-07)
 
