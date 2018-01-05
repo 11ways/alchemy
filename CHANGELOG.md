@@ -1,4 +1,4 @@
-## 0.5.0 (WIP)
+## 0.5.0 (2018-01-05)
 
 * Wait for `Blast` to load before starting the `startServer` stage
 * `usePath` will now always first load in files and THEN directories
