@@ -1,6 +1,7 @@
 ## 1.0.0 (WIP)
 
 * Split up old `Document` into `DocumentList` and `Document` class
+* Class-specific `title` and `type_name` properties are now statics instead of protos
 
 ## 0.5.0 (2018-01-05)
 
