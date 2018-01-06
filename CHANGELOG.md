@@ -1,3 +1,7 @@
+## 1.0.0 (WIP)
+
+* Split up old `Document` into `DocumentList` and `Document` class
+
 ## 0.5.0 (2018-01-05)
 
 * Wait for `Blast` to load before starting the `startServer` stage
