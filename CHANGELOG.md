@@ -2,6 +2,7 @@
 
 * Split up old `Document` into `DocumentList` and `Document` class
 * Class-specific `title` and `type_name` properties are now statics instead of protos
+* Add simple `HEAD` support
 
 ## 0.5.0 (2018-01-05)
 
