@@ -1,8 +1,9 @@
 ## 1.0.0 (WIP)
 
 * Split up old `Document` into `DocumentList` and `Document` class
+* Add client-side `Document`, `Model` and `DocumentList` classes
 * Class-specific `title` and `type_name` properties are now statics instead of protos
-* Add simple `HEAD` support
+* Add simple HTTP `HEAD` method support
 
 ## 0.5.0 (2018-01-05)
 
