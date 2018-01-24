@@ -4,6 +4,8 @@
 * Add client-side `Document`, `Model` and `DocumentList` classes
 * Class-specific `title` and `type_name` properties are now statics instead of protos
 * Add simple HTTP `HEAD` method support
+* `DbQuery` is now also available on the client side
+* Added query matching code from nedb to `DbQuery`
 
 ## 0.5.0 (2018-01-05)
 
