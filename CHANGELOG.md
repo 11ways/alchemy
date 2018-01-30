@@ -7,6 +7,7 @@
 * `DbQuery` is now also available on the client side
 * Added query matching code from nedb to `DbQuery`
 * Removed nedb dependency
+* Model & Controller are now their own namespace
 
 ## 0.5.0 (2018-01-05)
 
