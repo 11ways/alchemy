@@ -30,7 +30,6 @@
 		"mmmagic"           : "~0.4.6",
 		"mongodb"           : "~2.2.31",
 		"ncp"               : "~2.0.0",
-		"path-to-regexp"    : "~1.7.0",
 		"postcss"           : "~6.0.14",
 		"protoblast"        : "~0.3.10",
 		"qs"                : "~6.5.0",
