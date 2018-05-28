@@ -10,6 +10,7 @@
 * Model & Controller are now their own namespace
 * Added a Base class for the Client side + client conduit & controller
 * Custom elements should inherit from `Alchemy.Element` from now on
+* Add `Base#getClientPath` and `Base#getClientPathAfter`
 
 ## 0.5.0 (2018-01-05)
 
