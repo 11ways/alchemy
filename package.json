@@ -23,7 +23,7 @@
 		"expirable"         : "~0.1.0",
 		"formidable"        : "~1.1.1",
 		"graceful-fs"       : "~4.1.9",
-		"hawkejs"           : "~1.2.3",
+		"hawkejs"           : "skerit/hawkejs",
 		"jsondiffpatch"     : "~0.2.4",
 		"mime"              : "~1.3.4",
 		"minimist"          : "~1.2.0",
