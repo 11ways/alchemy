@@ -12,6 +12,7 @@
 * Custom elements should inherit from `Alchemy.Element` from now on
 * Add `Base#getClientPath` and `Base#getClientPathAfter`
 * Add `Conduit#chooseBestLocale(locales)` in order to get the best locale for the connection
+* Also check `data-breadcrumbs` when activating links
 
 ## 0.5.0 (2018-01-05)
 
