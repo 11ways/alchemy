@@ -13,6 +13,7 @@
 * Add `Base#getClientPath` and `Base#getClientPathAfter`
 * Add `Conduit#chooseBestLocale(locales)` in order to get the best locale for the connection
 * Also check `data-breadcrumbs` when activating links
+* Starting the server with `--debug-requirements` will print info about which files are loaded using `alchemy.use`
 
 ## 0.5.0 (2018-01-05)
 
