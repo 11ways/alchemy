@@ -1,4 +1,8 @@
-## 1.0.0 (WIP)
+## 1.0.1 (2018-07-04)
+
+* Fix `mongodb` dependency version
+
+## 1.0.0 (2018-07-04)
 
 * Split up old `Document` into `DocumentList` and `Document` class
 * Add client-side `Document`, `Model` and `DocumentList` classes
