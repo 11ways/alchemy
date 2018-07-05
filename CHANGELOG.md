@@ -1,3 +1,7 @@
+## 1.0.2 (WIP)
+
+* Fix `DocumentList#available` always defaulting to the length of the current set
+
 ## 1.0.1 (2018-07-04)
 
 * Fix `mongodb` dependency version
