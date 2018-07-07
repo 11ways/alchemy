@@ -1,6 +1,7 @@
 ## 1.0.2 (WIP)
 
 * Fix `DocumentList#available` always defaulting to the length of the current set
+* Correctly parse `x-forwarded-for` in case there are multiple ip addresses
 
 ## 1.0.1 (2018-07-04)
 
