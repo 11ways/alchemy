@@ -5,6 +5,7 @@
 * Fix `DocumentList#findNextBatch` looking for the `_options` property, when it should be `options`
 * Also pass the `model` instance when creating a new `DocumentList` instance
 * Fix `Document#remove` not finding the $model property
+* `DocumentList` instances can now be created without any arguments
 
 ## 1.0.2 (2018-07-07)
 
