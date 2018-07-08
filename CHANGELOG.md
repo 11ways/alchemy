@@ -4,6 +4,7 @@
 * `Schema#addField(name, type, options)` now allows you to directly pass a `Schema` instance as a type
 * Fix `DocumentList#findNextBatch` looking for the `_options` property, when it should be `options`
 * Also pass the `model` instance when creating a new `DocumentList` instance
+* Fix `Document#remove` not finding the $model property
 
 ## 1.0.2 (2018-07-07)
 
