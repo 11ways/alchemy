@@ -1,6 +1,7 @@
 ## 1.0.3 (WIP)
 
 * Update alchemy info page
+* `Schema#addField(name, type, options)` now allows you to directly pass a `Schema` instance as a type
 
 ## 1.0.2 (2018-07-07)
 
