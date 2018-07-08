@@ -7,6 +7,7 @@
 * Fix `Document#remove` not finding the $model property
 * `DocumentList` instances can now be created without any arguments
 * Add `DocumentList#toSimpleArray()` which returns an array of simple objects with only the wanted fields
+* Add `DocumentList.unDry` static method to the server-side class, because static methods don't get added by default yet
 
 ## 1.0.2 (2018-07-07)
 
