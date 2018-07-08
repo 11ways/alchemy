@@ -1,3 +1,7 @@
+## 1.0.3 (WIP)
+
+* Update alchemy info page
+
 ## 1.0.2 (2018-07-07)
 
 * Fix `DocumentList#available` always defaulting to the length of the current set
