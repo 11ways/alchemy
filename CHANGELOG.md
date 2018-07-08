@@ -2,6 +2,7 @@
 
 * Update alchemy info page
 * `Schema#addField(name, type, options)` now allows you to directly pass a `Schema` instance as a type
+* Fix `DocumentList#findNextBatch` looking for the `_options` property, when it should be `options`
 
 ## 1.0.2 (2018-07-07)
 
