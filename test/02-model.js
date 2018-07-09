@@ -412,6 +412,25 @@ describe('Model', function() {
 
 				let prods = await product.find('all');
 				assert.strictEqual(prods.length, 3);
+
+				let removed = await prod.remove();
+
+				assert.strictEqual(removed, true);
+
+				prod = await product.findById('52efff000073570002000002');
+				assert.strictEqual(prod, null);
+
+				prods = await product.find('all');
+				assert.strictEqual(prods.length, 2, 'There should only be 3 products after one was removed');
+
+				// Ensure them again
+				await product.ensureIds(list);
+
+				prods = await product.find('all');
+				assert.strictEqual(prods.length, 3, 'There should only be 3 products: only the missing one should have been added');
+
+				prod = await product.findById('52efff000073570002000002');
+				assert.strictEqual(prod.name, 'keyboard');
 			});
 		});
 	});

@@ -11,6 +11,8 @@
 * Fix `Document#conduit` causing an infinite loop
 * Change `Model.cacheDuration` to `Model.cache_duration`
 * Make `Model#save()` and `Model#findById()` also return Pledges
+* Make `Model#remove()`, `Document#remove()`, `Model#ensureIds()` return Pledges
+* Make MongoDataSource use `findOneAndDelete` to remove a record
 
 ## 1.0.2 (2018-07-07)
 
