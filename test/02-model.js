@@ -36,20 +36,15 @@ describe('Model', function() {
 	});
 
 	/**
-	 * Adding fields to the new Model
+	 * The schema
 	 */
-	describe('.addField(name, type, options)', function() {
-		it('should add fields (during constitution)', function(done) {
-			Person.constitute(function addFields() {
+	describe('.schema', function() {
+		it('returns the Model\'s schema', function() {
+			assert.strictEqual(Person.schema instanceof Classes.Alchemy.Schema, true);
+		});
 
-				this.addField('firstname', 'String');
-				this.addField('lastname',  'String');
-				this.addField('nicknames', 'String', {array: true});
-				this.addField('birthdate', 'Date');
-				this.addField('male',      'Boolean');
-
-				done();
-			});
+		it('returns false when getting the schema of the base Model class', function() {
+			assert.strictEqual(Model.schema, false);
 		});
 	});
 
@@ -83,10 +78,28 @@ describe('Model', function() {
 	});
 
 	/**
+	 * Adding fields to the new Model
+	 */
+	describe('.addField(name, type, options)', function() {
+		it('should add fields (during constitution)', function(done) {
+			Person.constitute(function addFields() {
+
+				this.addField('firstname', 'String');
+				this.addField('lastname',  'String');
+				this.addField('nicknames', 'String', {array: true});
+				this.addField('birthdate', 'Date');
+				this.addField('male',      'Boolean');
+
+				done();
+			});
+		});
+	});
+
+	/**
 	 * Add Document methods
 	 */
 	describe('.setDocumentMethod(fnc)', function() {
-		it('adds a new method to the Document class', function() {
+		it('adds a new method to the linked Document class', function() {
 			Person.setDocumentMethod(function getFamiliarName() {
 				var result;
 
@@ -107,9 +120,58 @@ describe('Model', function() {
 	});
 
 	/**
+	 * Add Document properties
+	 */
+	describe('.setDocumentProperty(getter)', function() {
+		it('adds a new property getter to the linked Document class', function() {
+			Person.setDocumentProperty(function upper_firstname() {
+
+				if (!this.firstname) {
+					return '';
+				}
+
+				return this.firstname.toUpperCase();
+			});
+
+			var person = new Person.Document();
+
+			assert.strictEqual(person.upper_firstname, '');
+
+			person.firstname = 'test';
+
+			assert.strictEqual(person.upper_firstname, 'TEST');
+		});
+	});
+
+	/**
+	 * The name of a model
+	 */
+	describe('#name', function() {
+		it('should return the name of the model class', function() {
+			var person = Model.get('Person');
+			assert.strictEqual(person.name, Person.name);
+		});
+
+		it('should allow you to override the name per instance', function() {
+			var person = Model.get('Person'),
+			    second = Model.get('Person');
+
+			assert.strictEqual(person.name, 'Person');
+			assert.strictEqual(second.name, person.name);
+
+			// Now set a different name
+			second.name = 'SecondPerson';
+
+			assert.strictEqual(second.name, 'SecondPerson');
+			assert.strictEqual(person.name, 'Person');
+			assert.strictEqual(Model.get('Person').name, 'Person');
+		});
+	});
+
+	/**
 	 * Getting an instance of the model
 	 */
-	describe('.get(model_name)', function() {
+	describe('#get(model_name)', function() {
 		it('should create a new instance of the wanted model', function() {
 
 			var person = Model.get('Person');
@@ -123,7 +185,7 @@ describe('Model', function() {
 	/**
 	 * Saving data
 	 */
-	describe('.save(data, callback)', function() {
+	describe('#save(data, callback)', function() {
 
 		it('should save the data and call back with a DocumentList', function(done) {
 
@@ -153,7 +215,7 @@ describe('Model', function() {
 	/**
 	 * Getting data
 	 */
-	describe('.find(\'first\', options, callback)', function() {
+	describe('#find(\'first\', options, callback)', function() {
 		it('should find 1 document by ObjectId instance', function(done) {
 			Model.get('Person').find('first', {conditions: {_id: _id}}, function gotDocument(err, document) {
 
