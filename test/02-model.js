@@ -35,6 +35,58 @@ describe('Model', function() {
 		});
 	});
 
+	describe('.cache_duration', function() {
+		it('gets the current cache_duration', function() {
+			assert.strictEqual(Person.cache_duration, undefined);
+		});
+
+		it('gets the cache duration from the settings', function() {
+			alchemy.settings.model_query_cache_duration = '1 second';
+
+			assert.strictEqual(Person.cache_duration, '1 second');
+
+			alchemy.settings.model_query_cache_duration = '2 seconds';
+			assert.strictEqual(Person.cache_duration, '1 second', 'Changing the settings should not have affected the existing duration');
+
+			Person.cache_duration = null;
+			assert.strictEqual(Person.cache_duration, '2 seconds', 'After setting cache_duration to null, it should revert back to the settings value');
+		});
+
+		it('sets the duration for future caches', function() {
+
+			// Warning: this has ZERO effect after the cache has been made
+			Person.cache_duration = '3 seconds';
+			assert.strictEqual(Person.cache_duration, '3 seconds');
+
+			Person.cache_duration = '1 second';
+			assert.strictEqual(Person.cache_duration, '1 second');
+		});
+	});
+
+	describe('.cache', function() {
+		var Animal;
+
+		it('returns false if there is no duration set', function() {
+
+			Animal = Function.inherits('Alchemy.Model', function Animal(options) {
+				Animal.super.call(this, options);
+			});
+
+			Animal.cache_duration = null;
+			assert.strictEqual(Animal.cache_duration, '2 seconds');
+			Animal.cache_duration = false;
+			assert.strictEqual(Animal.cache_duration, false);
+
+			assert.strictEqual(Animal.cache, false);
+		});
+
+		it('returns the cache object', function() {
+			Person.cache_duration = '10 ms';
+			Animal.cache_duration = '10 ms';
+			assert.strictEqual(typeof Animal.cache, 'object');
+		});
+	});
+
 	/**
 	 * The schema
 	 */
