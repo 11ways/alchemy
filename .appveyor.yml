@@ -16,4 +16,4 @@ install:
 build: off
 version: '{build}'
 test_script:
-  - npm test
+  - npm run appveyor
