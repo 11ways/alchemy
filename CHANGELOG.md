@@ -10,6 +10,7 @@
 * Add `DocumentList.unDry` static method to the server-side class, because static methods don't get added by default yet
 * Fix `Document#conduit` causing an infinite loop
 * Change `Model.cacheDuration` to `Model.cache_duration`
+* Make `Model#save()` and `Model#findById()` also return Pledges
 
 ## 1.0.2 (2018-07-07)
 

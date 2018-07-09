@@ -32,6 +32,16 @@ describe('Model', function() {
 			});
 
 			assert.strictEqual(Person.super, Classes.Alchemy.Model.Model, true);
+
+			global.Event = Function.inherits('Alchemy.Model', function Event(options) {
+				Person.super.call(this, options);
+			});
+
+			assert.strictEqual(Event.super, Classes.Alchemy.Model.Model, true);
+
+			global.Product = Function.inherits('Alchemy.Model', function Product(options) {
+				Product.super.call(this, options);
+			});
 		});
 	});
 
@@ -133,7 +143,7 @@ describe('Model', function() {
 	 * Adding fields to the new Model
 	 */
 	describe('.addField(name, type, options)', function() {
-		it('should add fields (during constitution)', function(done) {
+		it('should add fields (during constitution) - Person example', function(done) {
 			Person.constitute(function addFields() {
 
 				this.addField('firstname', 'String');
@@ -141,6 +151,23 @@ describe('Model', function() {
 				this.addField('nicknames', 'String', {array: true});
 				this.addField('birthdate', 'Date');
 				this.addField('male',      'Boolean');
+
+				done();
+			});
+		});
+
+		it('should add fields (during constitution) - Event example', function(done) {
+			Event.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.hasAndBelongsToMany('Invited', 'Person');
+
+				done();
+			});
+		});
+
+		it('should add fields (during constitution) - Product example', function(done) {
+			Product.constitute(function addFields() {
+				this.addField('name', 'String');
 
 				done();
 			});
@@ -310,6 +337,81 @@ describe('Model', function() {
 				}
 
 				done();
+			});
+		});
+	});
+
+	describe('#findById(object_id, callback)', function() {
+		it('should find a single document by ObjectId instance', function(done) {
+			Model.get('Person').findById(_id, function gotPerson(err, person) {
+
+				if (err) {
+					return done(err);
+				}
+
+				assert.strictEqual(String(_id), String(person._id));
+				assert.strictEqual(person instanceof Classes.Alchemy.Document.Document, true);
+				done();
+			});
+		});
+
+		it('should find a single document by ObjectId string', function(done) {
+			Model.get('Person').findById(String(_id), function gotPerson(err, person) {
+
+				if (err) {
+					return done(err);
+				}
+
+				assert.strictEqual(String(_id), String(person._id));
+				assert.strictEqual(person instanceof Classes.Alchemy.Document.Document, true);
+				done();
+			});
+		});
+	});
+
+	describe('#ensureIds(list, callback)', function() {
+
+		var product,
+		    list;
+
+		list = [
+			{
+				_id   : '52efff000073570002000000',
+				name  : 'screen'
+			},
+			{
+				_id   : '52efff000073570002000001',
+				name  : 'mouse'
+			},
+			{
+				_id   : '52efff000073570002000002',
+				name  : 'keyboard'
+			}
+		];
+
+		it('should make sure the given ids & records exist in the database', async function() {
+
+			product = Model.get('Product');
+
+			await product.ensureIds(list, async function done(err) {
+
+				if (err) {
+					return done(err);
+				}
+
+				let prod;
+
+				prod = await product.findById('52efff000073570002000000');
+				assert.strictEqual(prod.name, 'screen');
+
+				prod = await product.findById('52efff000073570002000001');
+				assert.strictEqual(prod.name, 'mouse');
+
+				prod = await product.findById('52efff000073570002000002');
+				assert.strictEqual(prod.name, 'keyboard');
+
+				let prods = await product.find('all');
+				assert.strictEqual(prods.length, 3);
 			});
 		});
 	});

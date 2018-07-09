@@ -54,6 +54,142 @@ describe('Document', function() {
 		});
 	});
 
+	describe('#save(callback)', function() {
+		it('should save a new record to the database', function(done) {
+
+			var doc = new Classes.Alchemy.Document.Person();
+
+			doc.firstname = 'Roel',
+			doc.lastname = 'Van Gils';
+			doc.birthdate = new Date('1979-05-21');
+			doc.male = true;
+
+			doc.save(function saved(err) {
+
+				if (err) {
+					return done(err);
+				}
+
+				try {
+					assert.strictEqual(String(doc._id).isObjectId(), true);
+				} catch (err) {
+					return done(err);
+				}
+
+				Model.get('Person').find('all', {sort: {created: -1}}, function found(err, list) {
+
+					if (err) {
+						return done(err);
+					}
+
+					try {
+						assert.strictEqual(list.length, 2);
+						assert.strictEqual(list.available, 2);
+
+						assert.strictEqual(list[0].firstname, 'Roel');
+						global.person_roel = list[0];
+						global.two_person_list = list;
+
+					} catch (err) {
+						return done(err);
+					}
+
+					done();
+				});
+			});
+		});
+
+		it('should save updated document records to the database', function(done) {
+
+			var updated;
+			var new_updated;
+
+			Model.get('Person').find('first', {sort: {created: -1}}, function found(err, roel) {
+
+				if (err) {
+					return done(err);
+				}
+
+				if (!roel) {
+					return done(new Error('Did not find expected Person record'));
+				}
+
+				try {
+					assert.strictEqual(roel.firstname, 'Roel');
+					updated = getUpdatedTimestamp(roel);
+				} catch (err) {
+					return done(err);
+				}
+
+				roel.firstname = 'Roelie';
+
+				roel.save(function saved(err) {
+
+					if (err) {
+						return done(err);
+					}
+
+					Model.get('Person').find('first', {sort: {created: -1}}, function found(err, roel) {
+
+						if (err) {
+							return done(err);
+						}
+
+						try {
+							assert.strictEqual(roel.firstname, 'Roelie');
+							checkUpdatedIncrease(roel);
+						} catch (err) {
+							return done(err);
+						}
+
+						roel.firstname = 'Roel';
+
+						roel.save(function savedAgain(err) {
+
+							if (err) {
+								return done(err);
+							}
+
+							Model.get('Person').find('first', {sort: {created: -1}}, function found(err, roel) {
+
+								if (err) {
+									return done(err);
+								}
+
+								try {
+									assert.strictEqual(roel.firstname, 'Roel');
+									checkUpdatedIncrease(roel);
+								} catch (err) {
+									return done(err);
+								}
+
+								done();
+							});
+						});
+					});
+				});
+			});
+
+			function checkUpdatedIncrease(doc) {
+				new_updated = getUpdatedTimestamp(doc);
+
+				if (new_updated > updated) {
+					// Ok
+				} else {
+					throw new Error('The updated timestamp did not increase');
+				}
+
+				updated = new_updated;
+			}
+
+			function getUpdatedTimestamp(doc) {
+				var result = Number(doc.updated);
+				assert.strictEqual(typeof result, 'number');
+				return result;
+			}
+		});
+	});
+
 	describe('#clone()', function() {
 		it('should clone the Document', function() {
 
