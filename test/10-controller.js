@@ -27,6 +27,104 @@ describe('Controller', function() {
 			assert.strictEqual(PersonController.actions.test, test_function);
 		});
 	});
+
+	describe('#cookie(name)', function() {
+		var url;
+
+		it('should return the value of the cookie', function(done) {
+
+			// Make sure cookies are DISABLED
+			alchemy.settings.cookies = false;
+
+			Router.add({
+				name    : 'Cookietest',
+				handler : 'Person#cookietest',
+				paths   : '/cookie_test',
+				methods : 'get'
+			});
+
+			url = Router.getUrl('Cookietest');
+
+			url.host = 'localhost';
+			url.protocol = 'http';
+			url.port = alchemy.settings.port;
+
+			url = String(url);
+
+			PersonController.setAction(function cookietest(conduit) {
+
+				var response = '';
+
+				response += (this.cookie('my_cookie') || '');
+
+				this.cookie('my_cookie', 'some_value');
+
+				conduit.end(response);
+			});
+
+			Function.series(function disabledCookies(next) {
+				Blast.fetch(url, function gotResponse(err, res, body) {
+
+					if (err) {
+						return next(err);
+					}
+
+					assert.strictEqual(res.headers['set-cookie'], undefined);
+					assert.strictEqual(body, '');
+					next();
+				});
+			}, function setACookie(next) {
+
+				// Enable cookies
+				alchemy.settings.cookies = true;
+
+				Blast.fetch(url, function gotResponse(err, res, body) {
+
+					if (err) {
+						return next(err);
+					}
+
+					assert.deepStrictEqual(res.headers['set-cookie'], [ 'my_cookie=some_value; path=/' ]);
+					assert.strictEqual(body, '');
+					next();
+				});
+			}, function setAgain(next) {
+				Blast.fetch({
+					url     : url,
+					headers : {
+						'Cookie': 'my_cookie=SENTVALUE'
+					}
+				}, function gotResponse(err, res, body) {
+
+					if (err) {
+						return next(err);
+					}
+
+					assert.deepStrictEqual(res.headers['set-cookie'], [ 'my_cookie=some_value; path=/' ]);
+					assert.strictEqual(body, 'SENTVALUE');
+					next();
+				});
+			}, done);
+		});
+
+		it('should parse Cookie headers case insensitively', function(done) {
+			Blast.fetch({
+				url     : url,
+				headers : {
+					'cOoKiE': 'my_cookie=whatever'
+				}
+			}, function gotResponse(err, res, body) {
+
+				if (err) {
+					return next(err);
+				}
+
+				assert.deepStrictEqual(res.headers['set-cookie'], [ 'my_cookie=some_value; path=/' ]);
+				assert.strictEqual(body, 'whatever');
+				done();
+			});
+		});
+	});
 });
 
 describe('Router', function() {
