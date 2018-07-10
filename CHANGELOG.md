@@ -15,6 +15,8 @@
 * Make MongoDataSource use `findOneAndDelete` to remove a record
 * Switched from `slug` dependency to `mollusc`, which is a fork with several fixes
 * When the `port` setting is `null`, a random port will be tried. All other falsy values will still not start the server.
+* `Alchemy#usePlugin(name, options)` now accepts a `path_to_plugin` option
+* `Alchemy#usePath()` will no longer load `test` folders
 
 ## 1.0.2 (2018-07-07)
 

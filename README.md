@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://protoblast.develry.be/media/static/alchemy-small.png?width=30" alt="Alchemy logo"/>
+  <img src="https://protoblast.develry.be/media/static/alchemy-small.png" width=30 alt="Alchemy logo"/>
   <b>Alchemy</b>
 </h1>
 <div align="center">
