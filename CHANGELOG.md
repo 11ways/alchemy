@@ -14,6 +14,7 @@
 * Make `Model#remove()`, `Document#remove()`, `Model#ensureIds()` return Pledges
 * Make MongoDataSource use `findOneAndDelete` to remove a record
 * Switched from `slug` dependency to `mollusc`, which is a fork with several fixes
+* When the `port` setting is `null`, a random port will be tried. All other falsy values will still not start the server.
 
 ## 1.0.2 (2018-07-07)
 
