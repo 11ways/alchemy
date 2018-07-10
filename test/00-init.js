@@ -45,7 +45,3 @@ describe('Alchemy', function() {
 		});
 	});
 });
-
-
-
-
