@@ -19,6 +19,7 @@
 * `Alchemy#usePath()` will no longer load `test` folders
 * Fix paths equaling a prefix not working as you expect them to
 * Don't start socket.io when `settings.websockets` is false
+* Fix `Alchemy#broadcast(type, data)` not working
 
 ## 1.0.2 (2018-07-07)
 
