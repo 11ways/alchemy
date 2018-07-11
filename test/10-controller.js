@@ -125,6 +125,74 @@ describe('Controller', function() {
 			});
 		});
 	});
+
+	describe('#render(template)', function() {
+		var url;
+
+		before(function() {
+			Router.add({
+				name    : 'Rendertest',
+				handler : 'Person#rendertest',
+				paths   : '/render_test',
+				methods : 'get'
+			});
+
+			url = Router.getUrl('Rendertest');
+
+			url.host = 'localhost';
+			url.protocol = 'http';
+			url.port = alchemy.settings.port;
+
+			url = String(url);
+
+			PersonController.setAction(function rendertest(conduit) {
+				var view = this.param('view');
+
+				console.log('RENDERING.....', view);
+
+				this.render(view);
+			});
+		});
+
+		it('should render the given template with a status of 200', function(done) {
+			Blast.fetch(url + '?view=single', function gotResponse(err, res, body) {
+
+				assert.strictEqual(!!err, false);
+				assert.strictEqual(body, 'this is a single ejs');
+				assert.strictEqual(res.statusCode, 200);
+				done();
+			});
+		});
+
+		it.skip('should render an error when a non-existing template is requested', function(done) {
+			Blast.fetch(url + '?view=does_not_exist_at_all', function gotResponse(err, res, body) {
+				// Right now a 404 view is returned with a 200 status code.
+				// I guess this should actually all be 500s?
+			});
+		});
+
+		it('should render views with expansions', function(done) {
+			Blast.fetch(url + '?view=test', function gotResponse(err, res, body) {
+
+				assert.strictEqual(!!err, false);
+				assert.strictEqual(res.statusCode, 200);
+
+				if (body.indexOf('\nthis is the main block\n') == -1) {
+					throw new Error('Main block content not found');
+				}
+
+				if (body.indexOf('Main block will go here:') == -1) {
+					throw new Error('Expanded view "body" not found');
+				}
+
+				if (body.indexOf('Body will go here:') == -1) {
+					throw new Error('Expanded view "base" not found');
+				}
+
+				done();
+			});
+		});
+	});
 });
 
 describe('Router', function() {

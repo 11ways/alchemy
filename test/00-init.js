@@ -44,4 +44,18 @@ describe('Alchemy', function() {
 			Datasource.create('mongo', 'default', {uri: mongo_uri});
 		});
 	});
+
+	describe('#pathResolve(...path_to_dirs)', function() {
+		it('resolves all arguments to a directory', function() {
+			assert.strictEqual(alchemy.pathResolve('/a', 'b', 'c'), '/a/b/c');
+			assert.strictEqual(alchemy.pathResolve('/a'), '/a');
+		});
+	});
+
+	describe('#addViewDirectory(path, weight = 10)', function() {
+		it('adds a new view directory', function() {
+			let test_views = alchemy.pathResolve(__filename, '..', 'view');
+			alchemy.addViewDirectory(test_views);
+		});
+	});
 });
