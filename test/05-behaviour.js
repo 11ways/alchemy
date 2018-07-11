@@ -35,7 +35,7 @@ describe('RevisionBehaviour', function() {
 
 			let bird = Model.get('Bird'),
 			    behaviours = bird.behaviours,
-			    rev_model = bird.behaviours.RevisionBehaviour.revision_model;
+			    rev_model = bird.getBehaviour('revision').revision_model;
 
 			assert.strictEqual(rev_model.name, 'BirdDataRevision');
 		});
