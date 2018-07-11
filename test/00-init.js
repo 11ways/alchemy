@@ -47,8 +47,13 @@ describe('Alchemy', function() {
 
 	describe('#pathResolve(...path_to_dirs)', function() {
 		it('resolves all arguments to a directory', function() {
-			assert.strictEqual(alchemy.pathResolve('/a', 'b', 'c'), '/a/b/c');
-			assert.strictEqual(alchemy.pathResolve('/a'), '/a');
+
+			if (process.platform == 'win32') {
+				assert.strictEqual(alchemy.pathResolve('/a', 'b', 'c'), 'C:\\a\\b\\c');
+			} else {
+				assert.strictEqual(alchemy.pathResolve('/a', 'b', 'c'), '/a/b/c');
+				assert.strictEqual(alchemy.pathResolve('/a'), '/a');
+			}
 		});
 	});
 
