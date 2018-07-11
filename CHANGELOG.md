@@ -21,6 +21,7 @@
 * Don't start socket.io when `settings.websockets` is false
 * Fix `Alchemy#broadcast(type, data)` not working
 * Add `Model#getBehaviour(name)`, which gets an existing instance on the current model
+* Add `Document#revert(revisions)` to revert to an earlier version of the document
 
 ## 1.0.2 (2018-07-07)
 

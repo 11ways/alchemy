@@ -1,8 +1,10 @@
 var assert = require('assert');
 
 describe('RevisionBehaviour', function() {
-	var alpha_record,
-	    Bird;
+	var alpha_second_version,
+	    alpha_record,
+	    Bird,
+	    bird;
 
 	before(function(next) {
 		next = Function.regulate(next);
@@ -33,8 +35,9 @@ describe('RevisionBehaviour', function() {
 
 		it('should create a new Model for this revision data', function() {
 
-			let bird = Model.get('Bird'),
-			    behaviours = bird.behaviours,
+			bird = Model.get('Bird');
+
+			let behaviours = bird.behaviours,
 			    rev_model = bird.getBehaviour('revision').revision_model;
 
 			assert.strictEqual(rev_model.name, 'BirdDataRevision');
@@ -42,11 +45,8 @@ describe('RevisionBehaviour', function() {
 	});
 
 	describe('#afterSave(record, options, created)', function() {
-		var bird;
 
 		it('should add a revision number to each saved record of the attached model', async function() {
-
-			bird = Model.get('Bird');
 
 			let records = await bird.save({name: 'alpha', age: 3});
 			let record = records[0];
@@ -67,12 +67,10 @@ describe('RevisionBehaviour', function() {
 	});
 
 	describe('#revision_model', function() {
-		var bird_dr,
-		    bird;
+		var bird_dr;
 
 		it('should contain revision data', async function() {
 
-			bird = Model.get('Bird');
 			bird_dr = Model.get('BirdDataRevision');
 
 			let records = await bird_dr.find('all');
@@ -87,6 +85,9 @@ describe('RevisionBehaviour', function() {
 
 			assert.strictEqual(String(created_revision.record_id), String(alpha_record._id));
 			assert.strictEqual(String(updated_revision.record_id), String(alpha_record._id));
+
+			assert.strictEqual(created_revision.revision, 0);
+			assert.strictEqual(updated_revision.revision, 1);
 
 			let created_delta = created_revision.delta;
 			let updated_delta = updated_revision.delta;
@@ -107,6 +108,52 @@ describe('RevisionBehaviour', function() {
 
 			assert.deepStrictEqual(updated_delta.age, [3, 4]);
 			assert.deepStrictEqual(updated_delta.__r, [0, 1]);
+
+			alpha_second_version = await bird.find('first');
+		});
+	});
+
+	describe('Document#revert(revisions)', function() {
+		it('should revert an amount of versions', async function() {
+
+			let record = await bird.find('first');
+			let alpha_third_version = await bird.find('first');
+
+			alpha_third_version.name = 'alpha_three';
+			alpha_third_version.age = 5;
+			await alpha_third_version.save();
+
+			let to_revert = await bird.find('first');
+
+			assert.strictEqual(alpha_second_version.name, 'alpha');
+			assert.strictEqual(to_revert.name, 'alpha_three');
+			assert.strictEqual(to_revert.age, 5);
+			assert.strictEqual(to_revert.__r, 2);
+
+			// Revert 2 versions
+			await to_revert.revert(2);
+
+			assert.strictEqual(to_revert.name, 'alpha');
+			assert.strictEqual(to_revert.age, 3);
+			assert.strictEqual(to_revert.__r, 0);
+		});
+
+		it('should default to 1 revert', async function() {
+
+			let to_revert = await bird.find('first');
+
+			// Should still be the latest version
+			assert.strictEqual(alpha_second_version.name, 'alpha');
+			assert.strictEqual(to_revert.name, 'alpha_three');
+			assert.strictEqual(to_revert.age, 5);
+			assert.strictEqual(to_revert.__r, 2);
+
+			// Revert 1 revision
+			await to_revert.revert();
+
+			assert.strictEqual(to_revert.name, 'alpha');
+			assert.strictEqual(to_revert.age, 4);
+			assert.strictEqual(to_revert.__r, 1);
 		});
 	});
 });
