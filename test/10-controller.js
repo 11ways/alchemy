@@ -148,8 +148,6 @@ describe('Controller', function() {
 			PersonController.setAction(function rendertest(conduit) {
 				var view = this.param('view');
 
-				console.log('RENDERING.....', view);
-
 				this.render(view);
 			});
 		});

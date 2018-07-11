@@ -58,4 +58,40 @@ describe('Alchemy', function() {
 			alchemy.addViewDirectory(test_views);
 		});
 	});
+
+	describe('#styleMiddleware(req, res, next)', function() {
+		it('is the middleware that compiles & serves CSS, LESS & SCSS files', function(done) {
+			var url = 'http://localhost:' + alchemy.settings.port + '/stylesheets/alchemy-info.css';
+
+			Blast.fetch(url, function gotResponse(err, res, body) {
+
+				if (err) {
+					return done(err);
+				}
+
+				assert.strictEqual(res.statusCode, 200);
+				assert.strictEqual(res.headers['content-type'], 'text/css; charset=utf-8');
+				assert.strictEqual(body.length > 100, true);
+				done();
+			});
+		});
+	});
+
+	describe('#scriptMiddleware(req, res, next)', function() {
+		it('is the middleware that serves script files', function(done) {
+			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/alchemy.js';
+
+			Blast.fetch(url, function gotResponse(err, res, body) {
+
+				if (err) {
+					return done(err);
+				}
+
+				assert.strictEqual(res.statusCode, 200);
+				assert.strictEqual(res.headers['content-type'], 'application/javascript; charset=utf-8');
+				assert.strictEqual(body.length > 100, true);
+				done();
+			});
+		});
+	});
 });
