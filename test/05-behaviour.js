@@ -66,6 +66,22 @@ describe('RevisionBehaviour', function() {
 		});
 	});
 
+	describe('#revision_model_class', function() {
+		it('returns a class constructor of the revision data model for the attached model', function() {
+
+			var bird_a = Model.get('Bird'),
+			    bird_b = Model.get('Bird');
+
+			assert.strictEqual(bird_a.getBehaviour('revision'), bird_a.getBehaviour('Revision'), 'An instance should return the same behaviour instance');
+			assert.notStrictEqual(bird_a.getBehaviour('revision'), bird_b.getBehaviour('revision'), 'Two different instances should return different behaviour instances');
+
+			let class_a = bird_a.getBehaviour('revision').revision_model_class,
+			    class_b = bird_b.getBehaviour('revision').revision_model_class;
+
+			assert.strictEqual(class_a, class_b);
+		});
+	});
+
 	describe('#revision_model', function() {
 		var bird_dr;
 
@@ -154,6 +170,155 @@ describe('RevisionBehaviour', function() {
 			assert.strictEqual(to_revert.name, 'alpha');
 			assert.strictEqual(to_revert.age, 4);
 			assert.strictEqual(to_revert.__r, 1);
+		});
+	});
+});
+
+describe('PublishableBehaviour', function() {
+	var PublishablePost,
+	    PreparedPost;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		Function.parallel(function(next) {
+
+			PublishablePost = Function.inherits('Alchemy.Model', function PublishablePost(options) {
+				PublishablePost.super.call(this, options);
+			});
+
+			PublishablePost.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('body', 'Text');
+
+				this.addBehaviour('publishable');
+
+				next();
+			});
+		}, function(next) {
+
+			PreparedPost = Function.inherits('Alchemy.Model', function PreparedPost(options) {
+				PreparedPost.super.call(this, options);
+			});
+
+			PreparedPost.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('body', 'Text');
+				this.addField('publish_date', 'Datetime', {title: 'My publish date'});
+
+				this.addBehaviour('publishable');
+
+				next();
+			});
+		}, next);
+	});
+
+	describe('.attached(schema, new_options)', function() {
+		it('should add a publish_date field if it does not yet exist', function() {
+
+			let pd_field = PublishablePost.schema.getField('publish_date');
+
+			assert.strictEqual(pd_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(pd_field.title, 'Publish date');
+		});
+
+		it('should use the existing publish_date field if already added', function() {
+
+			let pd_field = PreparedPost.schema.getField('publish_date');
+
+			assert.strictEqual(pd_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(pd_field.title, 'My publish date');
+		});
+	});
+
+	describe('#beforeFind(options)', function() {
+
+		var no_pd_doc,
+		    future_doc,
+		    PP;
+
+		it('needs some documents first', async function() {
+
+			PP = Model.get('PublishablePost');
+
+			let doc = PP.createDocument();
+
+			doc.name = 'No publish date';
+			doc.body = 'body';
+
+			await doc.save();
+
+			no_pd_doc = await PP.findById(doc._id);
+
+			assert.strictEqual(String(no_pd_doc._id), String(doc._id));
+
+			doc = PP.createDocument();
+			doc.name = 'Future';
+			doc.body = 'future';
+
+			let future_date = new Date();
+			future_date.add(1, 'week');
+
+			doc.publish_date = future_date;
+
+			await doc.save();
+
+			future_doc = await PP.findById(doc._id);
+
+			assert.strictEqual(String(future_doc.publish_date), String(doc.publish_date));
+		});
+
+		it('should find all documents by default', async function() {
+
+			let records = await PP.find('all');
+
+			assert.strictEqual(records.length, 2);
+		});
+
+		it('should only find currently publishable documents when the `publish_date` option is true', async function() {
+
+			let records = await PP.find('all', {publish_date: true});
+
+			assert.strictEqual(records.length, 1, 'Only 1 document should have been returned');
+			assert.strictEqual(String(records[0]._id), String(no_pd_doc._id), 'The returned document should have been the one without a date');
+		});
+
+		it('should find all documents published at the given `publish_date`', async function() {
+
+			let records,
+			    date;
+
+			date = new Date();
+			date.add(2, 'weeks');
+
+			records = await PP.find('all', {publish_date: date});
+
+			assert.strictEqual(records.length, 2);
+		});
+
+		it('should work when conditions are already given', async function() {
+
+			let records = await PP.find('all', {
+				publish_date: true,
+				conditions: {
+					$and: {
+						body: 'body'
+					}
+				}
+			});
+
+			assert.strictEqual(records.length, 1);
+
+			records = await PP.find('all', {
+				publish_date: true,
+				conditions: {
+					$and: [{
+						body: 'body'
+					}]
+				}
+			});
+
+			assert.strictEqual(records.length, 1);
 		});
 	});
 });
