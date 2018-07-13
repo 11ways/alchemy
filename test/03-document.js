@@ -43,7 +43,7 @@ describe('Document', function() {
 		});
 	});
 
-	describe('#model', function() {
+	describe('#$model', function() {
 		it('should return an instance of the Model of the Document', function() {
 			var new_doc = new Classes.Alchemy.Document.Person(),
 			    model;
@@ -51,6 +51,21 @@ describe('Document', function() {
 			model = new_doc.$model;
 
 			assert.strictEqual(model.constructor.name, 'Person');
+		});
+	});
+
+	describe('#$attributes', function() {
+		it('creates an `attributes` property on the fly', function() {
+
+			var new_doc = new Classes.Alchemy.Document.Person();
+
+			assert.strictEqual(new_doc.$_attributes, undefined, 'New document instances should have no $_attributes');
+
+			let $attributes = new_doc.$attributes;
+
+			assert.strictEqual(typeof $attributes, 'object', 'The $attributes getter should have created an object');
+			assert.strictEqual(new_doc.$_attributes, $attributes);
+			assert.strictEqual(new_doc.$attributes, $attributes, 'It should always return the same object instance')
 		});
 	});
 
@@ -187,6 +202,51 @@ describe('Document', function() {
 				assert.strictEqual(typeof result, 'number');
 				return result;
 			}
+		});
+	});
+
+
+	describe('#markChangedField(name, value)', function() {
+		it('marks the document as having been changed', async function() {
+
+			var doc = await Model.get('Person').find('first');
+
+			assert.strictEqual(doc.hasChanged(), false);
+
+			assert.strictEqual(doc.firstname, 'Jelle');
+
+			// Let's change the firstname
+			doc.firstname = 'Someone else';
+
+			assert.strictEqual(doc.hasChanged(), true, 'The document should have been marked as changed');
+			assert.strictEqual(doc.hasChanged('lastname'), false, 'The lastname did not change');
+			assert.strictEqual(doc.hasChanged('firstname'), true, 'The firstname did change');
+
+			// Let's change the firstname back
+			doc.firstname = 'Jelle';
+
+			assert.strictEqual(doc.hasChanged(), false, 'After manually restoring the value, `hasChanged()` should be false');
+		});
+	});
+
+	describe('#resetFields()', function() {
+		it('should return the document as it was', async function() {
+
+			var doc = await Model.get('Person').find('first');
+
+			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.firstname, 'Jelle');
+
+			doc.firstname = 'Reset this';
+
+			assert.strictEqual(doc.hasChanged(), true);
+			assert.strictEqual(doc.hasChanged('firstname'), true);
+
+			doc.resetFields();
+
+			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.hasChanged('firstname'), false);
+			assert.strictEqual(doc.firstname, 'Jelle');
 		});
 	});
 
