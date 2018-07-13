@@ -230,7 +230,7 @@ describe('Document', function() {
 	});
 
 	describe('#resetFields()', function() {
-		it('should return the document as it was', async function() {
+		it('should reset the document as it was', async function() {
 
 			var doc = await Model.get('Person').find('first');
 
@@ -247,6 +247,49 @@ describe('Document', function() {
 			assert.strictEqual(doc.hasChanged(), false);
 			assert.strictEqual(doc.hasChanged('firstname'), false);
 			assert.strictEqual(doc.firstname, 'Jelle');
+
+			let first = doc.$main;
+			doc.resetFields();
+			let second = doc.$main;
+
+			assert.notStrictEqual(first, second, '`resetFields()` should always create a new object');
+
+			let new_doc = Model.get('Person').createDocument();
+
+			first = new_doc.$main;
+			new_doc.resetFields();
+			second = new_doc.$main;
+
+			assert.notStrictEqual(first, second, '`resetFields()` should always create a new object, even when nothing changed');
+		});
+	});
+
+	describe('#resetFields(fields)', function() {
+		it('should reset the given fields as they were', async function() {
+
+			var doc = await Model.get('Person').find('first');
+
+			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.firstname, 'Jelle');
+
+			doc.firstname = 'Roel';
+			doc.lastname = 'Van Gils';
+
+			assert.strictEqual(doc.hasChanged(), true);
+			assert.strictEqual(doc.hasChanged('firstname'), true);
+			assert.strictEqual(doc.hasChanged('lastname'), true);
+
+			doc.resetFields(['lastname']);
+
+			assert.strictEqual(doc.hasChanged(), true);
+			assert.strictEqual(doc.hasChanged('firstname'), true);
+			assert.strictEqual(doc.hasChanged('lastname'), false);
+
+			doc.resetFields(['firstname']);
+
+			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.hasChanged('firstname'), false);
+			assert.strictEqual(doc.hasChanged('lastname'), false);
 		});
 	});
 
@@ -266,7 +309,6 @@ describe('Document', function() {
 			assert.strictEqual(clone.firstname,      'Clonie');
 			assert.strictEqual(person_doc.firstname, 'Jelle');
 			assert.strictEqual(clone.familiar_name,  'Clonie');
-
 		});
 	});
 
