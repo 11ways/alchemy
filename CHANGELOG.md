@@ -1,3 +1,7 @@
+## 1.0.4 (WIP)
+
+* Don't create a `db` instance when the MongoDatasource fails to connect
+
 ## 1.0.3 (2018-07-12)
 
 * Update alchemy info page
