@@ -437,6 +437,35 @@ describe('SluggableBehaviour', function() {
 			assert.strictEqual(String(doc._id).isObjectId(), true);
 		});
 
+		it('should generate the same slug for an existing record', async function() {
+
+			var doc = await sp_model.find('first'),
+			    slug = 'this-is-a-document';
+
+			assert.strictEqual(doc.name, 'This is a document');
+			assert.strictEqual(doc.slug, slug);
+
+			// Unset the slug
+			doc.slug = '';
+
+			assert.strictEqual(doc.slug, '');
+
+			await doc.save();
+
+			assert.strictEqual(doc.slug, slug);
+		});
+
+		it.skip('should generate another slug for duplicates', async function() {
+
+			var doc = sp_model.createDocument();
+
+			doc.name = 'This is a different document';
+			doc.slug = 'this-is-a-document';
+
+			await doc.save();
+
+			assert.strictEqual(doc.slug, 'this-is-a-different-document');
+		});
 	});
 
 });
