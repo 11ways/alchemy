@@ -429,6 +429,11 @@ describe('Document', function() {
 			// It SHOULD contain the same values
 			assert.deepStrictEqual(clone.$main, person_doc.$main);
 
+			assert.strictEqual(clone instanceof Informer, true);
+			assert.strictEqual(person_doc instanceof Informer, true);
+
+			assert.strictEqual(Object.alike(person_doc, clone), true, 'Object.alike() should work on these documents');
+
 			clone.firstname = 'Clonie';
 
 			assert.strictEqual(clone.firstname,      'Clonie');

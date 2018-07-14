@@ -8,6 +8,7 @@
 * Add `Document#needsToBeSaved()`
 * Make `Document#hasChanged()` detect changes in object values
 * Don't pass undefined `version` argument to `indexedDB.open()`
+* Add `Document#[Blast.alikeSymbol]` method to check for likeness
 
 ## 1.0.3 (2018-07-12)
 
