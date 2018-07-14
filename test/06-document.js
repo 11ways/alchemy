@@ -59,7 +59,9 @@ describe('Document', function() {
 
 			var new_doc = new Classes.Alchemy.Document.Person();
 
-			assert.strictEqual(new_doc.$_attributes, undefined, 'New document instances should have no $_attributes');
+			if (!new_doc.hasObjectFields()) {
+				assert.strictEqual(new_doc.$_attributes, undefined, 'New document instances should have no $_attributes');
+			}
 
 			let $attributes = new_doc.$attributes;
 
@@ -332,6 +334,51 @@ describe('Document', function() {
 			assert.strictEqual(doc.lastname, 'De Loecker');
 
 			assert.strictEqual(doc.hasChanged(), false);
+		});
+
+		it('should notice changes in object & schema fields', async function() {
+			var model = Model.get('WithSchemaField'),
+			    doc = model.createDocument();
+
+			doc.subschema = {
+				subname: 'subname',
+				subvalue: 'subvalue'
+			};
+
+			assert.strictEqual(doc.hasChanged(), true);
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false, 'The document has been saved, so it should no longer be marked as changed');
+
+			// Change subschema value
+			doc.subschema.subname = 'changed';
+
+			assert.strictEqual(doc.hasChanged(), true, 'The document was changed again after it has been saved, so it should be marked as changed again');
+
+			// Manually restore value
+			doc.subschema.subname = 'subname';
+
+			assert.strictEqual(doc.hasChanged(), false, 'The value was restored manually, so it should no longer be marked as changed');
+
+			doc.entries = [
+				{entryname: 'a'},
+				{entryname: 'b'}
+			];
+
+			assert.strictEqual(doc.hasChanged(), true);
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false);
+
+			let a = doc.entries[0],
+			    b = doc.entries[1];
+
+			doc.entries[0] = b;
+			doc.entries[1] = a;
+
+			assert.strictEqual(doc.hasChanged(), true, 'Two array values have been switched, so it should have been marked as changed');
 		});
 	});
 

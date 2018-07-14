@@ -2,7 +2,8 @@ var assert = require('assert');
 
 describe('Model', function() {
 
-	var data,
+	var WithSchemaField,
+	    data,
 	    _id;
 
 	data = {
@@ -170,6 +171,31 @@ describe('Model', function() {
 				this.addField('name', 'String');
 
 				done();
+			});
+		});
+
+		it('should be able to add schema as fields', function(next) {
+			next = Function.regulate(next);
+
+			WithSchemaField = Function.inherits('Alchemy.Model', function WithSchemaField(options) {
+				WithSchemaField.super.call(this, options);
+			});
+
+			WithSchemaField.constitute(function addFields() {
+				var schema = new Classes.Alchemy.Schema(this);
+
+				schema.addField('subname', 'String');
+				schema.addField('subvalue', 'String');
+
+				this.addField('subschema', schema);
+
+				var schema_two = new Classes.Alchemy.Schema(this);
+
+				schema_two.addField('entryname', 'String');
+
+				this.addField('entries', schema, {array: true});
+
+				next();
 			});
 		});
 	});

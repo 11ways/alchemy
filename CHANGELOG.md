@@ -6,6 +6,7 @@
 * Add `Document#resetFields()` to reset a document to its initial state
 * Fix SluggableBehaviour
 * Add `Document#needsToBeSaved()`
+* Make `Document#hasChanged()` detect changes in object values
 
 ## 1.0.3 (2018-07-12)
 
