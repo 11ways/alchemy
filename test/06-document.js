@@ -464,4 +464,26 @@ describe('Document', function() {
 			assert.strictEqual(does_not_exist, undefined);
 		});
 	});
+
+	describe('#remove()', function() {
+		it('should remove the current record', async function() {
+
+			var p_model,
+			    doc;
+
+			// Get the model instance
+			p_model = Model.get('Person');
+
+			doc = await p_model.find('first', {conditions: {firstname: 'Flo'}});
+
+			assert.strictEqual(doc.firstname, 'Flo');
+
+			// Remove it
+			doc.remove();
+
+			let removed_doc = await p_model.find('first', {conditions: {firstname: 'Flo'}});
+
+			assert.strictEqual(removed_doc, null);
+		});
+	});
 });
