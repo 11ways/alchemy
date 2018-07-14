@@ -322,3 +322,121 @@ describe('PublishableBehaviour', function() {
 		});
 	});
 });
+
+describe('SluggableBehaviour', function() {
+	var SlugPost,
+	    SlugPostOther,
+	    SlugPostExisting;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		Function.parallel(function(next) {
+
+			SlugPost = Function.inherits('Alchemy.Model', function SlugPost(options) {
+				SlugPost.super.call(this, options);
+			});
+
+			SlugPost.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('body', 'Text');
+
+				this.addBehaviour('sluggable');
+
+				next();
+			});
+		}, function(next) {
+
+			SlugPostOther = Function.inherits('Alchemy.Model', function SlugPostOther(options) {
+				SlugPostOther.super.call(this, options);
+			});
+
+			SlugPostOther.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('body', 'Text');
+
+				this.addBehaviour('sluggable');
+
+				next();
+			});
+		}, function(next) {
+			SlugPostExisting = Function.inherits('Alchemy.Model', function SlugPostExisting(options) {
+				SlugPostExisting.super.call(this, options);
+			});
+
+			SlugPostExisting.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('body', 'Text');
+				this.addField('slug', 'String', {title: 'Sluggish'})
+
+				this.addBehaviour('sluggable');
+
+				next();
+			});
+		}, next);
+	});
+
+	describe('.attached(schema, new_options)', function() {
+		it('should add a slug field if it does not yet exist', function() {
+
+			let slug_field = SlugPost.schema.getField('slug');
+
+			assert.strictEqual(slug_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(slug_field.title, 'Slug');
+		});
+
+		it('should use the existing slug field if already added', function() {
+
+			let slug_field = SlugPostExisting.schema.getField('slug');
+
+			assert.strictEqual(slug_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(slug_field.title, 'Sluggish');
+		});
+	});
+
+	describe('#beforeSave(date, options, creating)', function() {
+
+		var sp_model;
+
+		before(function() {
+			sp_model = new SlugPost();
+		});
+
+		it('should have generated a slug for new records', async function() {
+
+			var doc = sp_model.createDocument();
+
+			doc.name = 'This is a document';
+			doc.body = 'This is the body';
+
+			await doc.save();
+
+			assert.strictEqual(doc.slug, 'this-is-a-document');
+			assert.strictEqual(String(doc._id).isObjectId(), true);
+		});
+
+		it('should have generated a different slug for a record with the same name', async function() {
+
+			var doc = sp_model.createDocument();
+
+			doc.name = 'This is a document';
+			doc.body = 'This is the body of the other document';
+
+			await doc.save();
+
+			assert.strictEqual(doc.slug, 'this-is-a-document-2');
+			assert.strictEqual(String(doc._id).isObjectId(), true);
+
+			doc = sp_model.createDocument();
+			doc.name = 'This is a document';
+			doc.body = 'This is the body of the third document with the same name';
+
+			await doc.save();
+
+			assert.strictEqual(doc.slug, 'this-is-a-document-3');
+			assert.strictEqual(String(doc._id).isObjectId(), true);
+		});
+
+	});
+
+});
