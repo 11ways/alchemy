@@ -4,6 +4,8 @@
 * Add `Document#$attributes` property, where non-database values can be stored in
 * Add `Document#hasChanged(name)` method, to check if values have changed
 * Add `Document#resetFields()` to reset a document to its initial state
+* Fix SluggableBehaviour
+* Add `Document#needsToBeSaved()`
 
 ## 1.0.3 (2018-07-12)
 

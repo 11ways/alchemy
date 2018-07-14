@@ -293,6 +293,84 @@ describe('Document', function() {
 		});
 	});
 
+	describe('#hasChanged()', function() {
+
+		var p_model;
+
+		it('should say if a document has changed', async function() {
+
+			var doc;
+
+			// Get the model instance
+			p_model = Model.get('Person');
+
+			// Create a new record
+			doc = p_model.createDocument();
+
+			// The doc is new, so it has not changed
+			assert.strictEqual(doc.hasChanged(), false);
+
+			// Set something
+			doc.firstname = 'Griet';
+			doc.lastname = 'De Leener';
+
+			// Now the doc has changed
+			assert.strictEqual(doc.hasChanged(), true);
+
+			// Save the document
+			await doc.save();
+
+			// It should be false again!
+			assert.strictEqual(doc.hasChanged(), false, 'A document should be marked as unchanged after a save');
+		});
+
+		it('should not mark new documents with data as changed', function() {
+
+			var doc = p_model.createDocument({firstname: 'Patrick', lastname: 'De Loecker'});
+
+			assert.strictEqual(doc.firstname, 'Patrick');
+			assert.strictEqual(doc.lastname, 'De Loecker');
+
+			assert.strictEqual(doc.hasChanged(), false);
+		});
+	});
+
+	describe('#needsToBeSaved()', function() {
+		var p_model;
+
+		it('should say if a queried document needs to be saved', async function() {
+
+			var doc;
+
+			// Get the model instance
+			p_model = Model.get('Person');
+
+			doc = await p_model.find('first');
+
+			assert.strictEqual(doc.needsToBeSaved(), false);
+
+			// Change the firstname
+			doc.firstname = 'Whodis?';
+
+			// It has changed, so it needs saving
+			assert.strictEqual(doc.hasChanged(), true);
+			assert.strictEqual(doc.needsToBeSaved(), true);
+
+			// Create a new doc
+			doc = p_model.createDocument({firstname: 'Flo'});
+
+			assert.strictEqual(doc.hasChanged(), false, 'The document has not changed since its creation');
+			assert.strictEqual(doc.needsToBeSaved(), true, 'The document does need to be saved');
+
+			await doc.save();
+
+			assert.strictEqual(String(doc._id).isObjectId(), true);
+			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.needsToBeSaved(), false, 'The document has just been saved, so this should be false');
+		});
+	});
+
+
 	describe('#clone()', function() {
 		it('should clone the Document', function() {
 
