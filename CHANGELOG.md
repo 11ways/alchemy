@@ -7,6 +7,7 @@
 * Fix SluggableBehaviour
 * Add `Document#needsToBeSaved()`
 * Make `Document#hasChanged()` detect changes in object values
+* Don't pass undefined `version` argument to `indexedDB.open()`
 
 ## 1.0.3 (2018-07-12)
 
