@@ -217,6 +217,59 @@ describe('Model', function() {
 	});
 
 	/**
+	 * Add a belongsTo relation
+	 */
+	describe('.belongsTo(alias, model)', function() {
+		var Group,
+		    Member;
+
+		it('adds a new relation', function(next) {
+
+			Function.series(function(next) {
+
+				Group = Function.inherits('Alchemy.Model', function PeopleGroup(options) {
+					PeopleGroup.super.call(this, options);
+				});
+
+				Group.constitute(function addFields() {
+
+					// Group name
+					this.addField('name', 'String');
+
+					next();
+				});
+			}, function(next) {
+
+				Member = Function.inherits('Alchemy.Model', function Member(options) {
+					Member.super.call(this, options);
+				});
+
+				Member.constitute(function addFields() {
+
+					// Member name
+					this.addField('name', 'String');
+
+					// The group it belongs to
+					this.belongsTo('PeopleGroup');
+
+					next();
+				});
+			}, function done(err) {
+
+				if (err) {
+					return next(err);
+				}
+
+				let people_group_id = Member.getField('people_group_id');
+
+				assert.strictEqual(people_group_id instanceof Classes.Alchemy.BelongsToFieldType, true, 'Should have made a people_group_id field');
+				assert.strictEqual(people_group_id.parent_schema.name, 'Member');
+				next();
+			});
+		});
+	});
+
+	/**
 	 * Add Document methods
 	 */
 	describe('.setDocumentMethod(fnc)', function() {
