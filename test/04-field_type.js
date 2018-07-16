@@ -1,5 +1,31 @@
 var assert = require('assert');
 
+describe('FieldType', function() {
+
+	describe('translatable fields', function() {
+
+		it('handles translatable fields', async function() {
+
+			var model = Model.get('WithTranslation'),
+			    doc = model.createDocument();
+
+			doc.name = 'name';
+			doc.title = 'title';
+
+			await doc.save();
+
+			let saved_doc = await model.find('first');
+
+			assert.strictEqual(typeof saved_doc.title, 'object');
+			assert.strictEqual(saved_doc.title.__, 'title', 'Should have saved the title under the __ prefix');
+
+			// @TODO: should have overwritten the saved doc
+			//assert.strictEqual(doc.title.__, saved_doc.title.__);
+		});
+	});
+
+});
+
 describe('StringFieldType', function() {
 
 	var schema,

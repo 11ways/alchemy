@@ -3,6 +3,7 @@ var assert = require('assert');
 describe('Model', function() {
 
 	var WithSchemaField,
+	    WithTranslation,
 	    data,
 	    _id;
 
@@ -194,6 +195,21 @@ describe('Model', function() {
 				schema_two.addField('entryname', 'String');
 
 				this.addField('entries', schema, {array: true});
+
+				next();
+			});
+		});
+
+		it('should be able to add translatable fields', function(next) {
+			next = Function.regulate(next);
+
+			WithTranslation = Function.inherits('Alchemy.Model', function WithTranslation(options) {
+				WithTranslation.super.call(this, options);
+			});
+
+			WithTranslation.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('title', 'String', {translatable: true});
 
 				next();
 			});
