@@ -9,6 +9,7 @@
 * Make `Document#hasChanged()` detect changes in object values
 * Don't pass undefined `version` argument to `indexedDB.open()`
 * Add `Document#[Blast.alikeSymbol]` method to check for likeness
+* Add `Conduit#supports(feature)` to check for supported features (only async/await for now)
 
 ## 1.0.3 (2018-07-12)
 
