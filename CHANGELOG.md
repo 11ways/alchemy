@@ -11,6 +11,7 @@
 * Add `Document#[Blast.alikeSymbol]` method to check for likeness
 * Add `Conduit#supports(feature)` to check for supported features (only async/await for now)
 * Add `nodent-compiler` optional dependency for compiling async/await code for IE11
+* The `PATH_ROOT` constant can now take its value from an environment variable
 
 ## 1.0.3 (2018-07-12)
 
