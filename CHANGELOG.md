@@ -12,6 +12,7 @@
 * Add `Conduit#supports(feature)` to check for supported features (only async/await for now)
 * Add `nodent-compiler` optional dependency for compiling async/await code for IE11
 * The `PATH_ROOT` constant can now take its value from an environment variable
+* Make `loadHelpers`  recursively load in a directory of helpers
 
 ## 1.0.3 (2018-07-12)
 
