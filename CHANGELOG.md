@@ -14,6 +14,7 @@
 * The `PATH_ROOT` constant can now take its value from an environment variable
 * Make `loadHelpers`  recursively load in a directory of helpers
 * Add `Alchemy#isObjectId(obj)` to see if a string or object is an object id
+* `Model#findById(id)` will throw an error when an invalid object id is given
 
 ## 1.0.3 (2018-07-12)
 
