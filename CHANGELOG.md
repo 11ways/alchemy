@@ -15,6 +15,7 @@
 * Make `loadHelpers`  recursively load in a directory of helpers
 * Add `Alchemy#isObjectId(obj)` to see if a string or object is an object id
 * `Model#findById(id)` will throw an error when an invalid object id is given
+* Document constructor code is now moved to `setDataRecord` method, so it can be shared with the client-side instance
 
 ## 1.0.3 (2018-07-12)
 
