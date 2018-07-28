@@ -491,4 +491,55 @@ describe('Document', function() {
 			assert.strictEqual(removed_doc, null);
 		});
 	});
+
+	describe('#toDry()', function() {
+		it('should allow it to be json-dried', async function() {
+			var product = Model.get('Product');
+
+			let prod = await product.findById('52efff000073570002000000');
+			let prod_str = JSON.dry(prod, null, 4);
+			let undried_prod = JSON.undry(prod_str);
+
+			assert.strictEqual(undried_prod instanceof Blast.Classes.Alchemy.Document.Document, true);
+			assert.strictEqual(undried_prod.name, 'screen');
+		});
+	});
+});
+
+describe('Client.Document', function() {
+	var product;
+
+	before(function() {
+		product = Model.get('Product');
+	});
+
+	describe('Document#toHawkejs()', function() {
+		it('should return a client document', async function() {
+			let prod = await product.findById('52efff000073570002000000');
+
+			let client_prod = JSON.clone(prod, 'toHawkejs');
+
+			assert.strictEqual(client_prod instanceof Blast.Classes.Alchemy.Client.Document.Document, true);
+			assert.strictEqual(client_prod.name, 'screen');
+		});
+	});
+
+	describe('#clone()', function() {
+		it('should return a clone', async function() {
+			let prod = await product.findById('52efff000073570002000000');
+			let client_prod = JSON.clone(prod, 'toHawkejs');
+			let clone = JSON.clone(client_prod);
+
+			assert.strictEqual(client_prod instanceof Blast.Classes.Alchemy.Client.Document.Document, true);
+			assert.strictEqual(clone instanceof Blast.Classes.Alchemy.Client.Document.Document, true);
+			assert.strictEqual(client_prod.name, 'screen');
+			assert.strictEqual(clone.name, 'screen');
+
+			client_prod.name = 'something_else';
+
+			assert.strictEqual(client_prod.name, 'something_else');
+			assert.strictEqual(clone.name, 'screen');
+		});
+	});
+
 });
