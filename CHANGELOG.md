@@ -17,6 +17,7 @@
 * `Model#findById(id)` will throw an error when an invalid object id is given
 * Document constructor code is now moved to `setDataRecord` method, so it can be shared with the client-side instance
 * Add default `saveRecord` action to the Controller class, for client-side record saving
+* Add `getModel()` method to the custom Element class
 
 ## 1.0.3 (2018-07-12)
 
