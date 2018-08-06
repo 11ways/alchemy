@@ -16,6 +16,7 @@
 * Add `Alchemy#isObjectId(obj)` to see if a string or object is an object id
 * `Model#findById(id)` will throw an error when an invalid object id is given
 * Document constructor code is now moved to `setDataRecord` method, so it can be shared with the client-side instance
+* Add default `saveRecord` action to the Controller class, for client-side record saving
 
 ## 1.0.3 (2018-07-12)
 
