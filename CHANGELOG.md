@@ -19,6 +19,7 @@
 * Add default `saveRecord` action to the Controller class, for client-side record saving
 * Add `getModel()` method to the custom Element class
 * Fix Paginate component interpreting empty filters as a regex
+* Fix Paginate filter inputs not showing the filtered value
 
 ## 1.0.3 (2018-07-12)
 
