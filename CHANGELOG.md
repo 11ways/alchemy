@@ -20,6 +20,7 @@
 * Add `getModel()` method to the custom Element class
 * Fix Paginate component interpreting empty filters as a regex
 * Fix Paginate filter inputs not showing the filtered value
+* Add `filtering` and `sorting` boolean property to `Pagination#getConfig()` method result
 
 ## 1.0.3 (2018-07-12)
 
