@@ -21,6 +21,7 @@
 * Fix Paginate component interpreting empty filters as a regex
 * Fix Paginate filter inputs not showing the filtered value
 * Add `filtering` and `sorting` boolean property to `Pagination#getConfig()` method result
+* Check if manual slug values are actually valid
 
 ## 1.0.3 (2018-07-12)
 
