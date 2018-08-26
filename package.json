@@ -22,9 +22,8 @@
 		"chokidar"          : "~2.0.4",
 		"formidable"        : "~1.2.1",
 		"graceful-fs"       : "~4.1.11",
-		"hawkejs"           : "~1.2.7",
+		"hawkejs"           : "~1.2.8",
 		"jsondiffpatch"     : "~0.3.11",
-		"lru-cache"         : "~4.1.3",
 		"mime"              : "~2.3.1",
 		"minimist"          : "~1.2.0",
 		"mkdirp"            : "~0.5.1",
@@ -32,7 +31,7 @@
 		"mongodb"           : "~3.1.0",
 		"ncp"               : "~2.0.0",
 		"postcss"           : "~6.0.23",
-		"protoblast"        : "~0.5.11",
+		"protoblast"        : "~0.6.0",
 		"semver"            : "~5.5.0",
 		"mollusc"           : "~2.0.0",
 		"socket.io"         : "~2.1.1",
@@ -41,10 +40,10 @@
 		"temp"              : "~0.8.3",
 		"toobusy-js"        : "~0.5.1",
 		"uglify-es"         : "~3.3.9",
-		"useragent"         : "~2.2.1"
+		"useragent"         : "~2.3.0"
 	},
 	"optionalDependencies": {
-		"janeway"           : "~0.3.1",
+		"janeway"           : "~0.3.2",
 		"less"              : "~3.0.4",
 		"node-sass"         : "~4.9.0",
 		"nodent-compiler"   : "~3.2.6",
