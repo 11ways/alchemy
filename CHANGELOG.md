@@ -1,4 +1,4 @@
-## 1.0.4 (WIP)
+## 1.0.4 (2018-08-27)
 
 * Don't create a `db` instance when the MongoDatasource fails to connect
 * Add `Document#$attributes` property, where non-database values can be stored in
