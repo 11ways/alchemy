@@ -1,3 +1,7 @@
+## 1.0.5 (WIP)
+
+* Submitting data over a socket will now also be JSON-DRY'd
+
 ## 1.0.4 (2018-08-27)
 
 * Don't create a `db` instance when the MongoDatasource fails to connect
