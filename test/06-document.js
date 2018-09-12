@@ -27,6 +27,18 @@ describe('Document', function() {
 		});
 	});
 
+	describe('.isDocument(obj)', function() {
+		it('should say if argument is a document or not', function() {
+
+			var empty_doc = new Person.Document();
+
+			assert.strictEqual(Blast.Classes.Alchemy.Document.Document.isDocument(empty_doc), true);
+			assert.strictEqual(Person.Document.isDocument(empty_doc), true);
+
+			assert.strictEqual(Person.Document.isDocument({}), false);
+		});
+	});
+
 	describe('model field properties', function() {
 		it('should refer to the $main object', function() {
 			assert.strictEqual(person_doc.firstname, person_doc.$main.firstname);

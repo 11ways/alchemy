@@ -95,7 +95,9 @@ describe('Alchemy', function() {
 			return;
 		}
 
-		it('is the middleware that serves script files', function(done) {
+		// @TODO: There no longer is a simple alchemy.js script file,
+		// should test with something else
+		it.skip('is the middleware that serves script files', function(done) {
 			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/alchemy.js';
 
 			Blast.fetch(url, function gotResponse(err, res, body) {

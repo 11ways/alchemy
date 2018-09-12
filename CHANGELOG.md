@@ -2,6 +2,8 @@
 
 * Submitting data over a socket will now also be JSON-DRY'd
 * Allow the server to use the client-side only controller if no server-side controller is found
+* Add validator classes
+* Add `Document.isDocument(obj)` static method
 
 ## 1.0.4 (2018-08-27)
 
