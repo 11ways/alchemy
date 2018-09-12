@@ -5,6 +5,7 @@
 * Add validator classes
 * Add `Document.isDocument(obj)` static method
 * Make the save methods use a `Document` instance instead of a simple object
+* Add `Alchemy#findPathToBinarySync()` for finding a path to a binary
 
 ## 1.0.4 (2018-08-27)
 
