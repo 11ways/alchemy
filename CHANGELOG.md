@@ -4,6 +4,7 @@
 * Allow the server to use the client-side only controller if no server-side controller is found
 * Add validator classes
 * Add `Document.isDocument(obj)` static method
+* Make the save methods use a `Document` instance instead of a simple object
 
 ## 1.0.4 (2018-08-27)
 
