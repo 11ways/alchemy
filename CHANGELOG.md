@@ -7,6 +7,7 @@
 * Make the save methods use a `Document` instance instead of a simple object
 * Add `Alchemy#findPathToBinarySync()` for finding a path to a binary
 * Fix copying & moving files on mac os
+* `Schema#addAssociation()` will no longer add a localKey if it already exists
 
 ## 1.0.4 (2018-08-27)
 
