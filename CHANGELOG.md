@@ -9,6 +9,7 @@
 * Fix copying & moving files on mac os
 * `Schema#addAssociation()` will no longer add a localKey if it already exists
 * Allow passing options to `Document#addAssociatedData()` and make it return a pledge
+* Also clear the client-side model cache when clearing the server-side class cache
 
 ## 1.0.4 (2018-08-27)
 
