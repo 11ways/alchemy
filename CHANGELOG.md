@@ -11,6 +11,7 @@
 * Allow passing options to `Document#addAssociatedData()` and make it return a pledge
 * Also clear the client-side model cache when clearing the server-side class cache
 * Add export/import functionality
+* Clone object with `toHawkejs` method before stringifying when calling `Conduit#end()`
 
 ## 1.0.4 (2018-08-27)
 
