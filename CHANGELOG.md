@@ -12,6 +12,7 @@
 * Also clear the client-side model cache when clearing the server-side class cache
 * Add export/import functionality
 * Clone object with `toHawkejs` method before stringifying when calling `Conduit#end()`
+* Add `undefined` "from" property to postcss options to prevent annoying warning
 
 ## 1.0.4 (2018-08-27)
 
