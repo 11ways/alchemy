@@ -1,3 +1,5 @@
+## 1.0.6 (WIP)
+
 ## 1.0.5 (2018-10-18)
 
 * Submitting data over a socket will now also be JSON-DRY'd
