@@ -22,7 +22,7 @@
 		"chokidar"          : "~2.0.4",
 		"formidable"        : "~1.2.1",
 		"graceful-fs"       : "~4.1.11",
-		"hawkejs"           : "~1.2.9",
+		"hawkejs"           : "skerit/hawkejs",
 		"jsondiffpatch"     : "~0.3.11",
 		"mime"              : "~2.3.1",
 		"minimist"          : "~1.2.0",
