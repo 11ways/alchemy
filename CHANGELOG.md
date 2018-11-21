@@ -1,6 +1,8 @@
 ## 1.0.6 (WIP)
 
 * Add `Document#is_new_record` property
+* Fix `Document#[Symbol(alike)]` method
+* Fix bug in SluggableBehaviour always assuming an existing record will be found
 
 ## 1.0.5 (2018-10-18)
 
