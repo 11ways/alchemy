@@ -3,6 +3,7 @@
 * Add `Document#is_new_record` property
 * Fix `Document#[Symbol(alike)]` method
 * Fix bug in SluggableBehaviour always assuming an existing record will be found
+* Work around adding document methods before parent model is ready
 
 ## 1.0.5 (2018-10-18)
 
