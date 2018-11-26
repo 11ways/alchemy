@@ -4,6 +4,8 @@
 * Fix `Document#[Symbol(alike)]` method
 * Fix bug in SluggableBehaviour always assuming an existing record will be found
 * Work around adding document methods before parent model is ready
+* Make client-side Document classes inherit from correct parent
+* Allow querying for extraneous, out-of-schema fields by passing the `extraneous` option
 
 ## 1.0.5 (2018-10-18)
 
