@@ -7,6 +7,7 @@
 * Make client-side Document classes inherit from correct parent
 * Allow querying for extraneous, out-of-schema fields by passing the `extraneous` option
 * Fix renderings of client-side Controller actions
+* Use aggregate `sortByPath` in client-side IndexedDB search
 
 ## 1.0.5 (2018-10-18)
 
