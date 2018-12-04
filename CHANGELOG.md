@@ -10,6 +10,7 @@
 * Use aggregate `sortByPath` in client-side IndexedDB search
 * Add `Alchemy.Client.Document.getClassForUndry()` method
 * `Model#saveRecord()` will now throw an error when a regular object is passed instead of a Document instance
+* Add HTML field type
 
 ## 1.0.5 (2018-10-18)
 
