@@ -12,6 +12,7 @@
 * `Model#saveRecord()` will now throw an error when a regular object is passed instead of a Document instance
 * Add HTML field type
 * Convert raw datasource data back to app-readable data after a create or update
+* Add `Document#getLocalVersion()` and `Document#getLocalVersionIfNewer()` for in the browser
 
 ## 1.0.5 (2018-10-18)
 
