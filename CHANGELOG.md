@@ -13,6 +13,7 @@
 * Add HTML field type
 * Convert raw datasource data back to app-readable data after a create or update
 * Add `Document#getLocalVersion()` and `Document#getLocalVersionIfNewer()` for in the browser
+* Convert document data using `toServerSaveRecord` method before sending to server
 
 ## 1.0.5 (2018-10-18)
 
