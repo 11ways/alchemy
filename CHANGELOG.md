@@ -14,6 +14,7 @@
 * Convert raw datasource data back to app-readable data after a create or update
 * Add `Document#getLocalVersion()` and `Document#getLocalVersionIfNewer()` for in the browser
 * Convert document data using `toServerSaveRecord` method before sending to server
+* Set a reference to the current controller on the `conduit` instance
 
 ## 1.0.5 (2018-10-18)
 
