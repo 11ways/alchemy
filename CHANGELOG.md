@@ -2,6 +2,7 @@
 
 * Setting `prefer: "client"` and `layout` property on a Route will let the client render the action once the base layout is loaded
 * Add default `Conduit#notAuthorized()` and `Conduit#forbidden()` method
+* Add support for some basic `policy` property on a Route.
 
 ## 1.0.6 (2018-12-06)
 
