@@ -5,6 +5,7 @@
 * Add support for some basic `policy` property on a Route
 * Make the `Scene#interceptOpenUrl` method set the internal `breadcrumb` variable
 * Add appcache support
+* The `offline_clients` setting needs to be truthy in order to send an appcache manifest
 
 ## 1.0.6 (2018-12-06)
 
