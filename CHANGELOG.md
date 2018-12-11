@@ -4,6 +4,7 @@
 * Add default `Conduit#notAuthorized()` and `Conduit#forbidden()` method
 * Add support for some basic `policy` property on a Route
 * Make the `Scene#interceptOpenUrl` method set the internal `breadcrumb` variable
+* Add appcache support
 
 ## 1.0.6 (2018-12-06)
 
