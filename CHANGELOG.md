@@ -6,6 +6,7 @@
 * Make the `Scene#interceptOpenUrl` method set the internal `breadcrumb` variable
 * Add appcache support
 * The `offline_clients` setting needs to be truthy in order to send an appcache manifest
+* Fix `Schema#getField()` not looking in the subschema of a SchemaFieldType
 
 ## 1.0.6 (2018-12-06)
 
