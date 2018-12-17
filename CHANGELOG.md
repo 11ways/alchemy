@@ -7,6 +7,7 @@
 * Add appcache support
 * The `offline_clients` setting needs to be truthy in order to send an appcache manifest
 * Fix `Schema#getField()` not looking in the subschema of a SchemaFieldType
+* Fix `Model#find('count')` returning wrong value when result is 0
 
 ## 1.0.6 (2018-12-06)
 
