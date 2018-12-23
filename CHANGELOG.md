@@ -9,6 +9,7 @@
 * Fix `Schema#getField()` not looking in the subschema of a SchemaFieldType
 * Fix `Model#find('count')` returning wrong value when result is 0
 * Add `Alchemy#getMedHash()` function to get a simple, non-verification hash of a file
+* The `Conduit#body` property can now be overwritten
 
 ## 1.0.6 (2018-12-06)
 
