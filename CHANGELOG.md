@@ -10,6 +10,7 @@
 * Fix `Model#find('count')` returning wrong value when result is 0
 * Add `Alchemy#getMedHash()` function to get a simple, non-verification hash of a file
 * The `Conduit#body` property can now be overwritten
+* Allow json-dry data from logged-in users during a readDataSource request
 
 ## 1.0.6 (2018-12-06)
 
