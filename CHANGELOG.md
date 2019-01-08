@@ -14,6 +14,7 @@
 * Add `FieldType#datasource` property
 * Add `Datasource.setSupport(name, value)` and `Datasource.supports(name)`
 * Use `Datasource.supports('objectid')` to see if it understands ObjectID instances
+* Add `Alchemy#statPath(path, options)` function
 
 ## 1.0.6 (2018-12-06)
 
