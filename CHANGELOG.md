@@ -15,6 +15,7 @@
 * Add `Datasource.setSupport(name, value)` and `Datasource.supports(name)`
 * Use `Datasource.supports('objectid')` to see if it understands ObjectID instances
 * Add `Alchemy#statPath(path, options)` function
+* Allow `Model.addField()` to override already existing fields
 
 ## 1.0.6 (2018-12-06)
 
