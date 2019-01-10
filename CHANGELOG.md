@@ -16,6 +16,7 @@
 * Use `Datasource.supports('objectid')` to see if it understands ObjectID instances
 * Add `Alchemy#statPath(path, options)` function
 * Allow `Model.addField()` to override already existing fields
+* Add pledge support to `Alchemy#openUrl()`
 
 ## 1.0.6 (2018-12-06)
 
