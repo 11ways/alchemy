@@ -1,3 +1,7 @@
+## 1.0.8 (2019-01-12)
+
+* Fix for package.json dependency version error
+
 ## 1.0.7 (2019-01-12)
 
 * Setting `prefer: "client"` and `layout` property on a Route will let the client render the action once the base layout is loaded
