@@ -4,6 +4,8 @@ var assert = require('assert'),
     fs = require('fs'),
     mongo_uri;
 
+let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
+
 // Make sure janeway doesn't start
 process.env.DISABLE_JANEWAY = 1;
 
@@ -122,6 +124,30 @@ describe('Alchemy', function() {
 		});
 	});
 
+	describe('#copyFile(source, path, callback)', function() {
+		it('should copy a file', function(done) {
+			var target_path = libpath.resolve(PATH_TEMP, '__test' + Date.now() + '.js');
+
+			alchemy.copyFile(test_script_path, target_path, function copied(err) {
+
+				if (err) {
+					throw err;
+				}
+
+				done();
+			});
+		});
+
+		it('should return an error when the source does not exist', function(done) {
+			var target_path = libpath.resolve(PATH_TEMP, '__test' + Date.now() + '.js');
+
+			alchemy.copyFile(libpath.resolve(__dirname, 'does_not_exist.js'), target_path, function copied(err) {
+				assert.strictEqual(!!err, true);
+				done();
+			});
+		});
+	});
+
 	describe('#downloadFile(url, options, callback)', function() {
 		it('should download the file and return the filepath', function(done) {
 
@@ -139,8 +165,7 @@ describe('Alchemy', function() {
 
 				assert.strictEqual(name, 'test.js');
 
-				var fs_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js'),
-				    result = fs.readFileSync(fs_path, 'utf8');
+				var result = fs.readFileSync(test_script_path, 'utf8');
 
 				if (result.indexOf('This is a test script') == -1) {
 					throw new Error('Test script file does not contain expected content');
