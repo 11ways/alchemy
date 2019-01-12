@@ -1,2 +1,3 @@
 ignore:
-  - "lib/init/devwatch.js"  # ignore development script
+  - "lib/init/devwatch.js" # development script
+  - "lib/app/conduit/electron_conduit.js" # deprecated electron conduit
