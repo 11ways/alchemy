@@ -113,4 +113,29 @@ describe('Alchemy', function() {
 			});
 		});
 	});
+
+	describe('#findPathToBinarySync(name)', function() {
+		it('should find the path of a wanted binary', function() {
+
+			var wanted,
+			    result,
+			    second;
+
+			if (process.platform == 'win32') {
+				// @TODO: Sole this in some way?
+				return;
+			} else {
+				wanted = 'ls';
+			}
+
+			result = alchemy.findPathToBinarySync('ls');
+
+			assert.notStrictEqual(result, false, 'The `ls` command was not found');
+
+			// Look for the preferred path first, but it should not be found now
+			second = alchemy.findPathToBinarySync('ls', '/non/existing/binary/ls');
+
+			assert.strictEqual(second, result);
+		});
+	});
 });
