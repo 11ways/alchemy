@@ -1,5 +1,7 @@
 var assert = require('assert'),
     MongoUnit = require('mongo-unit'),
+    libpath = require('path'),
+    fs = require('fs'),
     mongo_uri;
 
 // Make sure janeway doesn't start
@@ -95,10 +97,16 @@ describe('Alchemy', function() {
 			return;
 		}
 
+		before(function() {
+			// Add a new script directory
+			alchemy.addScriptDirectory(libpath.resolve(__dirname, 'assets', 'scripts'));
+		});
+
 		// @TODO: There no longer is a simple alchemy.js script file,
 		// should test with something else
-		it.skip('is the middleware that serves script files', function(done) {
-			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/alchemy.js';
+		it('is the middleware that serves script files', function(done) {
+
+			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/test.js';
 
 			Blast.fetch(url, function gotResponse(err, res, body) {
 
@@ -108,7 +116,46 @@ describe('Alchemy', function() {
 
 				assert.strictEqual(res.statusCode, 200);
 				assert.strictEqual(res.headers['content-type'], 'application/javascript; charset=utf-8');
-				assert.strictEqual(body.length > 100, true);
+				assert.strictEqual(body.length > 20, true);
+				done();
+			});
+		});
+	});
+
+	describe('#downloadFile(url, options, callback)', function() {
+		it('should download the file and return the filepath', function(done) {
+
+			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/test.js';
+
+			alchemy.downloadFile(url, function downloaded(err, filepath, name) {
+
+				if (err) {
+					throw err;
+				}
+
+				if (!filepath) {
+					throw new Error('File does not seem to have downloaded');
+				}
+
+				assert.strictEqual(name, 'test.js');
+
+				var fs_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js'),
+				    result = fs.readFileSync(fs_path, 'utf8');
+
+				if (result.indexOf('This is a test script') == -1) {
+					throw new Error('Test script file does not contain expected content');
+				}
+
+				done();
+			});
+		});
+
+		it('should return a 404 error when downloading non-existing path', function(done) {
+			alchemy.downloadFile('http://localhost:' + alchemy.settings.port + '/scripts/does_not_exist.js', function downloaded(err, filepath, name) {
+
+				assert.strictEqual(filepath, undefined);
+				assert.strictEqual(name, undefined);
+				assert.strictEqual(err.number, 404);
 				done();
 			});
 		});

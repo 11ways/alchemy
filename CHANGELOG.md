@@ -19,6 +19,7 @@
 * Add pledge support to `Alchemy#openUrl()`
 * `Alchemy#findPathToBinarySync()` will now also look in the `/bin/` directory
 * Deprecate `Alchemy#List()`
+* Testing: Add `Alchemy#downloadFile()` test & fix `Alchemy#scriptMiddleware()` test
 
 ## 1.0.6 (2018-12-06)
 
