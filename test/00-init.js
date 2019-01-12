@@ -124,6 +124,26 @@ describe('Alchemy', function() {
 		});
 	});
 
+	describe('#getFileInfo(path, options, callback)', function() {
+		it('should lookup file info', function(done) {
+
+			alchemy.getFileInfo(test_script_path, function gotInfo(err, info) {
+
+				if (err) {
+					throw err;
+				}
+
+				assert.strictEqual(info.hash, 'd9ad8ceda0c6617b9166647772c50d72aa793521');
+				assert.strictEqual(info.mimetype, 'text/plain');
+				assert.strictEqual(info.size, 86);
+				assert.strictEqual(info.name, 'test');
+				assert.strictEqual(info.filename, 'test.js');
+
+				done();
+			});
+		});
+	});
+
 	describe('#copyFile(source, path, callback)', function() {
 		it('should copy a file', function(done) {
 			var target_path = libpath.resolve(PATH_TEMP, '__test' + Date.now() + '.js');
