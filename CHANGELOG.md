@@ -18,6 +18,7 @@
 * Allow `Model.addField()` to override already existing fields
 * Add pledge support to `Alchemy#openUrl()`
 * `Alchemy#findPathToBinarySync()` will now also look in the `/bin/` directory
+* Deprecate `Alchemy#List()`
 
 ## 1.0.6 (2018-12-06)
 
