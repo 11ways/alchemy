@@ -1,6 +1,7 @@
 ## 1.1.0 (WIP)
 
 * Add `Schema#getDatasource()` which returns a pledge that resolves to the datasource
+* `Alchemy#requirePlugin(name, attempt)` will now attempt to load the plugin if it hasn't been done yet
 
 ## 1.0.8 (2019-01-12)
 
