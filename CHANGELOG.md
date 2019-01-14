@@ -1,3 +1,7 @@
+## 1.1.0 (WIP)
+
+* Add `Schema#getDatasource()` which returns a pledge that resolves to the datasource
+
 ## 1.0.8 (2019-01-12)
 
 * Fix for package.json dependency version error
