@@ -115,7 +115,7 @@ describe('Document', function() {
 						assert.strictEqual(list.length, 2);
 						assert.strictEqual(list.available, 2);
 
-						assert.strictEqual(list[0].firstname, 'Roel');
+						assert.strictEqual(list[0].firstname, 'Roel', 'The returned list is not in the correct order');
 						global.person_roel = list[0];
 						global.two_person_list = list;
 
