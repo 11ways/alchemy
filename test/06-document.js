@@ -112,8 +112,8 @@ describe('Document', function() {
 					}
 
 					try {
-						assert.strictEqual(list.length, 2);
-						assert.strictEqual(list.available, 2);
+						assert.strictEqual(list.length, 3);
+						assert.strictEqual(list.available, 3);
 
 						assert.strictEqual(list[0].firstname, 'Roel', 'The returned list is not in the correct order');
 						global.person_roel = list[0];
@@ -227,7 +227,7 @@ describe('Document', function() {
 
 			assert.strictEqual(doc.hasChanged(), false);
 
-			assert.strictEqual(doc.firstname, 'Jelle');
+			assert.strictEqual(doc.firstname, 'Griet');
 
 			// Let's change the firstname
 			doc.firstname = 'Someone else';
@@ -237,7 +237,7 @@ describe('Document', function() {
 			assert.strictEqual(doc.hasChanged('firstname'), true, 'The firstname did change');
 
 			// Let's change the firstname back
-			doc.firstname = 'Jelle';
+			doc.firstname = 'Griet';
 
 			assert.strictEqual(doc.hasChanged(), false, 'After manually restoring the value, `hasChanged()` should be false');
 		});
@@ -249,7 +249,7 @@ describe('Document', function() {
 			var doc = await Model.get('Person').find('first');
 
 			assert.strictEqual(doc.hasChanged(), false);
-			assert.strictEqual(doc.firstname, 'Jelle');
+			assert.strictEqual(doc.firstname, 'Griet');
 
 			doc.firstname = 'Reset this';
 
@@ -260,7 +260,7 @@ describe('Document', function() {
 
 			assert.strictEqual(doc.hasChanged(), false);
 			assert.strictEqual(doc.hasChanged('firstname'), false);
-			assert.strictEqual(doc.firstname, 'Jelle');
+			assert.strictEqual(doc.firstname, 'Griet');
 
 			let first = doc.$main;
 			doc.resetFields();
@@ -284,7 +284,7 @@ describe('Document', function() {
 			var doc = await Model.get('Person').find('first');
 
 			assert.strictEqual(doc.hasChanged(), false);
-			assert.strictEqual(doc.firstname, 'Jelle');
+			assert.strictEqual(doc.firstname, 'Griet');
 
 			doc.firstname = 'Roel';
 			doc.lastname = 'Van Gils';
@@ -325,8 +325,8 @@ describe('Document', function() {
 			assert.strictEqual(doc.hasChanged(), false);
 
 			// Set something
-			doc.firstname = 'Griet';
-			doc.lastname = 'De Leener';
+			doc.firstname = 'Patrick';
+			doc.lastname = 'De Loecker';
 
 			// Now the doc has changed
 			assert.strictEqual(doc.hasChanged(), true);

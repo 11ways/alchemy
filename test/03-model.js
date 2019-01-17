@@ -154,6 +154,9 @@ describe('Model', function() {
 				this.addField('birthdate', 'Date');
 				this.addField('male',      'Boolean');
 
+				this.belongsTo('Parent', 'Person');
+				this.hasMany('Children', 'Person', {foreignKey: 'parent_id'});
+
 				done();
 			});
 		});
@@ -363,26 +366,51 @@ describe('Model', function() {
 
 		it('should save the data and call back with a DocumentList', function(done) {
 
-			Model.get('Person').save(data, function saved(err, list) {
+			Function.series(function doGriet(next) {
 
-				if (err) {
-					return done(err);
-				}
+				var griet_data = {
+					firstname : 'Griet',
+					lastname  : 'De Leener',
+					male      : false
+				};
 
-				assert.strictEqual(list.length, 1);
+				Model.get('Person').save(griet_data, function saved(err, list) {
 
-				let document = list[0];
+					if (err) {
+						return next(err);
+					}
 
-				testDocument(document, data);
+					assert.strictEqual(list.length, 1);
 
-				// Save the _id for next tests
-				_id = document._id;
+					let document = list[0];
+					next(null, document);
+				});
 
-				// Save this for later tests
-				global.person_doc = document;
+			}, function doJelle(next, griet) {
 
-				done();
-			});
+				data.parent_id = griet._id;
+
+				Model.get('Person').save(data, function saved(err, list) {
+
+					if (err) {
+						return next(err);
+					}
+
+					assert.strictEqual(list.length, 1);
+
+					let document = list[0];
+
+					testDocument(document, data);
+
+					// Save the _id for next tests
+					_id = document._id;
+
+					// Save this for later tests
+					global.person_doc = document;
+
+					next(null, document);
+				});
+			}, done);
 		});
 	});
 
