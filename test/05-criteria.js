@@ -162,10 +162,6 @@ describe('Criteria', function() {
 				}
 			});
 
-			console.log('Records:', records);
-			console.dir(records.options.compile(), {depth: null})
-			console.dir(records.options.all_expressions, {depth: 3});
-
 			assert.strictEqual(records.length, 1);
 
 			let record = records[0];
