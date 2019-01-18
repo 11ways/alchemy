@@ -41,11 +41,14 @@ describe('Alchemy', function() {
 	describe('#start(callback)', function() {
 		it('should start the server', function(done) {
 			alchemy.start({silent: true}, function started() {
+
+				setTimeout(function() {
+					// Also create the mongodb datasource
+					Datasource.create('mongo', 'default', {uri: mongo_uri});
+				}, 50);
+
 				done();
 			});
-
-			// Also create the mongodb datasource
-			Datasource.create('mongo', 'default', {uri: mongo_uri});
 		});
 	});
 
