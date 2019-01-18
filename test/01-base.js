@@ -12,9 +12,9 @@ describe('Base', function() {
 	describe('.getAllChildren()', function() {
 		it('returns an array of all the children & grandchildren', function() {
 
-			var result = Classes.Alchemy.FieldType.getAllChildren();
+			var result = Classes.Alchemy.Field.Field.getAllChildren();
 
-			assert.strictEqual(result.length > 15, true, 'There are at least 15 FieldType classes');
+			assert.strictEqual(result.length > 15, true, 'There are at least 15 Field classes');
 
 			for (let i = 0; i < result.length; i++) {
 				assert.strictEqual(typeof result[i], 'function', 'All children should be functions');
@@ -24,16 +24,17 @@ describe('Base', function() {
 
 	describe('.getMember(name)', function() {
 		it('should return a member of a class group', function() {
-			var result = Classes.Alchemy.FieldType.getMember('Password');
+			var result = Classes.Alchemy.Field.Field.getMember('Password');
 
 			assert.strictEqual(typeof result, 'function');
 		});
 
 		it('allows being passed underscored names', function() {
-			var result = Classes.Alchemy.FieldType.getMember('has_and_belongs_to_many');
+
+			var result = Classes.Alchemy.Field.Field.getMember('has_and_belongs_to_many');
 
 			assert.strictEqual(typeof result, 'function');
-			assert.strictEqual(result.name, 'HasAndBelongsToManyFieldType');
+			assert.strictEqual(result.name, 'HasAndBelongsToMany');
 		});
 
 		it('returns null for classes that are not a group', function() {

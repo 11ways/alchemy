@@ -3,7 +3,7 @@
 * Add `Schema#getDatasource()` which returns a pledge that resolves to the datasource
 * `Alchemy#requirePlugin(name, attempt)` will now attempt to load the plugin if it hasn't been done yet
 * Add `Criteria` class, which replaces the messy `DbQuery` class and is a query builder to boot.
-* The `Datasource` class is now also available on the client side
+* The `Datasource` & `Field` class is now also available on the client side
 
 ## 1.0.8 (2019-01-12)
 

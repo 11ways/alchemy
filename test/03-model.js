@@ -265,7 +265,7 @@ describe('Model', function() {
 
 				let people_group_id = Member.getField('people_group_id');
 
-				assert.strictEqual(people_group_id instanceof Classes.Alchemy.BelongsToFieldType, true, 'Should have made a people_group_id field');
+				assert.strictEqual(people_group_id instanceof Classes.Alchemy.Field.BelongsTo, true, 'Should have made a people_group_id field');
 				assert.strictEqual(people_group_id.parent_schema.name, 'Member');
 				next();
 			});

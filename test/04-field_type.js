@@ -33,7 +33,7 @@ describe('StringFieldType', function() {
 
 	before(function() {
 		schema = new Classes.Alchemy.Schema();
-		field = new Classes.Alchemy.StringFieldType(schema, 'test');
+		field = new Classes.Alchemy.Field.String(schema, 'test');
 	});
 
 	describe('#cast(value)', function() {

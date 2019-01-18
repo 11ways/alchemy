@@ -29,7 +29,7 @@ describe('RevisionBehaviour', function() {
 
 			let __r = Bird.schema.getField('__r');
 
-			assert.strictEqual(__r instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(__r instanceof Classes.Alchemy.Field.Field, true);
 			assert.strictEqual(__r.title, 'Revision');
 		});
 
@@ -218,7 +218,7 @@ describe('PublishableBehaviour', function() {
 
 			let pd_field = PublishablePost.schema.getField('publish_date');
 
-			assert.strictEqual(pd_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(pd_field instanceof Classes.Alchemy.Field.Field, true);
 			assert.strictEqual(pd_field.title, 'Publish date');
 		});
 
@@ -226,7 +226,7 @@ describe('PublishableBehaviour', function() {
 
 			let pd_field = PreparedPost.schema.getField('publish_date');
 
-			assert.strictEqual(pd_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(pd_field instanceof Classes.Alchemy.Field.Field, true);
 			assert.strictEqual(pd_field.title, 'My publish date');
 		});
 	});
@@ -381,7 +381,7 @@ describe('SluggableBehaviour', function() {
 
 			let slug_field = SlugPost.schema.getField('slug');
 
-			assert.strictEqual(slug_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(slug_field instanceof Classes.Alchemy.Field.Field, true);
 			assert.strictEqual(slug_field.title, 'Slug');
 		});
 
@@ -389,7 +389,7 @@ describe('SluggableBehaviour', function() {
 
 			let slug_field = SlugPostExisting.schema.getField('slug');
 
-			assert.strictEqual(slug_field instanceof Classes.Alchemy.FieldType, true);
+			assert.strictEqual(slug_field instanceof Classes.Alchemy.Field.Field, true);
 			assert.strictEqual(slug_field.title, 'Sluggish');
 		});
 	});
