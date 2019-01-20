@@ -36,7 +36,7 @@
 		"mollusc"           : "~2.0.0",
 		"socket.io"         : "~2.2.0",
 		"socket.io-stream"  : "~0.9.1",
-		"sputnik"           : "~0.0.6",
+		"sputnik"           : "~0.1.0",
 		"temp"              : "~0.8.3",
 		"toobusy-js"        : "~0.5.1",
 		"uglify-es"         : "~3.3.9",
