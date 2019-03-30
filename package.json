@@ -43,7 +43,7 @@
 		"useragent"         : "~2.3.0"
 	},
 	"optionalDependencies": {
-		"janeway"           : "~0.3.3",
+		"janeway"           : "skerit/janeway",
 		"less"              : "~3.9.0",
 		"node-sass"         : "~4.11.0",
 		"nodent-compiler"   : "~3.2.11",
