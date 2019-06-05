@@ -50,7 +50,12 @@
   </sub>
 </div>
 
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fskerit%2Falchemy.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fskerit%2Falchemy?ref=badge_large)
+
 ## Getting started
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fskerit%2Falchemy.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fskerit%2Falchemy?ref=badge_shield)
+
 
 Create a shallow clone of the alchemy-skeleton repository:
 
