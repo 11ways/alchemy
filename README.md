@@ -69,6 +69,10 @@ Just installing the npm package can be done like this:
 
 # Quick start guide
 
+Alchemy makes heavy use of the **Protoblast** utility library, which extends the native objects with many new methods.
+Especially the `Function.inherits()` method is interesting, as that is the basis for the Alchemy class system.
+You can find extensive documentation on the library here: [https://protoblast.develry.be](https://protoblast.develry.be)
+
 ## File structure
 
 All of your project code should go into an `app` directory.
