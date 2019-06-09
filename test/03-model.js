@@ -33,6 +33,10 @@ describe('Model', function() {
 				Person.super.call(this, options);
 			});
 
+			Person.prepareProperty('sort', function sort() {
+				return {firstname: 1};
+			});
+
 			assert.strictEqual(Person.super, Classes.Alchemy.Model.Model, true);
 
 			global.Event = Function.inherits('Alchemy.Model', function Event(options) {
@@ -43,6 +47,18 @@ describe('Model', function() {
 
 			global.Product = Function.inherits('Alchemy.Model', function Product(options) {
 				Product.super.call(this, options);
+			});
+
+			global.Project = Function.inherits('Alchemy.Model', function Project(options) {
+				Project.super.call(this, options);
+			});
+
+			global.ProjectVersion = Function.inherits('Alchemy.Model', function ProjectVersion(options) {
+				ProjectVersion.super.call(this, options);
+			});
+
+			ProjectVersion.prepareProperty('sort', function sort() {
+				return {major: 1, minor: 1, patch: 1};
 			});
 		});
 	});
@@ -173,6 +189,28 @@ describe('Model', function() {
 		it('should add fields (during constitution) - Product example', function(done) {
 			Product.constitute(function addFields() {
 				this.addField('name', 'String');
+
+				done();
+			});
+		});
+
+		it('should add fields (during constitution) - Project example', function(done) {
+			Project.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.hasMany('Versions', 'ProjectVersion');
+
+				done();
+			});
+		});
+
+		it('should add fields (during constitution) - ProjectVersion example', function(done) {
+			ProjectVersion.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('major', 'Number');
+				this.addField('minor', 'Number');
+				this.addField('patch', 'Number');
+				this.addField('version_string', 'String');
+				this.belongsTo('Project');
 
 				done();
 			});
@@ -411,6 +449,16 @@ describe('Model', function() {
 					next(null, document);
 				});
 			}, done);
+		});
+	});
+
+	describe('#sort', function() {
+		it('should be used when no sort parameter is given', async function() {
+
+			var persons = await Model.get('Person').find('all');
+
+			assert.strictEqual(persons[0].firstname, 'Griet');
+			assert.strictEqual(persons[1].firstname, 'Jelle');
 		});
 	});
 

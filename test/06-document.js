@@ -217,8 +217,64 @@ describe('Document', function() {
 				return result;
 			}
 		});
-	});
 
+		it('should return a pledge', async function() {
+
+			var Project = Model.get('Project'),
+			    ProjectVersion = Model.get('ProjectVersion');
+
+			let project = Project.createDocument();
+			project.name = 'protoblast';
+
+			await project.save();
+
+			assert.strictEqual(String(project._id).isObjectId(), true);
+
+			let version_one = ProjectVersion.createDocument(),
+			    version_two = ProjectVersion.createDocument(),
+			    version_three = ProjectVersion.createDocument(),
+			    version_four = ProjectVersion.createDocument(),
+			    version_five = ProjectVersion.createDocument();
+
+			version_one.project_id = project._id;
+			version_two.project_id = project._id;
+			version_three.project_id = project._id;
+			version_four.project_id = project._id;
+			version_five.project_id = project._id;
+
+			version_one.major = 0;
+			version_one.minor = 1;
+			version_one.patch = 1;
+			version_one.version_string = '0.1.1';
+
+			version_two.major = 0;
+			version_two.minor = 2;
+			version_three.patch = 0;
+			version_one.version_string = '0.2.0';
+
+			version_three.major = 1;
+			version_three.minor = 0;
+			version_three.patch = 1;
+			version_three.version_string = '1.0.1';
+
+			version_four.major = 2;
+			version_four.minor = 0;
+			version_four.patch = 0;
+			version_four.version_string = '2.0.0';
+
+			version_five.major = 10;
+			version_five.minor = 0;
+			version_five.patch = 0;
+			version_five.version_string = '10.0.0';
+
+			// Save in random order
+			await version_four.save();
+			await version_two.save();
+			await version_three.save();
+			await version_one.save();
+			await version_five.save();
+		});
+	});
 
 	describe('#markChangedField(name, value)', function() {
 		it('marks the document as having been changed', async function() {
@@ -553,5 +609,4 @@ describe('Client.Document', function() {
 			assert.strictEqual(clone.name, 'screen');
 		});
 	});
-
 });
