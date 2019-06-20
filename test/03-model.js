@@ -460,6 +460,10 @@ describe('Model', function() {
 			assert.strictEqual(persons[0].firstname, 'Griet');
 			assert.strictEqual(persons[1].firstname, 'Jelle');
 		});
+
+		it.skip('should allow adding the model name before the field name', function() {
+			// @TODO: need to write this!
+		});
 	});
 
 	/**
