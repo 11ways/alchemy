@@ -4,6 +4,7 @@
 * `Alchemy#requirePlugin(name, attempt)` will now attempt to load the plugin if it hasn't been done yet
 * Add `Criteria` class, which replaces the messy `DbQuery` class and is a query builder to boot.
 * The `Datasource` & `Field` class is now also available on the client side
+* Typedefs in routes can now contain fields, like `/{[Model._id]custom_id_name}/`
 
 ## 1.0.8 (2019-01-12)
 
