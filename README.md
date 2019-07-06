@@ -52,10 +52,10 @@
 
 # Getting started
 
-Create a shallow clone of the alchemy-skeleton repository:
+You can create a new, empty app by executing this npm command:
 
 ```bash
-git clone --depth 1 https://github.com/skerit/alchemy-skeleton.git && rm -rf alchemy-skeleton/.git
+npm init alchemy your-app-name
 ```
 
 Then `npm install` the package.json contents.
