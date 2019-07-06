@@ -5,6 +5,7 @@
 * Add `Criteria` class, which replaces the messy `DbQuery` class and is a query builder to boot.
 * The `Datasource` & `Field` class is now also available on the client side
 * Typedefs in routes can now contain fields, like `/{[Model._id]custom_id_name}/`
+* Add `Models#load_external_schema` boolean property
 
 ## 1.0.8 (2019-01-12)
 
