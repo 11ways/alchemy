@@ -8,6 +8,7 @@
 * Add `Models#load_external_schema` boolean property
 * Add `second_format` option to Date & Datetime fields, allowing you to save Date as a timestamp
 * Add `Datasource#allows(name)` to see if read/create/remove/update is allowed
+* Add `Inode` namespace & `File` & `Directory` classes, as our way of dealing with files
 
 ## 1.0.8 (2019-01-12)
 
