@@ -7,6 +7,7 @@
 * Typedefs in routes can now contain fields, like `/{[Model._id]custom_id_name}/`
 * Add `Models#load_external_schema` boolean property
 * Add `second_format` option to Date & Datetime fields, allowing you to save Date as a timestamp
+* Add `Datasource#allows(name)` to see if read/create/remove/update is allowed
 
 ## 1.0.8 (2019-01-12)
 
