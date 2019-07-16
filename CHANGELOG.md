@@ -10,6 +10,8 @@
 * Add `Datasource#allows(name)` to see if read/create/remove/update is allowed
 * Add `Inode` namespace & `File` & `Directory` classes, as our way of dealing with files
 * Also set the `method` property on the client-side `Conduit` instance
+* Replace `Document.$main` object with save result
+* Add `Model#findByValues` and `Model#findAllByValues`
 
 ## 1.0.8 (2019-01-12)
 
