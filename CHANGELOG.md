@@ -12,6 +12,7 @@
 * Also set the `method` property on the client-side `Conduit` instance
 * Replace `Document.$main` object with save result
 * Add `Model#findByValues` and `Model#findAllByValues`
+* Add `Router#serveDependencyFile()` for when you want to serve a file from within a dependency
 
 ## 1.0.8 (2019-01-12)
 
