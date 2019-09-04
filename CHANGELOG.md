@@ -14,6 +14,7 @@
 * Add `Model#findByValues` and `Model#findAllByValues`
 * Add `Router#serveDependencyFile()` for when you want to serve a file from within a dependency
 * Decode path parameters using `RURL.decodeUriSegment()`
+* Add `$hold` property to Document class, which are also sent to the client
 
 ## 1.0.8 (2019-01-12)
 
