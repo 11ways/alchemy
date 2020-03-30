@@ -34,7 +34,7 @@
 		"protoblast"        : "skerit/protoblast",
 		"semver"            : "~5.6.0",
 		"mollusc"           : "~2.0.0",
-		"socket.io"         : "~2.2.0",
+		"socket.io"         : "~2.3.0",
 		"socket.io-stream"  : "~0.9.1",
 		"sputnik"           : "skerit/sputnik",
 		"temp"              : "~0.8.3",
@@ -47,7 +47,7 @@
 		"less"              : "~3.9.0",
 		"node-sass"         : "~4.11.0",
 		"nodent-compiler"   : "~3.2.11",
-		"socket.io-client"  : "~2.2.0"
+		"socket.io-client"  : "~2.3.0"
 	},
 	"devDependencies": {
 		"codecov"    : "~3.6.5",
