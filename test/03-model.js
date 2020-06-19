@@ -235,7 +235,7 @@ describe('Model', function() {
 
 				schema_two.addField('entryname', 'String');
 
-				this.addField('entries', schema, {array: true});
+				this.addField('entries', schema_two, {array: true});
 
 				next();
 			});

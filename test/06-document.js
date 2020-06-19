@@ -438,6 +438,8 @@ describe('Document', function() {
 
 			await doc.save();
 
+			assert.strictEqual(doc.entries[0].entryname, 'a', 'Saved subschema value is wrong');
+
 			assert.strictEqual(doc.hasChanged(), false);
 
 			let a = doc.entries[0],
