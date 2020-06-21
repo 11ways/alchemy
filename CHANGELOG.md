@@ -16,7 +16,22 @@
 * Decode path parameters using `RURL.decodeUriSegment()`
 * Add `$hold` property to Document class, which are also sent to the client
 * `Conduit#redirect()` now has a `hard_refresh` option, to force a non-ajax redirection
+* `DocumentList` can now be iterated over
+* Add new Inode (File, Dir) classes
+* Removing the cached client file will no longer cause 404 errors
+* Conduit responses can now be ended with a buffer
+* Sessions will emit the `removed` event when they're being removed
+* Websocket messages will no longer be resent upon reconnect
+* Add `populate`  method to `DocumentList`
+* When adding an association to a model, an index will automatically be made
+* Uploaded files now use Alchemy's `Inode.File` class
+* The `Criteria` class can now be asynchronously iterated over
+* The `Fallback` datasource will now use the `read` method instead of `_read`
+* Add `Schema.isSchema()` method
+* `Enum` values will now also be serialized for the client-side config
+* The `Router` helper directive will now look for a `url_attribute` property on the target element
 * Add custom Error classes under the Classes.Alchemy.Error namespace
+
 
 ## 1.0.8 (2019-01-12)
 
