@@ -258,6 +258,40 @@ describe('Model', function() {
 	});
 
 	/**
+	 * Adding validation rules to the model
+	 */
+	describe('.addRule(validation_name, options)', function() {
+
+		it('should add rules (during constitution) - Person example', function(done) {
+			Person.constitute(function addFields() {
+
+				this.addRule('NotEmpty', {fields: ['firstname']});
+
+				done();
+			});
+		});
+
+		it('should throw an error when trying to create a new record without a firstname', async function() {
+
+			let person = Model.get('Person').createDocument(),
+			    caught_err;
+
+			person.lastname = 'Only Lastname';
+
+			try {
+				await person.save();
+			} catch (err) {
+				caught_err = err;
+			}
+
+			assert.strictEqual(!!caught_err, true, 'An error should have been thrown while trying to save this record');
+			assert.strictEqual(caught_err instanceof Blast.Classes.Alchemy.Error.Validation.Violations, true, 'A `Violations` error should have been thrown');
+			assert.strictEqual(caught_err.length, 1, 'The `Violations` error should contain 1 violation');
+
+		});
+	});
+
+	/**
 	 * Add a belongsTo relation
 	 */
 	describe('.belongsTo(alias, model)', function() {
@@ -413,6 +447,8 @@ describe('Model', function() {
 				};
 
 				Model.get('Person').save(griet_data, function saved(err, list) {
+
+					console.log('Saved:', err, list)
 
 					if (err) {
 						return next(err);
