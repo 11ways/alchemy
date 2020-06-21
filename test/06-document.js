@@ -450,6 +450,39 @@ describe('Document', function() {
 
 			assert.strictEqual(doc.hasChanged(), true, 'Two array values have been switched, so it should have been marked as changed');
 		});
+
+		it('should check specific fields if wanted', async function() {
+
+			var model = Model.get('WithSchemaField'),
+			    doc = model.createDocument();
+
+			doc.subschema = {
+				subname: 'subname',
+				subvalue: 'subvalue'
+			};
+
+			doc.entries = [
+				{entryname: 'first'},
+				{entryname: 'second'}
+			];
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false);
+
+			assert.strictEqual(doc.hasChanged('subschema'), false, 'The field has not yet changed, yet the changed check returns true');
+
+			doc.subschema.subname = 'newname';
+
+			assert.strictEqual(doc.hasChanged(), true);
+
+			assert.strictEqual(doc.hasChanged('subschema'), true);
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.hasChanged('subschema'), false);
+		});
 	});
 
 	describe('#needsToBeSaved()', function() {
