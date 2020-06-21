@@ -16,6 +16,7 @@
 * Decode path parameters using `RURL.decodeUriSegment()`
 * Add `$hold` property to Document class, which are also sent to the client
 * `Conduit#redirect()` now has a `hard_refresh` option, to force a non-ajax redirection
+* Add custom Error classes under the Classes.Alchemy.Error namespace
 
 ## 1.0.8 (2019-01-12)
 
