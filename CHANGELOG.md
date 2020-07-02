@@ -31,6 +31,7 @@
 * The `Router` helper directive will now look for a `url_attribute` property on the target element
 * Add custom Error classes under the Classes.Alchemy.Error namespace
 * Re-added validation support with the `Validator` & `Violation` classes
+* Use `Blast.fetch()` in the `Alchemy#request()` method
 
 ## 1.0.8 (2019-01-12)
 
