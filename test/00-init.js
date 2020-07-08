@@ -22,7 +22,7 @@ describe('require(\'alchemymvc\')', function() {
 });
 
 describe('Mongo-unit setup', function() {
-	this.timeout(70000)
+	this.timeout(150000)
 
 	it('should create in-memory mongodb instance first', async function() {
 
