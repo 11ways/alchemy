@@ -50,7 +50,7 @@
 		"socket.io-client"  : "~2.3.0"
 	},
 	"devDependencies": {
-		"codecov"    : "~3.6.5",
+		"codecov"    : "~3.7.0",
 		"nyc"        : "^13.1.0",
 		"mocha"      : "~5.2.0",
 		"mongo-unit" : "~2.0.1"

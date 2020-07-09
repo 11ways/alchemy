@@ -34,6 +34,7 @@
 * Use `Blast.fetch()` in the `Alchemy#request()` method
 * Rename `Model#findById()` to `Model#findByPk()`
 * Add `Document#refreshValues()` to re-query the data from the database
+* Allow individual associations to be resolved by the datasource itself
 
 ## 1.0.8 (2019-01-12)
 
