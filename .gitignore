@@ -33,6 +33,10 @@ coverage/
 # Coveralls contains private info
 .coveralls.yml
 
+# This can contain the private token
+# (This is NOT .codecov.yml)
+codecov.yml
+
 # Locks
 package-lock.json
 npm-shrinkwrap.json
