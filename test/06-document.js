@@ -299,6 +299,50 @@ describe('Document', function() {
 		});
 	});
 
+	describe('#refreshValues()', function() {
+		it('should requery the database and update the document', async function() {
+
+			var Project = Model.get('Project'),
+			    ProjectVersion = Model.get('ProjectVersion');
+
+			let protoblast = await Project.findByValues({name: 'protoblast'});
+
+			if (!protoblast) {
+				throw new Error('Could not find expected Project document');
+			}
+
+			let version_five = await ProjectVersion.findByValues({
+				project_id     : protoblast.$pk,
+				version_string : '10.0.0'
+			});
+
+			if (!version_five) {
+				throw new Error('Could not find expected ProjectVersion document');
+			}
+
+			let duplicate = version_five.clone();
+
+			assert.strictEqual(version_five.hasChanged(), false);
+			assert.strictEqual(duplicate.hasChanged(), false);
+
+			version_five.version_string = '10.0.0-alpha';
+
+			assert.strictEqual(version_five.hasChanged(), true);
+			assert.strictEqual(duplicate.hasChanged(), false);
+
+			await version_five.save();
+
+			assert.strictEqual(version_five.hasChanged(), false);
+			assert.strictEqual(version_five.version_string, '10.0.0-alpha');
+			assert.strictEqual(duplicate.version_string, '10.0.0', 'The duplicate should not have been updated');
+
+			await duplicate.refreshValues();
+
+			assert.strictEqual(duplicate.hasChanged(), false);
+			assert.strictEqual(duplicate.version_string, version_five.version_string);
+		});
+	});
+
 	describe('#resetFields()', function() {
 		it('should reset the document as it was', async function() {
 
