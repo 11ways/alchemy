@@ -631,7 +631,7 @@ describe('Document', function() {
 			assert.strictEqual(doc.firstname, 'Flo');
 
 			// Remove it
-			doc.remove();
+			await doc.remove();
 
 			let removed_doc = await p_model.find('first', {conditions: {firstname: 'Flo'}});
 
