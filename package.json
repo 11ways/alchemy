@@ -42,6 +42,10 @@
 		"uglify-es"         : "~3.3.9",
 		"useragent"         : "~2.3.0"
 	},
+	"files": [
+		"lib/",
+		"index.js"
+	],
 	"optionalDependencies": {
 		"janeway"           : "skerit/janeway",
 		"less"              : "~3.11.1",
