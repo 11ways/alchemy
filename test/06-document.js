@@ -83,6 +83,60 @@ describe('Document', function() {
 		});
 	});
 
+	describe('#populate()', function() {
+		it('should add associated records', async function() {
+
+			let griet = await Model.get('Person').findByValues({firstname: 'Griet'});
+
+			assert.strictEqual(griet.lastname, 'De Leener');
+
+			assert.strictEqual(griet.Children, undefined);
+
+			let clone = griet.clone();
+
+			await griet.populate('Children');
+
+			assert.strictEqual(griet.Children.length, 1);
+
+			let child = griet.Children[0];
+
+			assert.strictEqual(child.firstname, 'Jelle');
+			assert.strictEqual(child.lastname, 'De Loecker');
+			assert.strictEqual(child.male, true);
+			assert.deepStrictEqual(child.nicknames, ['skerit', 'Jellie']);
+
+			await clone.populate(['Children.firstname', 'Children.lastname']);
+
+			child = clone.Children[0];
+
+			assert.strictEqual(child.firstname, 'Jelle');
+			assert.strictEqual(child.lastname, 'De Loecker');
+			assert.strictEqual(child.male, undefined);
+			assert.deepStrictEqual(child.nicknames, undefined);
+
+			let jelle = await Model.get('Person').findByValues({firstname: 'Jelle'});
+
+			assert.strictEqual(jelle.firstname, 'Jelle');
+			assert.strictEqual(jelle.lastname, 'De Loecker');
+			assert.deepStrictEqual(jelle.nicknames, ['skerit', 'Jellie']);
+			assert.strictEqual(jelle.Parent, undefined);
+
+			clone = jelle.clone();
+
+			await jelle.populate('Parent');
+
+			assert.strictEqual(clone.Parent, undefined);
+			assert.strictEqual(jelle.Parent.firstname, 'Griet');
+			assert.strictEqual(jelle.Parent.lastname, 'De Leener');
+
+			await clone.populate(['Parent.firstname', 'Parent.male']);
+
+			assert.strictEqual(clone.Parent.firstname, 'Griet');
+			assert.strictEqual(clone.Parent.lastname, undefined);
+			assert.strictEqual(clone.Parent.male, false);
+		});
+	});
+
 	describe('#save(callback)', function() {
 		it('should save a new record to the database', function(done) {
 
