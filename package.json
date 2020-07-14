@@ -19,7 +19,7 @@
 		"body"              : "~5.1.0",
 		"body-parser"       : "~1.19.0",
 		"bson"              : "~4.0.4",
-		"chokidar"          : "~3.3.1",
+		"chokidar"          : "~3.4.0",
 		"formidable"        : "~1.2.2",
 		"graceful-fs"       : "~4.2.3",
 		"hawkejs"           : "skerit/hawkejs",
