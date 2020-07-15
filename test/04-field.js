@@ -17,7 +17,7 @@ function sameContents(a, b, message) {
 	}
 }
 
-describe('FieldType', function() {
+describe('Field', function() {
 
 	describe('translatable fields', function() {
 
@@ -102,6 +102,8 @@ describe('FieldType', function() {
 			let values = name_field.getDocumentValues(doc);
 
 			assert.strictEqual(values.length, 1, 'Only 1 result is expected for the "name" field');
+
+			assert.strictEqual(values[0].field.name, 'name');
 			assert.strictEqual(values[0].value, 'Jelle');
 			assert.strictEqual(values[0].path, 'name');
 
@@ -121,15 +123,19 @@ describe('FieldType', function() {
 
 			values = lorem_field.getDocumentValues(doc);
 
+			assert.strictEqual(values[0].field.name, 'lorem');
 			assert.strictEqual(values[0].value, 0);
 			assert.strictEqual(values[0].path,  'entries.0.sub_sub.0.lorem');
 
+			assert.strictEqual(values[1].field.name, 'lorem');
 			assert.strictEqual(values[1].value, 1);
 			assert.strictEqual(values[1].path,  'entries.0.sub_sub.1.lorem');
 
+			assert.strictEqual(values[2].field.name, 'lorem');
 			assert.strictEqual(values[2].value, 2);
 			assert.strictEqual(values[2].path,  'entries.0.sub_sub.2.lorem');
 
+			assert.strictEqual(values[3].field.name, 'lorem');
 			assert.strictEqual(values[3].value, 3);
 			assert.strictEqual(values[3].path,  'entries.1.sub_sub.0.lorem');
 
@@ -151,9 +157,11 @@ describe('FieldType', function() {
 
 			assert.strictEqual(values.length, 2, 'Expected 2 translated names, but got ' + values.length);
 
+			assert.strictEqual(values[0].field.name, 'name');
 			assert.strictEqual(values[0].value, 'en');
 			assert.strictEqual(values[0].path, 'translatable_schema.en.name');
 
+			assert.strictEqual(values[1].field.name, 'name');
 			assert.strictEqual(values[1].value, 'nl');
 			assert.strictEqual(values[1].path, 'translatable_schema.nl.name');
 
@@ -171,9 +179,11 @@ describe('FieldType', function() {
 
 			assert.strictEqual(values.length, 2, 'Expected 2 description values, but got ' + values.length);
 
+			assert.strictEqual(values[0].field.name, 'description');
 			assert.strictEqual(values[0].value, 'english');
 			assert.strictEqual(values[0].path, 'description.en');
 
+			assert.strictEqual(values[1].field.name, 'description');
 			assert.strictEqual(values[1].value, 'dutch');
 			assert.strictEqual(values[1].path, 'description.nl');
 
@@ -190,6 +200,7 @@ describe('FieldType', function() {
 
 			assert.strictEqual(values.length, 4, 'Expected 4 tags, but got ' + values.length);
 
+			assert.strictEqual(values[0].field.name, 'translatable_tags');
 			assert.strictEqual(values[0].value, 'en0');
 			assert.strictEqual(values[0].path,  'translatable_tags.en.0');
 
@@ -207,7 +218,7 @@ describe('FieldType', function() {
 
 });
 
-describe('StringFieldType', function() {
+describe('Field.String', function() {
 
 	var schema,
 	    field;
@@ -226,7 +237,7 @@ describe('StringFieldType', function() {
 
 });
 
-describe('DateTimeFieldType', function() {
+describe('Field.DateTime', function() {
 
 	var dtf_model,
 	    Dtf;
