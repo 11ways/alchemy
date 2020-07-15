@@ -666,4 +666,48 @@ describe('Model', function() {
 			});
 		});
 	});
+
+	describe('#createDocument()', function() {
+		it('should not break variables that were already documents', function() {
+
+			let Person = Model.get('Person');
+
+			let empty = Person.createDocument();
+
+			assert.strictEqual(empty.is_new_record, true);
+			assert.strictEqual(empty.$record.Person.Person, undefined);
+
+			let double = Person.createDocument(empty);
+
+			// Doing anything with this new document will now break the original one!
+			let test = double.is_new_record;
+
+			assert.strictEqual(test, true);
+
+			assert.strictEqual(empty.$record.Person.Person, undefined);
+		});
+	});
+
+	describe('#compose(data, options)', function() {
+
+		it.skip('should set default values', function() {
+
+		});
+
+		it('should set creation fields', async function() {
+
+			let Person = Model.get('Person');
+
+			let empty = Person.createDocument();
+
+			let data = Person.compose(empty, {create: true});
+
+			// Compose is actually not the source of this issue :(
+			assert.strictEqual(empty.$record.Person.Person, undefined);
+
+			assert.strictEqual(!!data._id, true, 'No _id field was created');
+			assert.strictEqual(!!data.created, true, 'The `created` field was not set');
+			assert.strictEqual(!!data.updated, true, 'The `updated` field was not set');
+		});
+	});
 });
