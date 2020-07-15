@@ -39,6 +39,7 @@
 * Fix getting the path of fields in a subschema
 * Add `Schema#getFieldChain(path)` and `Field#getFieldChain()`
 * Add `FieldValue` class and use it for the new `Field#getDocumentValues(document)` method
+* Add `Alchemy#getPrefixes()` to get the prefixes object on the server & client
 
 ## 1.0.8 (2019-01-12)
 
