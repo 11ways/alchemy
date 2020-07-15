@@ -237,6 +237,19 @@ describe('Model', function() {
 
 				this.addField('entries', schema_two, {array: true});
 
+				let sub_sub = new Classes.Alchemy.Schema(this);
+
+				sub_sub.addField('lorem', 'String');
+				sub_sub.addField('ipsum', 'String');
+
+				schema_two.addField('sub_sub', sub_sub, {array: true});
+
+				let sub_sub_no_initial_parent = new Classes.Alchemy.Schema();
+				sub_sub_no_initial_parent.addField('test', 'String');
+				schema_two.addField('sub_nip', sub_sub_no_initial_parent);
+
+				this.addField('name', 'String');
+
 				next();
 			});
 		});

@@ -36,6 +36,7 @@
 * Add `Document#refreshValues()` to re-query the data from the database
 * Allow individual associations to be resolved by the datasource itself
 * Throw an error when trying to set a Document's data record to an invalid value
+* Fix getting the path of fields in a subschema
 
 ## 1.0.8 (2019-01-12)
 

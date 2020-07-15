@@ -24,6 +24,32 @@ describe('FieldType', function() {
 		});
 	});
 
+	describe('#path', function() {
+		it('gets the path in the main document', async function() {
+
+			let WithSchema = Model.get('WithSchemaField');
+
+			let name_field = WithSchema.getField('name');
+			assert.strictEqual(name_field.path, 'name');
+
+			let subschema_field = WithSchema.getField('subschema');
+			assert.strictEqual(subschema_field.path, 'subschema');
+
+			let subname_field = WithSchema.getField('subschema.subname');
+			assert.strictEqual(subname_field.path, 'subschema.subname');
+
+			let entryname_in_arr_field = WithSchema.getField('entries.entryname');
+			assert.strictEqual(entryname_in_arr_field.path, 'entries.entryname');
+
+			let sub_sub_lorem_field = WithSchema.getField('entries.sub_sub.lorem');
+			assert.strictEqual(sub_sub_lorem_field.path, 'entries.sub_sub.lorem');
+
+			let sub_nip_test = WithSchema.getField('entries.sub_nip.test');
+			assert.strictEqual(sub_nip_test.path, 'entries.sub_nip.test');
+
+		});
+	});
+
 });
 
 describe('StringFieldType', function() {
