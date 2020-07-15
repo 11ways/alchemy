@@ -149,11 +149,58 @@ describe('FieldType', function() {
 			// Sort the result by the prefix
 			values.sortByPath(1, 'path');
 
+			assert.strictEqual(values.length, 2, 'Expected 2 translated names, but got ' + values.length);
+
 			assert.strictEqual(values[0].value, 'en');
 			assert.strictEqual(values[0].path, 'translatable_schema.en.name');
 
 			assert.strictEqual(values[1].value, 'nl');
 			assert.strictEqual(values[1].path, 'translatable_schema.nl.name');
+
+			doc.description = {
+				en: 'english',
+				nl: 'dutch'
+			}
+
+			let description_field = WithSchema.getField('description');
+
+			values = description_field.getDocumentValues(doc);
+
+			// Sort the result by the prefix
+			values.sortByPath(1, 'path');
+
+			assert.strictEqual(values.length, 2, 'Expected 2 description values, but got ' + values.length);
+
+			assert.strictEqual(values[0].value, 'english');
+			assert.strictEqual(values[0].path, 'description.en');
+
+			assert.strictEqual(values[1].value, 'dutch');
+			assert.strictEqual(values[1].path, 'description.nl');
+
+			doc.translatable_tags = {
+				en: ['en0', 'en1'],
+				nl: ['nl0', 'nl1']
+			};
+
+			let translatable_tags_field = WithSchema.getField('translatable_tags');
+			values = translatable_tags_field.getDocumentValues(doc);
+
+			// Sort the result by the prefix
+			values.sortByPath(1, 'path');
+
+			assert.strictEqual(values.length, 4, 'Expected 4 tags, but got ' + values.length);
+
+			assert.strictEqual(values[0].value, 'en0');
+			assert.strictEqual(values[0].path,  'translatable_tags.en.0');
+
+			assert.strictEqual(values[1].value, 'en1');
+			assert.strictEqual(values[1].path,  'translatable_tags.en.1');
+
+			assert.strictEqual(values[2].value, 'nl0');
+			assert.strictEqual(values[2].path,  'translatable_tags.nl.0');
+
+			assert.strictEqual(values[3].value, 'nl1');
+			assert.strictEqual(values[3].path,  'translatable_tags.nl.1');
 
 		});
 	});

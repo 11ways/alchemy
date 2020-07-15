@@ -254,6 +254,10 @@ describe('Model', function() {
 				translatable_schema.addField('name', 'String');
 				this.addField('translatable_schema', translatable_schema, {translatable: true});
 
+				this.addField('description', 'String', {translatable: true});
+
+				this.addField('translatable_tags', 'String', {translatable: true, array: true});
+
 				next();
 			});
 		});
