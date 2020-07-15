@@ -37,6 +37,7 @@
 * Allow individual associations to be resolved by the datasource itself
 * Throw an error when trying to set a Document's data record to an invalid value
 * Fix getting the path of fields in a subschema
+* Add `Schema#getFieldChain(path)` and `Field#getFieldChain()`
 
 ## 1.0.8 (2019-01-12)
 

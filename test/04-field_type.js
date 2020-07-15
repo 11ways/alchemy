@@ -1,5 +1,22 @@
 var assert = require('assert');
 
+function sameContents(a, b, message) {
+
+	if (!a && a !== b) {
+		throw new Error(message);
+	}
+
+	let i;
+
+	for (i = 0; i < a.length; i++) {
+		assert.strictEqual(a[i], b[i], message + ' (array length: ' + a.length + ')');
+	}
+
+	for (i = 0; i < b.length; i++) {
+		assert.strictEqual(a[i], b[i], message + ' (array length: ' + a.length + ')');
+	}
+}
+
 describe('FieldType', function() {
 
 	describe('translatable fields', function() {
@@ -41,12 +58,31 @@ describe('FieldType', function() {
 			let entryname_in_arr_field = WithSchema.getField('entries.entryname');
 			assert.strictEqual(entryname_in_arr_field.path, 'entries.entryname');
 
+			let sub_sub_field = WithSchema.getField('entries.sub_sub');
+			assert.strictEqual(sub_sub_field.path, 'entries.sub_sub');
+
 			let sub_sub_lorem_field = WithSchema.getField('entries.sub_sub.lorem');
 			assert.strictEqual(sub_sub_lorem_field.path, 'entries.sub_sub.lorem');
 
 			let sub_nip_test = WithSchema.getField('entries.sub_nip.test');
 			assert.strictEqual(sub_nip_test.path, 'entries.sub_nip.test');
+		});
+	});
 
+	describe('#getFieldChain()', function() {
+		it('should return the current field and all its ancestors', function() {
+
+			let WithSchema = Model.get('WithSchemaField');
+
+			let name_field = WithSchema.getField('name');
+			let entries_field = WithSchema.getField('entries');
+			let sub_sub_field = WithSchema.getField('entries.sub_sub');
+			let lorem_field = WithSchema.getField('entries.sub_sub.lorem');
+
+			sameContents(name_field.getFieldChain(), [name_field], 'Expected an array with the "name" field');
+			sameContents(entries_field.getFieldChain(), [entries_field], 'Expected an array with the "entries" field');
+			sameContents(sub_sub_field.getFieldChain(), [entries_field, sub_sub_field], 'Expected an array with the "entries" and "sub_sub" field');
+			sameContents(lorem_field.getFieldChain(), [entries_field, sub_sub_field, lorem_field], 'Expected an array with the "entries", "sub_sub" and "lorem" field');
 		});
 	});
 
