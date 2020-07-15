@@ -83,6 +83,18 @@ describe('Document', function() {
 		});
 	});
 
+	describe('#is_new_record', function() {
+
+		it('should return true if it\'s a new record', async function() {
+
+			let Person = Model.get('Person');
+
+			let empty = Person.createDocument();
+
+			assert.strictEqual(empty.is_new_record, true);
+		});
+	});
+
 	describe('#populate()', function() {
 		it('should add associated records', async function() {
 
