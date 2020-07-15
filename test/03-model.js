@@ -469,8 +469,6 @@ describe('Model', function() {
 
 				Model.get('Person').save(griet_data, function saved(err, list) {
 
-					console.log('Saved:', err, list)
-
 					if (err) {
 						return next(err);
 					}

@@ -59,16 +59,33 @@ describe('Base', function() {
 
 			var test = new Deprecated();
 
-			assert.strictEqual(test.my_value, 'nothing');
-			assert.strictEqual(test.myValue, 'nothing');
+			let old_warn = console.warn,
+			    called = 0;
 
-			test.my_value = 'something';
-			assert.strictEqual(test.my_value, 'something');
-			assert.strictEqual(test.myValue, 'something');
+			console.warn = function(msg) {
+				called++;
+			};
 
-			test.myValue = 'something_else';
+			try {
 
-			assert.strictEqual(test.my_value, 'something_else');
+				assert.strictEqual(test.my_value, 'nothing');
+				assert.strictEqual(called, 0);
+				assert.strictEqual(test.myValue, 'nothing');
+				assert.strictEqual(called, 1, 'A deprecation warning should have been logged');
+
+				test.my_value = 'something';
+				assert.strictEqual(test.my_value, 'something');
+				assert.strictEqual(test.myValue, 'something');
+
+				test.myValue = 'something_else';
+
+				assert.strictEqual(test.my_value, 'something_else');
+			} catch (err) {
+				console.warn = old_warn;
+				throw err;
+			}
+
+			console.warn = old_warn;
 		});
 	});
 

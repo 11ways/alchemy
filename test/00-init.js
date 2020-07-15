@@ -12,6 +12,9 @@ process.env.DISABLE_JANEWAY = 1;
 // Make MongoUnit a global
 global.MongoUnit = MongoUnit;
 
+// Do not log load warnings
+process.env.NO_ALCHEMY_LOAD_WARNING = 1;
+
 // Require alchemymvc
 require('../index.js');
 
