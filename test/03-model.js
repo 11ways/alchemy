@@ -250,6 +250,10 @@ describe('Model', function() {
 
 				this.addField('name', 'String');
 
+				let translatable_schema = new Classes.Alchemy.Schema(this);
+				translatable_schema.addField('name', 'String');
+				this.addField('translatable_schema', translatable_schema, {translatable: true});
+
 				next();
 			});
 		});

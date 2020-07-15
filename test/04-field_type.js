@@ -86,6 +86,78 @@ describe('FieldType', function() {
 		});
 	});
 
+	describe('#getFieldValues(document)', function() {
+		it('should return all the values of this field in the document', function() {
+
+			let WithSchema = Model.get('WithSchemaField'),
+			    doc = WithSchema.createDocument();
+
+			doc.name = 'Jelle';
+
+			let name_field = WithSchema.getField('name');
+			let entries_field = WithSchema.getField('entries');
+			let sub_sub_field = WithSchema.getField('entries.sub_sub');
+			let lorem_field = WithSchema.getField('entries.sub_sub.lorem');
+
+			let values = name_field.getDocumentValues(doc);
+
+			assert.strictEqual(values.length, 1, 'Only 1 result is expected for the "name" field');
+			assert.strictEqual(values[0].value, 'Jelle');
+			assert.strictEqual(values[0].path, 'name');
+
+			doc.entries = [
+				{
+					sub_sub: [
+						{lorem: 0},
+						{lorem: 1},
+						{lorem: 2}
+					]
+				}, {
+					sub_sub: [
+						{lorem: 3}
+					]
+				}
+			];
+
+			values = lorem_field.getDocumentValues(doc);
+
+			assert.strictEqual(values[0].value, 0);
+			assert.strictEqual(values[0].path,  'entries.0.sub_sub.0.lorem');
+
+			assert.strictEqual(values[1].value, 1);
+			assert.strictEqual(values[1].path,  'entries.0.sub_sub.1.lorem');
+
+			assert.strictEqual(values[2].value, 2);
+			assert.strictEqual(values[2].path,  'entries.0.sub_sub.2.lorem');
+
+			assert.strictEqual(values[3].value, 3);
+			assert.strictEqual(values[3].path,  'entries.1.sub_sub.0.lorem');
+
+			doc.translatable_schema = {
+				en: {
+					name: 'en'
+				},
+				nl: {
+					name: 'nl'
+				}
+			};
+
+			let translatable_schema_name_field = WithSchema.getField('translatable_schema.name');
+
+			values = translatable_schema_name_field.getDocumentValues(doc);
+
+			// Sort the result by the prefix
+			values.sortByPath(1, 'path');
+
+			assert.strictEqual(values[0].value, 'en');
+			assert.strictEqual(values[0].path, 'translatable_schema.en.name');
+
+			assert.strictEqual(values[1].value, 'nl');
+			assert.strictEqual(values[1].path, 'translatable_schema.nl.name');
+
+		});
+	});
+
 });
 
 describe('StringFieldType', function() {
