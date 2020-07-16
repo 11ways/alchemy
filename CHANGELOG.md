@@ -40,6 +40,7 @@
 * Add `Schema#getFieldChain(path)` and `Field#getFieldChain()`
 * Add `FieldValue` class and use it for the new `Field#getDocumentValues(document)` method
 * Add `Alchemy#getPrefixes()` to get the prefixes object on the server & client
+* The `Alchemy#pickTranslation()` method now also accepts a conduit as prefix choices
 
 ## 1.0.8 (2019-01-12)
 
