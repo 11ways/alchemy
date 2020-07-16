@@ -1,8 +1,10 @@
-var assert = require('assert'),
-    MongoUnit = require('mongo-unit'),
-    libpath = require('path'),
-    fs = require('fs'),
-    mongo_uri;
+const MongoUnit = require('mongo-unit'),
+      puppeteer = require('puppeteer'),
+      libpath   = require('path'),
+      assert    = require('assert'),
+      fs        = require('fs');
+
+let mongo_uri;
 
 let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
 
@@ -17,6 +19,24 @@ process.env.NO_ALCHEMY_LOAD_WARNING = 1;
 
 // Require alchemymvc
 require('../index.js');
+
+before(async function() {
+	global.browser = await puppeteer.launch();
+	global.page = await browser.newPage();
+});
+
+global.setLocation = function setLocation(path) {
+	var url = 'http://127.0.0.1:' + alchemy.settings.port + path;
+	return page.goto(url);
+};
+
+global.evalPage = function evalPage(fnc) {
+	return page.evaluate(fnc);
+};
+
+global.despace = function despace(text) {
+	return text.trim().replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
+};
 
 describe('require(\'alchemymvc\')', function() {
 	it('should create the global alchemy object', function() {
@@ -236,4 +256,9 @@ describe('Alchemy', function() {
 			assert.strictEqual(second, result);
 		});
 	});
+});
+
+// This will run after ALL the files have executed (not just this file)
+after(async function() {
+	await browser.close();
 });
