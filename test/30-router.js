@@ -50,6 +50,11 @@ describe('Router', function() {
 			});
 
 			assert.strictEqual(route.methods[0], 'get', 'It should have enabled the GET method by default');
+
+			Router.add({
+				name    : 'Static#viewContent',
+				paths   : '/viewcontent'
+			});
 		});
 
 		it('routes requests to the correct controller & action', function(done) {

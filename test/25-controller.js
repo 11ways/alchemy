@@ -10,6 +10,10 @@ describe('Controller', function() {
 			global.PersonController = Function.inherits('Alchemy.Controller', function Person(options) {
 				Person.super.call(this, options);
 			});
+
+			global.StaticController = Function.inherits('Alchemy.Controller', function Static(options) {
+				Static.super.call(this, options);
+			});
 		});
 	});
 
@@ -20,6 +24,15 @@ describe('Controller', function() {
 
 		it('adds an action to the controller', function() {
 			PersonController.setAction(test_function);
+
+			StaticController.setAction(function content(conduit) {
+				let response = 'SCT:' + JSON.stringify(conduit.param());
+				conduit.end(response);
+			});
+
+			StaticController.setAction(function viewContent(conduit) {
+				this.render('static/viewcontent');
+			});
 		});
 
 		it('adds the actions in a seperate object', function() {
@@ -43,13 +56,7 @@ describe('Controller', function() {
 				methods : 'get'
 			});
 
-			url = Router.getUrl('Cookietest');
-
-			url.host = 'localhost';
-			url.protocol = 'http';
-			url.port = alchemy.settings.port;
-
-			url = String(url);
+			url = global.getRouteUrl('Cookietest');
 
 			PersonController.setAction(function cookietest(conduit) {
 

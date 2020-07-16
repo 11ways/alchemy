@@ -26,7 +26,21 @@ before(async function() {
 });
 
 global.setLocation = function setLocation(path) {
-	var url = 'http://127.0.0.1:' + alchemy.settings.port + path;
+
+	let url;
+
+	if (alchemy) {
+		// Force exposing the defaults each time,
+		// because we add routes on-the-fly during testing
+		alchemy.exposeDefaultStaticVariables();
+	}
+
+	if (path.indexOf('http') == -1) {
+		url = 'http://127.0.0.1:' + alchemy.settings.port + path;
+	} else {
+		url = path;
+	}
+
 	return page.goto(url);
 };
 
@@ -37,6 +51,23 @@ global.evalPage = function evalPage(fnc) {
 global.despace = function despace(text) {
 	return text.trim().replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
 };
+
+global.getRouteUrl = function getRouteUrl(route, options) {
+
+	let url = Router.getUrl(route, options);
+
+	url.host = 'localhost';
+	url.protocol = 'http';
+	url.port = alchemy.settings.port;
+
+	return String(url);
+};
+
+global.getBodyHtml = function getBodyHtml() {
+	return global.evalPage(function() {
+		return document.body.innerHTML;
+	});
+}
 
 describe('require(\'alchemymvc\')', function() {
 	it('should create the global alchemy object', function() {

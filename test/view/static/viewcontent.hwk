@@ -1,0 +1,18 @@
+{% extend "base" %}
+
+{% block "body" %}
+	<% this.async(function getResource(next) {
+		this.helpers.Alchemy.getResource('Static#content', {name: 'Roel'}, function getResult(err, result) {
+
+			if (err) {
+				if (typeof err != 'object') {
+					err = new Error('Got resource error: ' + err);
+				}
+
+				return next(err);
+			}
+
+			next(null, result);
+		});
+	}) %>
+{% /block %}
