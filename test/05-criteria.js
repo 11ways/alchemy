@@ -170,4 +170,45 @@ describe('Criteria', function() {
 		});
 	});
 
+	describe('#sort()', function() {
+
+		it('should sort the result', async function() {
+
+			let criteria = Person.find();
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 2, '2 records should have been found');
+
+			criteria = Person.find();
+
+			// Sort descending
+			criteria.sort(['firstname', -1]);
+
+			records = await Person.find('all', criteria);
+
+			assert.strictEqual(records[0].firstname, 'Jelle');
+			assert.strictEqual(records[1].firstname, 'Griet');
+
+			criteria = Person.find();
+
+			// Sort ascending
+			criteria.sort(['firstname', 1]);
+
+			records = await Person.find('all', criteria);
+
+			assert.strictEqual(records[0].firstname, 'Griet');
+			assert.strictEqual(records[1].firstname, 'Jelle');
+
+			criteria = Person.find();
+			criteria.sort(['Person.firstname', -1]);
+
+			records = await Person.find('all', criteria);
+
+			assert.strictEqual(records[0].firstname, 'Jelle');
+			assert.strictEqual(records[1].firstname, 'Griet');
+		});
+
+	});
+
 });
