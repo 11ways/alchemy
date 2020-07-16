@@ -4,7 +4,7 @@ describe('Helper.Alchemy', function() {
 
 	describe('#getResource()', function() {
 
-		it.skip('should throw an error when called without a conduit', function(next) {
+		it('should throw an error when called without a conduit', function(next) {
 			alchemy.hawkejs.render('static/viewcontent', {}, function rendered(err, res) {
 
 				try {

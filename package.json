@@ -58,7 +58,8 @@
 		"nyc"        : "^15.1.0",
 		"mocha"      : "~8.0.1",
 		"mongo-unit" : "~2.0.1",
-		"puppeteer"  : "~5.1.0"
+		"puppeteer"  : "~5.1.0",
+		"source-map" : "~0.7.3"
 	},
 	"scripts": {
 		"test"            : "node_modules/.bin/mocha --exit --reporter spec --bail --timeout 5000 --file test/00-init.js",
