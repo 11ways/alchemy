@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const MongoUnit = require('mongo-unit'),
       puppeteer = require('puppeteer'),
       libpath   = require('path'),
@@ -7,6 +8,10 @@ const MongoUnit = require('mongo-unit'),
 let mongo_uri;
 
 let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
+
+let navigations = 0,
+    do_coverage = !!global.__coverage__,
+    coverage;
 
 // Make sure janeway doesn't start
 process.env.DISABLE_JANEWAY = 1;
@@ -25,9 +30,27 @@ before(async function() {
 	global.page = await browser.newPage();
 });
 
-global.setLocation = function setLocation(path) {
+global.fetchCoverage = async function fetchCoverage() {
+	let temp = await page.evaluate(function getCoverage() {
+		return window.__coverage__;
+	});
+
+	if (temp) {
+		coverage = temp;
+	}
+
+	return coverage;
+};
+
+global.setLocation = async function setLocation(path) {
 
 	let url;
+
+	if (navigations && do_coverage) {
+		await fetchCoverage();
+	}
+
+	navigations++;
 
 	if (alchemy) {
 		// Force exposing the defaults each time,
@@ -41,7 +64,13 @@ global.setLocation = function setLocation(path) {
 		url = path;
 	}
 
-	return page.goto(url);
+	await page.goto(url);
+
+	if (coverage) {
+		await page.evaluate(function setCoverage(coverage) {
+			window.__coverage__ = coverage;
+		}, coverage);
+	}
 };
 
 global.evalPage = function evalPage(fnc) {
