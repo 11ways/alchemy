@@ -109,7 +109,7 @@ describe('Mongo-unit setup', function() {
 
 	it('should create in-memory mongodb instance first', async function() {
 
-		var url = await MongoUnit.start();
+		var url = await MongoUnit.start({verbose: false});
 
 		mongo_uri = url;
 

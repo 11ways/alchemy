@@ -1,9 +1,13 @@
 var assert = require('assert'),
-    House;
+    House,
+    street;
 
 describe('Validator.NotEmpty', function() {
 
-	it('should be added to a Model', function(done) {
+	it('should be added to a Model', async function() {
+
+		let house_pledge = new Classes.Pledge(),
+		    street_pledge = new Classes.Pledge();
 
 		House = Function.inherits('Alchemy.Model', function House(options) {
 			House.super.call(this, options);
@@ -27,8 +31,32 @@ describe('Validator.NotEmpty', function() {
 				'inhabitants.languages'
 			]});
 
-			done();
+			house_pledge.resolve();
 		});
+
+		Street = Function.inherits('Alchemy.Model', function Street(options) {
+			Street.super.call(this, options);
+		});
+
+		Street.constitute(function addFields() {
+
+			let inhabitant = new Classes.Alchemy.Schema(this);
+
+			inhabitant.addField('firstname', 'String');
+			inhabitant.addField('lastname', 'String');
+
+			this.addField('inhabitants', inhabitant, {array: true});
+
+			this.addRule('NotEmpty', {fields: [
+				'inhabitants',
+				'inhabitants.firstname',
+			]});
+
+			street_pledge.resolve();
+		});
+
+		await house_pledge;
+		await street_pledge;
 	});
 
 	it('should work with nested structures', async function() {
@@ -129,5 +157,28 @@ describe('Validator.NotEmpty', function() {
 		assert.strictEqual(!!caught_err, false, 'No error should have been thrown');
 	});
 
+	it('should work on array fields', async function() {
 
+		let Street = Model.get('Street'),
+		    doc = Street.createDocument();
+
+		let caught_err,
+		    violation;
+
+		try {
+			await doc.save();
+		} catch (err) {
+			caught_err = err;
+		}
+
+		assert.strictEqual(!!caught_err, true, 'An error should have been thrown while trying to save this record');
+		assert.strictEqual(caught_err instanceof Blast.Classes.Alchemy.Error.Validation.Violations, true, 'A `Violations` error should have been thrown');
+		assert.strictEqual(caught_err.length, 1, 'The `Violations` error should contain 1 violation');
+
+		violation = caught_err.violations[0];
+
+		assert.strictEqual(violation.path, 'inhabitants');
+		assert.strictEqual(violation.field_name, 'inhabitants');
+		assert.strictEqual(violation.value, undefined);
+	});
 });

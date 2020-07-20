@@ -92,8 +92,6 @@ describe('Field', function() {
 			let WithSchema = Model.get('WithSchemaField'),
 			    doc = WithSchema.createDocument();
 
-			doc.name = 'Jelle';
-
 			let name_field = WithSchema.getField('name');
 			let entries_field = WithSchema.getField('entries');
 			let sub_sub_field = WithSchema.getField('entries.sub_sub');
@@ -101,11 +99,25 @@ describe('Field', function() {
 
 			let values = name_field.getDocumentValues(doc);
 
+			assert.strictEqual(values.length, 1, 'Even when the value is undefined, it should be returned');
+			assert.strictEqual(values[0].value, undefined);
+
+			doc.name = 'Jelle';
+
+			values = name_field.getDocumentValues(doc);
+
 			assert.strictEqual(values.length, 1, 'Only 1 result is expected for the "name" field');
 
 			assert.strictEqual(values[0].field.name, 'name');
 			assert.strictEqual(values[0].value, 'Jelle');
 			assert.strictEqual(values[0].path, 'name');
+
+			doc.entries = [];
+
+			values = entries_field.getDocumentValues(doc);
+
+			assert.strictEqual(values.length, 1, 'Even empty array fields should return at least 1 undefined value');
+			assert.strictEqual(values[0].value, undefined);
 
 			doc.entries = [
 				{
