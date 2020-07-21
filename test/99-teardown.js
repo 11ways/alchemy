@@ -8,7 +8,6 @@ describe('Teardown', function() {
 
 		if (global.__coverage__) {
 			let coverage = await fetchCoverage();
-			console.log('COVERAGE:', coverage)
 			fs.writeFileSync('./.nyc_output/alchemy-client-file.json', JSON.stringify(coverage));
 		}
 
