@@ -4,8 +4,8 @@
 </h1>
 <div align="center">
   <!-- CI - TravisCI -->
-  <a href="https://travis-ci.org/skerit/alchemy">
-    <img src="https://travis-ci.org/skerit/alchemy.svg?branch=master" alt="Mac/Linux Build Status" />
+  <a href="https://travis-ci.org/11ways/alchemy">
+    <img src="https://travis-ci.org/11ways/alchemy.svg?branch=master" alt="Mac/Linux Build Status" />
   </a>
 
   <!-- CI - AppVeyor -->
@@ -14,8 +14,8 @@
   </a>
 
   <!-- Coverage - Codecov -->
-  <a href="https://codecov.io/gh/skerit/alchemy">
-    <img src="https://img.shields.io/codecov/c/github/skerit/alchemy/master.svg" alt="Codecov Coverage report" />
+  <a href="https://codecov.io/gh/11ways/alchemy">
+    <img src="https://img.shields.io/codecov/c/github/11ways/alchemy/master.svg" alt="Codecov Coverage report" />
   </a>
 
   <!-- DM - Snyk -->
@@ -31,13 +31,13 @@
 
 <div align="center">
   <!-- Version - npm -->
-  <a href="https://www.npmjs.com/package/alchemy">
+  <a href="https://www.npmjs.com/package/alchemymvc">
     <img src="https://img.shields.io/npm/v/alchemymvc.svg" alt="Latest version on npm" />
   </a>
 
   <!-- License - MIT -->
-  <a href="https://github.com/skerit/alchemy#license">
-    <img src="https://img.shields.io/github/license/skerit/alchemy.svg" alt="Project license" />
+  <a href="https://github.com/11ways/alchemy#license">
+    <img src="https://img.shields.io/github/license/11ways/alchemy.svg" alt="Project license" />
   </a>
 </div>
 <br>
@@ -46,7 +46,7 @@
 </div>
 <div align="center">
   <sub>
-    Coded with ❤️ by <a href="#authors">Jelle De Loecker</a>.
+    Coded with ❤️ by <a href="#authors">Eleven Ways</a>.
   </sub>
 </div>
 
@@ -194,3 +194,7 @@ By default 3 fields are already added to the schema:
 * **_id**: An ObjectID field
 * **created**: A datetime field with the creation date
 * **updated**: A datetime field that gets updated whenever the record is saved
+
+## Authors
+
+Protoblast is developed at [Eleven Ways](https://www.elevenways.be/), a team of [IAAP Certified Accessibility Specialists](https://www.accessibilityassociation.org/).

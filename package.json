@@ -2,7 +2,7 @@
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
 	"version": "1.1.0-alpha",
-	"author": "Jelle De Loecker <jelle@develry.be>",
+	"author": "Jelle De Loecker <jelle@elevenways.be>",
 	"keywords": [
 		"alchemy",
 		"alchemymvc",
@@ -10,33 +10,33 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/skerit/alchemy.git"
+		"url": "git://github.com/11ways/alchemy.git"
 	},
 	"dependencies": {
 		"ansi-256-colors"   : "~1.1.0",
-		"autoprefixer"      : "~9.7.6",
-		"bcrypt"            : "~4.0.1",
+		"autoprefixer"      : "~9.8.5",
+		"bcrypt"            : "~5.0.0",
 		"body"              : "~5.1.0",
 		"body-parser"       : "~1.19.0",
 		"bson"              : "~4.0.4",
-		"chokidar"          : "~3.4.0",
+		"chokidar"          : "~3.4.1",
 		"formidable"        : "~1.2.2",
-		"graceful-fs"       : "~4.2.3",
-		"hawkejs"           : "skerit/hawkejs",
+		"graceful-fs"       : "~4.2.4",
+		"hawkejs"           : "~2.0.0",
 		"jsondiffpatch"     : "~0.4.1",
-		"mime"              : "~2.4.4",
+		"mime"              : "~2.4.6",
 		"minimist"          : "~1.2.5",
 		"mkdirp"            : "~1.0.4",
 		"mmmagic"           : "~0.5.3",
 		"mollusc"           : "~2.0.0",
-		"mongodb"           : "~3.5.6",
+		"mongodb"           : "~3.5.9",
 		"ncp"               : "~2.0.0",
 		"postcss"           : "~7.0.27",
-		"protoblast"        : "skerit/protoblast",
+		"protoblast"        : "~0.7.2",
 		"semver"            : "~7.3.2",
 		"socket.io"         : "~2.3.0",
 		"socket.io-stream"  : "~0.9.1",
-		"sputnik"           : "skerit/sputnik",
+		"sputnik"           : "~0.1.0",
 		"temp"              : "~0.9.1",
 		"toobusy-js"        : "~0.5.1",
 		"uglify-es"         : "~3.3.9",
@@ -47,14 +47,14 @@
 		"index.js"
 	],
 	"optionalDependencies": {
-		"janeway"           : "skerit/janeway",
-		"less"              : "~3.11.1",
-		"node-sass"         : "~4.13.1",
+		"janeway"           : "~0.3.5",
+		"less"              : "~3.12.2",
+		"node-sass"         : "~4.14.1",
 		"nodent-compiler"   : "~3.2.11",
 		"socket.io-client"  : "~2.3.0"
 	},
 	"devDependencies": {
-		"codecov"                 : "~3.7.0",
+		"codecov"                 : "~3.7.1",
 		"istanbul-lib-instrument" : "~4.0.3",
 		"nyc"                     : "^15.1.0",
 		"mocha"                   : "~8.0.1",
@@ -71,7 +71,6 @@
 	"main": "lib/bootstrap.js",
 	"license": "MIT",
 	"engines": {
-		"node": ">=8.9.0"
-	},
-	"private": true
+		"node": ">=10.21.0"
+	}
 }
