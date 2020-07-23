@@ -1,3 +1,9 @@
+## 1.1.1 (WIP)
+
+* Add `Base.mapEventToMethod()` to register simple emitted events names to methods per class
+* Add `Base#issueEvent(name, args, callback)` which will use the mapped event-to-method map to execute the method first & then emit the events
+* Implement the new event-and-method flow in Controller & Models
+
 ## 1.1.0 (2020-07-21)
 
 * Add `Schema#getDatasource()` which returns a pledge that resolves to the datasource
