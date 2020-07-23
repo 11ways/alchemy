@@ -3,6 +3,7 @@
 * Add `Base.mapEventToMethod()` to register simple emitted events names to methods per class
 * Add `Base#issueEvent(name, args, callback)` which will use the mapped event-to-method map to execute the method first & then emit the events
 * Implement the new event-and-method flow in Controller & Models
+* Already set the Hawkejs Renderer `is_for_client_side` property before calling the middleware
 
 ## 1.1.0 (2020-07-21)
 
