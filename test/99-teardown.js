@@ -7,8 +7,19 @@ describe('Teardown', function() {
 		alchemy.stop();
 
 		if (global.__coverage__) {
-			let coverage = await fetchCoverage();
-			fs.writeFileSync('./.nyc_output/alchemy-client-file.json', JSON.stringify(coverage));
+			let coverages = await fetchCoverage();
+
+			if (!coverages || coverages.length == 0) {
+				throw new Error('The browser-side coverage object was empty');
+			}
+
+			let i;
+
+			for (i = 0; i < coverages.length; i++) {
+				fs.writeFileSync('./.nyc_output/alchemy_' + i + '.json', JSON.stringify(coverages[i]));
+			}
+
+			await Pledge.after(500);
 		}
 
 	});

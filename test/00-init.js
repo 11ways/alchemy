@@ -10,8 +10,7 @@ let mongo_uri;
 let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
 
 let navigations = 0,
-    do_coverage = !!global.__coverage__,
-    coverage;
+    coverages = [];
 
 // Make sure janeway doesn't start
 process.env.DISABLE_JANEWAY = 1;
@@ -19,32 +18,75 @@ process.env.DISABLE_JANEWAY = 1;
 // Make MongoUnit a global
 global.MongoUnit = MongoUnit;
 
+global.do_coverage = !!global.__coverage__;
+
 // Do not log load warnings
 process.env.NO_ALCHEMY_LOAD_WARNING = 1;
 
 // Require alchemymvc
 require('../index.js');
 
-before(async function() {
+async function loadBrowser() {
 	global.browser = await puppeteer.launch();
 	global.page = await browser.newPage();
-});
+
+	page.on('console', function(msg) {
+		var pieces = ['[BROWSER]'],
+		    args = msg.args(),
+		    args;
+
+		for (arg of args) {
+			let remote = arg._remoteObject;
+
+			if (remote.type == 'string') {
+				pieces.push(remote.value);
+			} else if (remote.subtype == 'node') {
+				pieces.push('\x1b[1m\x1b[36m<' + remote.description + '>\x1b[0m');
+				//console.log(remote.preview);
+			} else if (remote.className) {
+				pieces.push('\x1b[1m\x1b[33m{' + remote.type + ' ' + remote.className + '}\x1b[0m');
+			} else if (remote.value != null) {
+				pieces.push(remote.value);
+			} else {
+				pieces.push(remote);
+			}
+		}
+
+		console.log(...pieces);
+	});
+}
 
 global.fetchCoverage = async function fetchCoverage() {
+
+	if (!global.page) {
+		return;
+	}
+
 	let temp = await page.evaluate(function getCoverage() {
+
+		if (typeof window.__Protoblast == 'undefined') {
+			return false;
+		}
+
 		return window.__coverage__;
 	});
 
 	if (temp) {
-		coverage = temp;
+		coverages.push(temp);
+	} else if (temp !== false) {
+		console.log('Failed to get coverage from browser');
 	}
 
-	return coverage;
+	return coverages;
 };
 
 global.setLocation = async function setLocation(path) {
 
 	let url;
+
+	if (!global.page) {
+		await loadBrowser();
+	}
 
 	if (navigations && do_coverage) {
 		await fetchCoverage();
@@ -64,17 +106,17 @@ global.setLocation = async function setLocation(path) {
 		url = path;
 	}
 
-	await page.goto(url);
+	let resource = await page.goto(url);
 
-	if (coverage) {
-		await page.evaluate(function setCoverage(coverage) {
-			window.__coverage__ = coverage;
-		}, coverage);
+	let status = await resource.status();
+
+	if (status >= 400) {
+		throw new Error('Received a ' + status + ' error response for "' + path + '"')
 	}
 };
 
-global.evalPage = function evalPage(fnc) {
-	return page.evaluate(fnc);
+global.evalPage = function evalPage(fnc, ...args) {
+	return page.evaluate(fnc, ...args);
 };
 
 global.despace = function despace(text) {
@@ -90,6 +132,21 @@ global.getRouteUrl = function getRouteUrl(route, options) {
 	url.port = alchemy.settings.port;
 
 	return String(url);
+};
+
+global.openHeUrl = async function openHeUrl(path) {
+
+	await evalPage(function(path) {
+		return hawkejs.scene.openUrl(path);
+	}, path);
+
+	let result = await evalPage(function() {
+		return {
+			location : document.location.pathname,
+		}
+	});
+
+	return result;
 };
 
 global.getBodyHtml = function getBodyHtml() {

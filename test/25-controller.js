@@ -198,4 +198,34 @@ describe('Controller', function() {
 			});
 		});
 	});
+
+	describe('#beforeAction(name)', function() {
+		it('should be called before an action is called', async function() {
+
+			let last_called,
+			    calls = 0,
+			    pledge = new Blast.Classes.Pledge();
+
+			PersonController.setMethod(function beforeAction(name) {
+				last_called = name;
+				calls++;
+				pledge.resolve();
+			});
+
+			let result = await setLocation('/render_test?view=body');
+
+			await pledge;
+
+			assert.strictEqual(last_called, 'rendertest');
+			assert.strictEqual(calls, 1);
+
+			result = await openHeUrl('/render_test?view=body');
+
+			assert.strictEqual(result.location, '/render_test');
+
+			assert.strictEqual(last_called, 'rendertest');
+			assert.strictEqual(calls, 2);
+
+		});
+	});
 });

@@ -1,0 +1,4 @@
+exclude:
+  - test/
+  - develry/
+exclude-after-remap: false
