@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "1.1.1-alpha",
+	"version": "1.1.1",
 	"author": "Jelle De Loecker <jelle@elevenways.be>",
 	"keywords": [
 		"alchemy",
@@ -22,7 +22,7 @@
 		"chokidar"          : "~3.4.1",
 		"formidable"        : "~1.2.2",
 		"graceful-fs"       : "~4.2.4",
-		"hawkejs"           : "~2.0.0",
+		"hawkejs"           : "~2.0.1",
 		"jsondiffpatch"     : "~0.4.1",
 		"mime"              : "~2.4.6",
 		"minimist"          : "~1.2.5",
@@ -31,7 +31,7 @@
 		"mollusc"           : "~2.0.0",
 		"mongodb"           : "~3.5.9",
 		"ncp"               : "~2.0.0",
-		"postcss"           : "~7.0.27",
+		"postcss"           : "~7.0.32",
 		"protoblast"        : "~0.7.2",
 		"semver"            : "~7.3.2",
 		"socket.io"         : "~2.3.0",
@@ -54,7 +54,7 @@
 		"socket.io-client"  : "~2.3.0"
 	},
 	"devDependencies": {
-		"codecov"                 : "~3.7.1",
+		"codecov"                 : "~3.7.2",
 		"istanbul-lib-instrument" : "~4.0.3",
 		"nyc"                     : "^15.1.0",
 		"mocha"                   : "~8.0.1",
@@ -72,6 +72,5 @@
 	"license": "MIT",
 	"engines": {
 		"node": ">=10.21.0"
-	},
-	"private": true
+	}
 }

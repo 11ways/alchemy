@@ -1,4 +1,4 @@
-## 1.1.1 (WIP)
+## 1.1.1 (2020-07-24)
 
 * Add `Base.mapEventToMethod()` to register simple emitted events names to methods per class
 * Add `Base#issueEvent(name, args, callback)` which will use the mapped event-to-method map to execute the method first & then emit the events
