@@ -1,3 +1,7 @@
+## 1.1.2 (WIP)
+
+* Fix Client class methods not being set on the server-side for classes defined in a plugin
+
 ## 1.1.1 (2020-07-24)
 
 * Add `Base.mapEventToMethod()` to register simple emitted events names to methods per class
