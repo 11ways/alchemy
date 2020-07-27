@@ -153,7 +153,26 @@ global.getBodyHtml = function getBodyHtml() {
 	return global.evalPage(function() {
 		return document.body.innerHTML;
 	});
-}
+};
+
+global.createModel = function createModel(creator) {
+
+	let name = creator.name,
+	    pledge = new Classes.Pledge();
+
+	let fnc = Function.create(name, function model(options) {
+		model.wrapper.super.call(this, options);
+	});
+
+	Function.inherits('Alchemy.Model', fnc);
+
+	fnc.constitute(function() {
+		creator.call(this);
+		pledge.resolve();
+	});
+
+	return pledge;
+};
 
 describe('require(\'alchemymvc\')', function() {
 	it('should create the global alchemy object', function() {
@@ -377,5 +396,7 @@ describe('Alchemy', function() {
 
 // This will run after ALL the files have executed (not just this file)
 after(async function() {
-	await browser.close();
+	if (global.browser) {
+		await browser.close();
+	}
 });

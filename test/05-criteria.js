@@ -153,6 +153,95 @@ describe('Criteria', function() {
 		});
 	});
 
+	describe('#isEmpty()', function() {
+		it('selects records if the context field is empty', async function() {
+
+			await createModel(function EmptyTester() {
+				this.addField('name', 'String');
+				this.addField('tags', 'String', {array: true});
+			});
+
+			let EmptyTester = Model.get('EmptyTester');
+
+			let doc = EmptyTester.createDocument();
+			doc.name = 'first';
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'second';
+			doc.tags = [];
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'third';
+			doc.tags = ['t1'];
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'fourth';
+			doc.tags = ['t2'];
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.tags = ['t3'];
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = '';
+			doc.tags = ['t4'];
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = null;
+			doc.tags = ['t5'];
+			await doc.save();
+
+			let crit = EmptyTester.find();
+			crit.where('name').isEmpty();
+
+			let all_records = await EmptyTester.find('all');
+			assert.strictEqual(all_records.length, 7);
+
+			let empty_names = await EmptyTester.find('all', crit);
+			assert.strictEqual(empty_names.length, 3);
+
+			crit = EmptyTester.find();
+			crit.where('name').not().isEmpty();
+
+			let not_empty_names = await EmptyTester.find('all', crit);
+			assert.strictEqual(not_empty_names.length, 4);
+
+			crit = EmptyTester.find();
+
+			crit.where('name').not().isEmpty();
+			crit.where('tags').not().isEmpty();
+
+			let nothing_empty = await EmptyTester.find('all', crit);
+			assert.strictEqual(nothing_empty.length, 2);
+
+			crit = EmptyTester.find();
+			let not = crit.where('name').not();
+			not.isEmpty();
+			not.equals('first');
+
+			let not_empty_or_first = await EmptyTester.find('all', crit);
+			assert.strictEqual(not_empty_or_first.length, 3);
+
+			assert.strictEqual(not_empty_or_first[0].name, 'second');
+			assert.strictEqual(not_empty_or_first[1].name, 'third');
+			assert.strictEqual(not_empty_or_first[2].name, 'fourth');
+
+			// @TODO: this doesn't work yet
+			// crit = EmptyTester.find();
+			// not = crit.where('name').not();
+			// not.isEmpty(false);
+			// not.equals('');
+
+			// let empty_no_empty_string = await EmptyTester.find('all', crit);
+
+		});
+	});
+
 	describe('#applyOldConditions(conditions)', function() {
 		it('should parse pre version 1.1.0 style conditions', async function() {
 
