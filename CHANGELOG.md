@@ -6,6 +6,7 @@
 * Add `--socket` startup argument support
 * When the given socket path is a directory, create a socket in that directory with the current project name
 * Add `--url` startup argument, which will print the url in the console
+* Add `--preload` startup argument, which will load the homepage & the client file on startup
 
 ## 1.1.1 (2020-07-24)
 
