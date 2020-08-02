@@ -3,6 +3,8 @@
 * Fix Client class methods not being set on the server-side for classes defined in a plugin
 * Add `Criteria#isEmpty()` field check
 * Add `Linkup#demand()` method
+* Add `--socket` startup argument support
+* When the given socket path is a directory, create a socket in that directory with the current project name
 
 ## 1.1.1 (2020-07-24)
 
