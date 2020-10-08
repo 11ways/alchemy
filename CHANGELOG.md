@@ -1,4 +1,4 @@
-## 1.1.2 (WIP)
+## 1.1.2 (2020-10-08)
 
 * Fix Client class methods not being set on the server-side for classes defined in a plugin
 * Add `Criteria#isEmpty()` field check

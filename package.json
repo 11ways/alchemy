@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"author": "Jelle De Loecker <jelle@elevenways.be>",
 	"keywords": [
 		"alchemy",
@@ -22,7 +22,7 @@
 		"chokidar"          : "~3.4.1",
 		"formidable"        : "~1.2.2",
 		"graceful-fs"       : "~4.2.4",
-		"hawkejs"           : "~2.0.1",
+		"hawkejs"           : "~2.0.2",
 		"jsondiffpatch"     : "~0.4.1",
 		"mime"              : "~2.4.6",
 		"minimist"          : "~1.2.5",
