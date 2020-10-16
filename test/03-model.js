@@ -262,6 +262,98 @@ describe('Model', function() {
 			});
 		});
 
+		it('should be able to add cloned schemas', function(next) {
+
+			let pledge = new Classes.Pledge();
+
+			next = Function.regulate(next);
+
+			let Scenario = Function.inherits('Alchemy.Model', function Scenario(options) {
+				Scenario.super.call(this, options);
+			});
+
+			Scenario.constitute(function addFields() {
+				this.addField('name', 'String');
+
+				let components = new Classes.Alchemy.Schema(this);
+
+				components.addField('uid', 'ObjectId', {default: alchemy.ObjectId});
+
+				let connections = new Classes.Alchemy.Schema();
+				let connection = new Classes.Alchemy.Schema();
+
+				// Create the anchor schema
+				let anchor = new Classes.Alchemy.Schema();
+				anchor.addField('node_uid', 'ObjectId');
+				anchor.addField('anchor_name', 'String');
+
+				// And we'll use this anchor schema twice!
+				connection.addField('source', JSON.clone(anchor));
+				connection.addField('target', JSON.clone(anchor));
+
+				// And the connections will also be used twice!
+				connections.addField('in', JSON.clone(connection), {array: true});
+				connections.addField('out', JSON.clone(connection), {array: true});
+
+				components.addField('connections', connections);
+
+				let pos = new Classes.Alchemy.Schema();
+				pos.addField('x', 'Number');
+				pos.addField('y', 'Number');
+
+				components.addField('pos', pos);
+
+				// All the blocks of this scenario
+				this.addField('components', components, {array: true});
+
+				pledge.resolve();
+			});
+
+			pledge.done(async function() {
+
+				let ScenarioModel = Model.get('Scenario'),
+				    scenario = ScenarioModel.createDocument();
+
+				scenario.name = 'first-scenario';
+
+				let components = [
+					{
+						uid : alchemy.ObjectId(),
+						pos : {x: 1, y: 2},
+						connections : {
+							in : [
+								{
+									source : {
+										node_uid     : alchemy.ObjectId(),
+										anchor_name  : 'alpha'
+									},
+									target : {
+										node_uid     : alchemy.ObjectId(),
+										anchor_name  : 'beta'
+									}
+								}
+							],
+							out : []
+						}
+					}
+				];
+
+				scenario.components = components;
+
+				await scenario.save();
+
+				let saved = await ScenarioModel.find('first');
+
+				assert.strictEqual(saved.name, scenario.name);
+
+				let alike = Object.alike(scenario.components, saved.components);
+
+				assert.strictEqual(alike, true);
+
+				next();
+			});
+		});
+
 		it('should be able to add translatable fields', function(next) {
 			next = Function.regulate(next);
 

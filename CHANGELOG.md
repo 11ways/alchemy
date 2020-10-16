@@ -1,3 +1,7 @@
+## 1.1.3 (WIP)
+
+* Add `Schema#clone()` method
+
 ## 1.1.2 (2020-10-08)
 
 * Fix Client class methods not being set on the server-side for classes defined in a plugin
