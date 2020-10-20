@@ -1,6 +1,7 @@
 ## 1.1.3 (WIP)
 
 * Add `Schema#clone()` method
+* Add `Schema#field_count` property
 
 ## 1.1.2 (2020-10-08)
 
