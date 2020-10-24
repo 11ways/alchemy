@@ -197,4 +197,4 @@ By default 3 fields are already added to the schema:
 
 ## Authors
 
-Protoblast is developed at [Eleven Ways](https://www.elevenways.be/), a team of [IAAP Certified Accessibility Specialists](https://www.accessibilityassociation.org/).
+AlchemyMVC is developed at [Eleven Ways](https://www.elevenways.be/), a team of [IAAP Certified Accessibility Specialists](https://www.accessibilityassociation.org/).

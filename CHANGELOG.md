@@ -2,6 +2,7 @@
 
 * Add `Schema#clone()` method
 * Add `Schema#field_count` property
+* Fix `Schema#addField()` throwing an error when adding a schema field on the browser side
 
 ## 1.1.2 (2020-10-08)
 
