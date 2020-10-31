@@ -38,7 +38,7 @@ describe('Base', function() {
 		});
 
 		it('returns null for classes that are not a group', function() {
-			var result = Classes.Alchemy.Conduit.getMember('http');
+			var result = Classes.Alchemy.Conduit.Conduit.getMember('http');
 
 			assert.strictEqual(result, null);
 		});

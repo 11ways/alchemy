@@ -4,6 +4,9 @@
 * Add `Schema#field_count` property
 * Fix `Schema#addField()` throwing an error when adding a schema field on the browser side
 * Added `Criteria#page(page, page_size)`
+* `Conduit` classes have been moved into the `Conduit` namespace
+* `Conduit.Loopback` now correctly sets the method & body
+* Added `Criteria.FieldSet` and `Criteria.FieldConfig` classes
 
 ## 1.1.2 (2020-10-08)
 
