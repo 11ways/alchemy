@@ -10,6 +10,7 @@
 * Object responses via `Conduit.Loopback#end()` will now first be cloned with the `toHawkejs` clone option
 * `Model#find()` will now reject when no `datasource` property is set
 * Add support for `fonts` asset folders
+* Add `CustomElement#getCurrentUrl()` method
 
 ## 1.1.2 (2020-10-08)
 
