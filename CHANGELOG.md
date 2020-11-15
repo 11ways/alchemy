@@ -1,3 +1,7 @@
+## 1.1.4 (WIP)
+
+* Fix certain socket linkup packets not being json-dry encodes
+
 ## 1.1.3 (2020-11-12)
 
 * Add `Schema#clone()` method
