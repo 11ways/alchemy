@@ -2,6 +2,7 @@
 
 * Fix certain socket linkup packets not being json-dry encodes
 * Make `Alchemy#findImagePath()` return a promise
+* Make `FieldConfig` class more aware of paths
 
 ## 1.1.3 (2020-11-12)
 
