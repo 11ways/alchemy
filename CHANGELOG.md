@@ -3,6 +3,7 @@
 * Fix certain socket linkup packets not being json-dry encodes
 * Make `Alchemy#findImagePath()` return a promise
 * Make `FieldConfig` class more aware of paths
+* Fix `Validator#validateFieldValue()` throwing an error when a field contains multiple violations
 
 ## 1.1.3 (2020-11-12)
 
