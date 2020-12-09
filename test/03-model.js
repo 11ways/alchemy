@@ -365,6 +365,11 @@ describe('Model', function() {
 				this.addField('name', 'String');
 				this.addField('title', 'String', {translatable: true});
 
+				let sub_schema = new Classes.Alchemy.Schema();
+				sub_schema.addField('foobar', 'String', {translatable: true});
+
+				this.addField('items', sub_schema, {array: true});
+
 				next();
 			});
 		});

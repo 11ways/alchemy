@@ -39,6 +39,101 @@ describe('Field', function() {
 			// @TODO: should have overwritten the saved doc
 			//assert.strictEqual(doc.title.__, saved_doc.title.__);
 		});
+
+		it('translates fields when needed', async function() {
+
+			var model = Model.get('WithTranslation'),
+			    doc = model.createDocument();
+
+			doc.name = 'with-translations';
+
+			doc.title = {
+				en: 'title',
+				nl: 'titel'
+			};
+
+			doc.items = [
+				{
+					foobar: {
+						en: 'one',
+						nl: 'een'
+					}
+				},
+				{
+					foobar: {
+						en: 'two',
+						nl: 'twee'
+					}
+				}
+			];
+
+			await doc.save();
+
+			doc = await model.findByValues({
+				name : 'with-translations'
+			});
+
+			assert.strictEqual(doc.name, 'with-translations');
+
+			assert.deepStrictEqual(doc.title, {
+				en: 'title',
+				nl: 'titel'
+			});
+
+			assert.deepStrictEqual(doc.items, [
+				{
+					foobar: {
+						en: 'one',
+						nl: 'een'
+					}
+				},
+				{
+					foobar: {
+						en: 'two',
+						nl: 'twee'
+					}
+				}
+			]);
+
+			let crit = model.find();
+			crit.setOption('locale', 'nl');
+			crit.where('name').equals('with-translations');
+
+			let nl = await model.find('first', crit);
+
+			assert.strictEqual(nl.title, 'titel');
+
+			assert.deepStrictEqual(nl.items, [
+				{
+					foobar: 'een',
+					_prefix_foobar: "nl"
+				},
+				{
+					foobar: 'twee',
+					_prefix_foobar: "nl"
+				}
+			]);
+
+			crit = model.find();
+			crit.setOption('locale', 'en');
+			crit.where('name').equals('with-translations');
+
+			let en = await model.find('first', crit);
+
+			assert.strictEqual(en.title, 'title');
+
+			assert.deepStrictEqual(en.items, [
+				{
+					foobar: 'one',
+					_prefix_foobar: "en"
+				},
+				{
+					foobar: 'two',
+					_prefix_foobar: "en"
+				}
+			]);
+
+		});
 	});
 
 	describe('#path', function() {

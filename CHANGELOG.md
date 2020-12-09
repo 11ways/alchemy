@@ -4,6 +4,7 @@
 * Make `Alchemy#findImagePath()` return a promise
 * Make `FieldConfig` class more aware of paths
 * Fix `Validator#validateFieldValue()` throwing an error when a field contains multiple violations
+* Fix Schema fields not translating translatable fields
 
 ## 1.1.3 (2020-11-12)
 
