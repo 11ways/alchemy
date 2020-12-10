@@ -5,6 +5,7 @@
 * Make `FieldConfig` class more aware of paths
 * Fix `Validator#validateFieldValue()` throwing an error when a field contains multiple violations
 * Fix Schema fields not translating translatable fields
+* Fix `Validations` errors always having only max 1 field error
 
 ## 1.1.3 (2020-11-12)
 
