@@ -1,4 +1,4 @@
-## 1.1.4 (WIP)
+## 1.1.4 (2020-12-10)
 
 * Fix certain socket linkup packets not being json-dry encodes
 * Make `Alchemy#findImagePath()` return a promise
