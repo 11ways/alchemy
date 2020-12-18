@@ -1,3 +1,9 @@
+## 1.1.5 (WIP)
+
+* Fallback to the `ENV` environment variable to set the environment
+* Fix rendering of segments
+* Fix Loopback conduits not setting the correct data when only provided with a route name
+
 ## 1.1.4 (2020-12-10)
 
 * Fix certain socket linkup packets not being json-dry encodes
