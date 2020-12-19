@@ -3,6 +3,7 @@
 * Fallback to the `ENV` environment variable to set the environment
 * Fix rendering of segments
 * Fix Loopback conduits not setting the correct data when only provided with a route name
+* Set the `Hawkejs.Renderer` language once we have a prefix
 
 ## 1.1.4 (2020-12-10)
 
