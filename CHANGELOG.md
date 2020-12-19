@@ -4,6 +4,7 @@
 * Fix rendering of segments
 * Fix Loopback conduits not setting the correct data when only provided with a route name
 * Set the `Hawkejs.Renderer` language once we have a prefix
+* Automatically add the `hreflang` attribute to links created with the Router helper
 
 ## 1.1.4 (2020-12-10)
 
