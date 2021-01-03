@@ -4,6 +4,7 @@ describe('Model', function() {
 
 	var WithSchemaField,
 	    WithTranslation,
+	    WithComplexSchemaField,
 	    data,
 	    _id;
 
@@ -257,6 +258,68 @@ describe('Model', function() {
 				this.addField('description', 'String', {translatable: true});
 
 				this.addField('translatable_tags', 'String', {translatable: true, array: true});
+
+				next();
+			});
+		});
+
+		it('should be able to add translatable & array schema fields', function(next) {
+
+			let pledge = new Classes.Pledge();
+
+			next = Function.regulate(next);
+
+			WithComplexSchemaField = Function.inherits('Alchemy.Model', 'WithComplexSchemaField');
+
+			WithComplexSchemaField.constitute(function addFields() {
+
+				let subschema = new Classes.Alchemy.Schema();
+
+				subschema.addField('name', 'String');
+				subschema.addField('value', 'String');
+
+				this.addField('name', 'String');
+				this.addField('values', subschema, {array: true, translatable: true});
+
+				this.addField('tags', 'String', {array: true, translatable: true});
+
+				pledge.resolve();
+			});
+
+			pledge.done(async function() {
+
+				let WCSF = Model.get('WithComplexSchemaField');
+
+				let doc = WCSF.createDocument();
+
+				doc.name = 'wcsftest';
+				doc.values = {
+					en : [
+						{name: 'en-name', value: 'en'}
+					],
+					nl: [
+						{name: 'nl-name', value: 'nl'}
+					]
+				};
+
+				doc.tags = {
+					en: ['en-tag'],
+					nl: ['nl-tag']
+				};
+
+				await doc.save();
+
+				let found_doc = await WCSF.find('first');
+
+				assert.deepStrictEqual(doc.tags, {
+					en: ['en-tag'],
+					nl: ['nl-tag']
+				});
+
+				assert.deepStrictEqual(found_doc.tags, {
+					en: ['en-tag'],
+					nl: ['nl-tag']
+				});
 
 				next();
 			});

@@ -182,7 +182,7 @@ describe('Field', function() {
 	});
 
 	describe('#getFieldValues(document)', function() {
-		it('should return all the values of this field in the document', function() {
+		it('should return all the values of this field in the document', async function() {
 
 			let WithSchema = Model.get('WithSchemaField'),
 			    doc = WithSchema.createDocument();
@@ -320,6 +320,14 @@ describe('Field', function() {
 			assert.strictEqual(values[3].value, 'nl1');
 			assert.strictEqual(values[3].path,  'translatable_tags.nl.1');
 
+			await doc.save();
+
+			values = translatable_tags_field.getDocumentValues(doc);
+
+			// Sort the result by the prefix
+			values.sortByPath(1, 'path');
+
+			assert.strictEqual(values.length, 4, 'Expected 4 tags, but got ' + values.length + ', something happend while saving');
 		});
 	});
 
