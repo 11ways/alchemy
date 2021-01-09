@@ -1,0 +1,2 @@
+<he-dialog #variables={% ["test"] %}></he-dialog>
+<my-button #value={% ["DIALOG-BUTTON"] %}></my-button>

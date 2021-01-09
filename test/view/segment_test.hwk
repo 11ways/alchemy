@@ -1,0 +1,8 @@
+{% extend "base" %}
+
+{% block "body" %}»
+	<he-dialog #variables={% ["test"] %}></he-dialog>
+	<% include('segment/he_dialog_test') %>
+	<% Alchemy.segment('Static#segment', {name: 'he_dialog_test'}) %>
+	<my-button #value={% ["BUTTON"] %}></my-button>
+{% /block %}

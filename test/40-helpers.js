@@ -1,5 +1,14 @@
 const assert = require('assert');
 
+// These tests require the controller & router tests
+if (!global.queued_controller) {
+	require('./25-controller.js');
+}
+
+if (!global.queued_router) {
+	require('./30-router.js');
+}
+
 describe('Helper.Alchemy', function() {
 
 	describe('#getResource()', function() {
@@ -24,6 +33,10 @@ describe('Helper.Alchemy', function() {
 		it('should render correctly on the server', function(next) {
 
 			let url = global.getRouteUrl('Static#viewContent');
+
+			if (!String(url).endsWith('viewcontent')) {
+				return next(new Error('The Static#viewContent url was not found'));
+			}
 
 			Blast.fetch(url, function gotResponse(err, res, body) {
 
@@ -72,6 +85,52 @@ describe('Helper.Alchemy', function() {
 			has_name = body.indexOf('SCT:{"name":"Roel"') > -1;
 
 			assert.strictEqual(has_name, true, 'The client-side render did not produce the expected result');
+		});
+	});
+
+	describe('#segment(route)', function() {
+		it('should render a route', async function() {
+
+			let url = global.getRouteUrl('Static#view', {view: 'segment_test'});
+
+			alchemy.settings.debug = true;
+
+			await setLocation(url);
+
+			let ids = await global.evalPage(function() {
+
+				let elements = document.querySelectorAll('[data-hid]'),
+				    element,
+				    ids = [],
+				    i;
+
+				for (i = 0; i < elements.length; i++) {
+					element = elements[i];
+
+					ids.push(element.dataset.hid);
+				}
+
+				ids.sort();
+
+				return ids;
+			});
+
+			alchemy.settings.debug = false;
+
+			let expected_ids = [
+				'hserverside-0',
+				'hserverside-1',
+				'hserverside-2',
+				'hserverside-3',
+				'hserverside-4',
+				'hserverside-5',
+				'hserverside-6',
+				'hserverside-7',
+				'hserverside-8',
+				'hserverside-9'
+			];
+
+			assert.deepStrictEqual(ids, expected_ids);
 		});
 	});
 

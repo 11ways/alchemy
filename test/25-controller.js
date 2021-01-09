@@ -1,5 +1,7 @@
 var assert = require('assert');
 
+global.queued_controller = true;
+
 describe('Controller', function() {
 
 	/**
@@ -28,6 +30,14 @@ describe('Controller', function() {
 			StaticController.setAction(function content(conduit) {
 				let response = 'SCT:' + JSON.stringify(conduit.param());
 				conduit.end(response);
+			});
+
+			StaticController.setAction(function segment(conduit, name) {
+				this.renderSegment('segment/' + name);
+			});
+
+			StaticController.setAction(function view(conduit, name) {
+				this.render(name);
 			});
 
 			StaticController.setAction(function viewContent(conduit) {

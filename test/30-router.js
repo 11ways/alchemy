@@ -1,5 +1,7 @@
 var assert = require('assert');
 
+global.queued_router = true;
+
 describe('Router', function() {
 
 	var people_url;
@@ -23,6 +25,18 @@ describe('Router', function() {
 				paths      : '/_dev_test',
 				handler    : 'Static#test',
 				breadcrumb : 'static.test'
+			});
+
+			Router.add({
+				name    : 'Static#segment',
+				methods : 'get',
+				paths   : '/api/static/segment/{name}'
+			});
+
+			Router.add({
+				name    : 'Static#view',
+				methods : 'get',
+				paths   : '/static/view/{view}'
 			});
 
 			assert.strictEqual(route instanceof Classes.Alchemy.Route, true);
@@ -56,6 +70,12 @@ describe('Router', function() {
 				paths   : '/viewcontent'
 			});
 		});
+
+		// If this is a test that does not include the controller tests,
+		// stop now
+		if (!global.queued_controller) {
+			return;
+		}
 
 		it('routes requests to the correct controller & action', function(done) {
 
