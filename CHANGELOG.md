@@ -7,6 +7,7 @@
 * Automatically add the `hreflang` attribute to links created with the Router helper
 * Fix `Conduit#url` property having the wrong path set
 * Load `helper_datasource` and `helper_field` folders before main `helper` folder
+* Add `Alchemy#checksum(value)` method
 
 ## 1.1.4 (2020-12-10)
 
