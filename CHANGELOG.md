@@ -9,6 +9,8 @@
 * Load `helper_datasource` and `helper_field` folders before main `helper` folder
 * Add `Alchemy#checksum(value)` method
 * Throw an error when a class instance is used as a criteria condition
+* Fix breadcrumbs for routes that contain objects
+* Apply active-link breadcrumb classes while creating the anchors
 
 ## 1.1.4 (2020-12-10)
 
