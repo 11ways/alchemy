@@ -1,4 +1,4 @@
-## 1.1.5 (WIP)
+## 1.1.5 (2021-01-21)
 
 * Fallback to the `ENV` environment variable to set the environment
 * Fix rendering of segments
