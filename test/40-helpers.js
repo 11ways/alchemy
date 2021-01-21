@@ -14,16 +14,17 @@ describe('Helper.Alchemy', function() {
 	describe('#getResource()', function() {
 
 		it('should throw an error when called without a conduit', function(next) {
+
 			alchemy.hawkejs.render('static/viewcontent', {}, function rendered(err, res) {
 
-				try {
-					assert.strictEqual(!!err, true);
-				} catch (err) {
+				if (err) {
 					return next(err);
 				}
 
-				if (err.message.indexOf('Unable to find template') > -1) {
-					return next(err);
+				let has_error = res.indexOf('Could not find conduit, alchemy resource will not be fetched') > -1;
+
+				if (!has_error) {
+					return next(new Error('Hawkejs should have printed an error in the html'));
 				}
 
 				next();
