@@ -1,3 +1,7 @@
+## 1.1.6 (WIP)
+
+* Switch from `uglify-es` to `terser` for minifying JavaScript files
+
 ## 1.1.5 (2021-01-21)
 
 * Fallback to the `ENV` environment variable to set the environment
