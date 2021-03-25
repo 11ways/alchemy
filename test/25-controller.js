@@ -36,8 +36,12 @@ describe('Controller', function() {
 				this.renderSegment('segment/' + name);
 			});
 
-			StaticController.setAction(function view(conduit, name) {
+			StaticController.setAction(function rootview(conduit, name) {
 				this.render(name);
+			});
+
+			StaticController.setAction(function view(conduit, name) {
+				this.render('static/' + name);
 			});
 
 			StaticController.setAction(function viewContent(conduit) {

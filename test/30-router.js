@@ -34,9 +34,25 @@ describe('Router', function() {
 			});
 
 			Router.add({
+				name    : 'Static#rootview',
+				methods : 'get',
+				paths   : '/root/{view}'
+			});
+
+			Router.add({
 				name    : 'Static#view',
 				methods : 'get',
 				paths   : '/static/view/{view}'
+			});
+
+			Router.add({
+				name    : 'Static#localeView',
+				methods : 'get',
+				paths   : {
+					nl  : '/static/view/{view}',
+					en  : '/static/view/{view}'
+				},
+				breadcrumb: 'static.view.{view}'
 			});
 
 			assert.strictEqual(route instanceof Classes.Alchemy.Route, true);

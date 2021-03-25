@@ -15,7 +15,11 @@ describe('Helper.Alchemy', function() {
 
 		it('should throw an error when called without a conduit', function(next) {
 
+			silenceConsole();
+
 			alchemy.hawkejs.render('static/viewcontent', {}, function rendered(err, res) {
+
+				restoreConsole();
 
 				if (err) {
 					return next(err);
@@ -92,7 +96,7 @@ describe('Helper.Alchemy', function() {
 	describe('#segment(route)', function() {
 		it('should render a route', async function() {
 
-			let url = global.getRouteUrl('Static#view', {view: 'segment_test'});
+			let url = global.getRouteUrl('Static#rootview', {view: 'segment_test'});
 
 			alchemy.settings.debug = true;
 
@@ -159,7 +163,23 @@ describe('Helper.Router', function() {
 				assert.strictEqual(res, `<a href="/api/test"></a>`);
 				done();
 			});
+		});
+	});
 
+	describe('#routeUrl()', () => {
+		it('should return the wanted route url', async () => {
+
+			let result = await setLocation('/static/view/routertest');
+
+			let html = await getBodyHtml();
+
+			let nl_span = await queryElementData('span#nlurl');
+			let en_span = await queryElementData('span#enurl');
+			let current_url = await queryElementData('#currenturl');
+
+			assert.strictEqual(nl_span.text, '/nl/static/view/routertest');
+			assert.strictEqual(en_span.text, '/en/static/view/routertest');
+			assert.strictEqual(current_url.text, 'http://127.0.0.1:3000/static/view/routertest');
 		});
 	});
 });

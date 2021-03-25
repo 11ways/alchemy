@@ -31,9 +31,12 @@ async function loadBrowser() {
 	global.page = await browser.newPage();
 
 	page.on('console', function(msg) {
-		var pieces = ['[BROWSER]'],
-		    args = msg.args(),
-		    args;
+
+		// Only needed when writing new tests
+		return;
+
+		let pieces = ['[BROWSER]'],
+		    args = msg.args();
 
 		for (arg of args) {
 			let remote = arg._remoteObject;
@@ -54,6 +57,19 @@ async function loadBrowser() {
 
 		console.log(...pieces);
 	});
+}
+
+let console_log = console.log;
+let console_error = console.error;
+
+global.restoreConsole = function restoreConsole() {
+	console.log = console_log;
+	console.error = console_error;
+};
+
+global.silenceConsole = function silenceConsole() {
+	console.log = () => {};
+	console.error = () => {};
 }
 
 global.fetchCoverage = async function fetchCoverage() {
@@ -132,6 +148,24 @@ global.getRouteUrl = function getRouteUrl(route, options) {
 	url.port = alchemy.settings.port;
 
 	return String(url);
+};
+
+global.queryElementData = async function queryElementData(query) {
+
+	let result = await evalPage(function(query) {
+		let block = document.querySelector(query);
+
+		let result = {
+			html       : block.outerHTML,
+			text       : block.textContent,
+			location   : document.location.pathname,
+			scroll_top : document.scrollingElement.scrollTop,
+		};
+
+		return result;
+	}, query);
+
+	return result;
 };
 
 global.openHeUrl = async function openHeUrl(path) {

@@ -1,0 +1,7 @@
+{% extend "base" %}
+
+{% block "body" %}
+	<span id="currenturl">{%= Router.current_url %}</span><br>
+	<span id="enurl">{%= Router.routeUrl('Static#localeView', {view: 'routertest'}, {locale: 'en'}) %}</span><br>
+	<span id="nlurl">{%= Router.routeUrl('Static#localeView', {view: 'routertest'}, {locale: 'nl'}) %}</span><br>
+{% /block %}
