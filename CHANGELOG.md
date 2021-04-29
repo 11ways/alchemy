@@ -1,4 +1,4 @@
-## 1.1.6 (WIP)
+## 1.1.6 (2021-04-29)
 
 * Switch from `uglify-es` to `terser` for minifying JavaScript files
 * Allow overriding any setting from the command line
