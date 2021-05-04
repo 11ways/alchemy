@@ -1,3 +1,7 @@
+## 1.1.7 (WIP)
+
+* Add `Alchemy.Criteria.FieldConfig#getDisplayValueIn(data)` method to get a simple string representation of a value
+
 ## 1.1.6 (2021-04-29)
 
 * Switch from `uglify-es` to `terser` for minifying JavaScript files
