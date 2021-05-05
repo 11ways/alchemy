@@ -3,6 +3,7 @@
 * Add `Alchemy.Criteria.FieldConfig#getDisplayValueIn(data)` method to get a simple string representation of a value
 * Check field class constructor in `Schema#addField()`
 * Allow RegExp values for String fields during a query
+* Requesting a route with the wrong method will now return a 405 error (Method Not Allowed) instead of a 404
 
 ## 1.1.6 (2021-04-29)
 
