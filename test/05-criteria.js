@@ -89,6 +89,19 @@ describe('Criteria', function() {
 			assert.strictEqual(record.firstname, 'Jelle');
 		});
 
+		it('should accept regex values', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').equals(/.*elle.*/i);
+
+			let records = await Person.find('all', criteria),
+			    record = records[0];
+
+			assert.strictEqual(records.length, 1);
+			assert.strictEqual(record.firstname, 'Jelle');
+
+		});
+
 		it('can target fields in an associated BelongsTo model', async function() {
 
 			var criteria = makeCriteria();

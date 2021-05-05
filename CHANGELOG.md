@@ -2,6 +2,7 @@
 
 * Add `Alchemy.Criteria.FieldConfig#getDisplayValueIn(data)` method to get a simple string representation of a value
 * Check field class constructor in `Schema#addField()`
+* Allow RegExp values for String fields during a query
 
 ## 1.1.6 (2021-04-29)
 
