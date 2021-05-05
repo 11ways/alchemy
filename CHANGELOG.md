@@ -4,6 +4,7 @@
 * Check field class constructor in `Schema#addField()`
 * Allow RegExp values for String fields during a query
 * Requesting a route with the wrong method will now return a 405 error (Method Not Allowed) instead of a 404
+* Fix client `Model` classes not being able to perform a query when running on the server in loopback mode
 
 ## 1.1.6 (2021-04-29)
 
