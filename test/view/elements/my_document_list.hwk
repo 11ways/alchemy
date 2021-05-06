@@ -1,0 +1,9 @@
+<ul class="records">
+{% each records as record %}
+	<ul>
+		<li>Constructor: {{ record.constructor.name }}</li>
+		<li>ID: <%= record._id != null %></li>
+		<li>Name: <%= record.firstname %></li>
+	</ul>
+{% /each %}
+</ul>

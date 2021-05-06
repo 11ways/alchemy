@@ -55,6 +55,8 @@ describe('Router', function() {
 				breadcrumb: 'static.view.{view}'
 			});
 
+			Router.post('Person#readDatasource', '/api/person/readDatasource');
+
 			assert.strictEqual(route instanceof Classes.Alchemy.Route, true);
 
 			assert.strictEqual(route.controller, 'Static');
@@ -121,9 +123,13 @@ describe('Router', function() {
 				post : {date: 1}
 			}, function gotResponse(err, res, body) {
 
-				assert.strictEqual(!!err, true);
-				assert.strictEqual(err instanceof Error, true);
-				assert.strictEqual(res.statusCode, 404);
+				try {
+					assert.strictEqual(!!err, true);
+					assert.strictEqual(err instanceof Error, true);
+					assert.strictEqual(res.statusCode, 405, 'A 405 is expected (Method not allowed)');
+				} catch (err) {
+					return done(err);
+				}
 
 				done();
 			});

@@ -262,6 +262,7 @@ describe('Alchemy', function() {
 			let test_views = alchemy.pathResolve(__filename, '..', 'view');
 			alchemy.addViewDirectory(test_views);
 			alchemy.hawkejs.load(__dirname + '/element/my_button.js');
+			alchemy.hawkejs.load(__dirname + '/element/my_document_list.js');
 		});
 	});
 

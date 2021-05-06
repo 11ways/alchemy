@@ -1,0 +1,5 @@
+{% extend "base" %}
+
+{% block "body" %}»
+	<my-document-list model="Person"></my-document-list>
+{% /block %}

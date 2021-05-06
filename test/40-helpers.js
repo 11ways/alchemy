@@ -91,6 +91,21 @@ describe('Helper.Alchemy', function() {
 
 			assert.strictEqual(has_name, true, 'The client-side render did not produce the expected result');
 		});
+
+		it('should be used when getting documents on the server side during a render', async function() {
+
+			let url = global.getRouteUrl('Static#rootview', {view: 'my_document_list_test'});
+
+			await setLocation(url);
+
+			let element = await queryElementData('my-document-list');
+			let text = element.text;
+
+			assert.strictEqual(text.indexOf('ID: true') > -1, true);
+			assert.strictEqual(text.indexOf('Constructor: Person') > -1, true);
+			assert.strictEqual(text.indexOf('Name: Griet') > -1, true);
+			assert.strictEqual(text.indexOf('Name: Jelle') > -1, true);
+		});
 	});
 
 	describe('#segment(route)', function() {
