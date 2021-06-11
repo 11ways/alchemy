@@ -6,6 +6,7 @@
 * Requesting a route with the wrong method will now return a 405 error (Method Not Allowed) instead of a 404
 * Fix client `Model` classes not being able to perform a query when running on the server in loopback mode
 * Fix `time-ago` element refreshing every second when counting down to a date
+* Fix the `Loopback` conduit sometimes setting the wrong route method
 
 ## 1.1.6 (2021-04-29)
 
