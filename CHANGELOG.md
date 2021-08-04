@@ -1,3 +1,7 @@
+## 1.1.8 (WIP)
+
+* Add `conduit` getter to the Base class
+
 ## 1.1.7 (2021-06-11)
 
 * Add `Alchemy.Criteria.FieldConfig#getDisplayValueIn(data)` method to get a simple string representation of a value

@@ -99,10 +99,16 @@ describe('Controller', function() {
 				// Enable cookies
 				alchemy.settings.cookies = true;
 
+				Blast.Classes.Develry.Request.cache.reset();
+
 				Blast.fetch(url, function gotResponse(err, res, body) {
 
 					if (err) {
 						return next(err);
+					}
+
+					if (!res.headers['set-cookie']) {
+						throw new Error('Response is missing the `set-cookie` header');
 					}
 
 					assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/') > -1, true);
