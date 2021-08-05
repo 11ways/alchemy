@@ -1,6 +1,8 @@
 ## 1.1.8 (WIP)
 
 * Add `conduit` getter to the Base class
+* Use Protoblast's temp file methods instead of `temp`
+* Add `/hawkejs/static.js` middleware
 
 ## 1.1.7 (2021-06-11)
 

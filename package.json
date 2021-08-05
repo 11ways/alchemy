@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "1.1.8-alpha.1",
+	"version": "1.1.8-alpha.3",
 	"author": "Jelle De Loecker <jelle@elevenways.be>",
 	"keywords": [
 		"alchemy",
@@ -37,7 +37,6 @@
 		"socket.io"        : "~2.3.0",
 		"socket.io-stream" : "~0.9.1",
 		"sputnik"          : "~0.1.0",
-		"temp"             : "~0.9.4",
 		"terser"           : "~5.7.0",
 		"toobusy-js"       : "~0.5.1",
 		"useragent"        : "~2.3.0"
