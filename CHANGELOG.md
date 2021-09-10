@@ -3,6 +3,7 @@
 * Add `conduit` getter to the Base class
 * Use Protoblast's temp file methods instead of `temp`
 * Add `/hawkejs/static.js` middleware
+* Use `sass` instead of the deprecated `node-sass`
 
 ## 1.1.7 (2021-06-11)
 
