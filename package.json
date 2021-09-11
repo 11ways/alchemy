@@ -28,7 +28,6 @@
 		"minimist"         : "~1.2.5",
 		"mkdirp"           : "~1.0.4",
 		"mmmagic"          : "~0.5.3",
-		"mollusc"          : "~2.0.0",
 		"mongodb"          : "~3.6.6",
 		"ncp"              : "~2.0.0",
 		"postcss"          : "~8.2.13",

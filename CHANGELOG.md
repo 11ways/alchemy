@@ -4,6 +4,7 @@
 * Use Protoblast's temp file methods instead of `temp`
 * Add `/hawkejs/static.js` middleware
 * Use `sass` instead of the deprecated `node-sass`
+* Use Protoblast's slug method instead of mollusc
 
 ## 1.1.7 (2021-06-11)
 
