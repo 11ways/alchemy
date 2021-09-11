@@ -5,6 +5,7 @@
 * Add `/hawkejs/static.js` middleware
 * Use `sass` instead of the deprecated `node-sass`
 * Use Protoblast's slug method instead of mollusc
+* Add some more Directory & File methods
 
 ## 1.1.7 (2021-06-11)
 
