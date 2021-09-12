@@ -1,4 +1,4 @@
-## 1.1.8 (WIP)
+## 1.1.8 (2021-09-12)
 
 * Add `conduit` getter to the Base class
 * Use Protoblast's temp file methods instead of `temp`
