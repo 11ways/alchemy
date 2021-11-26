@@ -1,3 +1,7 @@
+## 1.1.9 (2021-12-06)
+
+* Fix request files not being set correctly when using a nested form path (Backport)
+
 ## 1.1.8 (2021-09-12)
 
 * Add `conduit` getter to the Base class
