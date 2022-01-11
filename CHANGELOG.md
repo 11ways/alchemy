@@ -1,3 +1,7 @@
+## 1.1.10 (2022-01-11)
+
+* Fix socket.io issues
+
 ## 1.1.9 (2021-12-06)
 
 * Fix request files not being set correctly when using a nested form path (Backport)
