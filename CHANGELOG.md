@@ -3,6 +3,7 @@
 * Fix request files not being set correctly when using a nested form path
 * Fix associated field selections not being queried
 * Make `Model#getField(path)` support getting associated fields
+* Allow comparing any type of field to a RegExp
 
 ## 1.1.8 (2021-09-12)
 
