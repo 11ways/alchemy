@@ -624,6 +624,7 @@ describe('Model', function() {
 				var griet_data = {
 					firstname : 'Griet',
 					lastname  : 'De Leener',
+					birthdate : new Date('1967-04-14'),
 					male      : false
 				};
 

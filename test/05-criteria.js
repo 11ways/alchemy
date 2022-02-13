@@ -112,6 +112,51 @@ describe('Criteria', function() {
 			assert.strictEqual(record.firstname, 'Jelle');
 		});
 
+		it('should respect limits when giving regex values', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('birthdate').equals(/.*19.*/i);
+
+			criteria.sort({birthdate: 1});
+			criteria.limit(1);
+
+			let records = await Person.find('all', criteria),
+			    record = records[0];
+
+			assert.strictEqual(records.length, 1);
+			assert.strictEqual(records.available, 2);
+			assert.strictEqual(record.firstname, 'Griet');
+
+			// Now do the reverse sort
+			criteria = makeCriteria();
+			criteria.where('birthdate').equals(/.*19.*/i);
+
+			criteria.sort({birthdate: -1});
+			criteria.limit(1);
+
+			records = await Person.find('all', criteria);
+			record = records[0];
+
+			assert.strictEqual(records.length, 1);
+			assert.strictEqual(records.available, 2);
+			assert.strictEqual(record.firstname, 'Jelle');
+
+			// And now let's use the skip
+			criteria = makeCriteria();
+			criteria.where('birthdate').equals(/.*19.*/i);
+
+			criteria.sort({birthdate: -1});
+			criteria.limit(1);
+			criteria.skip(1);
+
+			records = await Person.find('all', criteria);
+			record = records[0];
+
+			assert.strictEqual(records.length, 1);
+			assert.strictEqual(record.firstname, 'Griet', 'Expected "Griet", the "Jelle" record should have been skipped');
+			assert.strictEqual(records.available, 2);
+		});
+
 		it('can target fields in an associated BelongsTo model', async function() {
 
 			var criteria = makeCriteria();
