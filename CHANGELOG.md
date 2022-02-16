@@ -4,6 +4,7 @@
 * Fix associated field selections not being queried
 * Make `Model#getField(path)` support getting associated fields
 * Allow comparing any type of field to a RegExp
+* Fix `Model#eachRecord()` expecting each record to be a document instance
 
 ## 1.1.8 (2021-09-12)
 
