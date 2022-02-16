@@ -5,6 +5,7 @@
 * Make `Model#getField(path)` support getting associated fields
 * Allow comparing any type of field to a RegExp
 * Fix `Model#eachRecord()` expecting each record to be a document instance
+* Implemented `Model#beforeSave()` methods should now return a promise
 
 ## 1.1.8 (2021-09-12)
 
