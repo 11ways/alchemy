@@ -7,6 +7,7 @@
 * Fix `Model#eachRecord()` expecting each record to be a document instance
 * Implemented `Model#beforeSave()` methods should now return a promise
 * Add basic migration system
+* Upgrade dependencies
 
 ## 1.1.8 (2021-09-12)
 
