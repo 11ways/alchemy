@@ -1,4 +1,4 @@
-## 1.2.0 (WIP)
+## 1.2.0 (2022-02-20)
 
 * Fix request files not being set correctly when using a nested form path
 * Fix associated field selections not being queried
@@ -7,7 +7,7 @@
 * Fix `Model#eachRecord()` expecting each record to be a document instance
 * Implemented `Model#beforeSave()` methods should now return a promise
 * Add basic migration system
-* Upgrade dependencies
+* Upgrade dependencies (that don't cause trouble)
 
 ## 1.1.8 (2021-09-12)
 
