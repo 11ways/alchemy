@@ -1,3 +1,7 @@
+## 1.2.1 (WIP)
+
+* `Router#routeUrl()` should strip away regexes
+
 ## 1.2.0 (2022-02-20)
 
 * Fix request files not being set correctly when using a nested form path
