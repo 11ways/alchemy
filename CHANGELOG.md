@@ -1,4 +1,4 @@
-## 1.2.1 (WIP)
+## 1.2.1 (2022-03-16)
 
 * `Router#routeUrl()` should strip away regexes
 * Add `Alchemy#createSchema()` method
