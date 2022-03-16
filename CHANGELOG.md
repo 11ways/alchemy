@@ -4,6 +4,7 @@
 * Add `Alchemy#createSchema()` method
 * Fix `Element#getCurrentUrl()` returning old url during render in the browser
 * Emit `generate_static_variables` event when generating static variables
+* Add `BackedMap` and `EnumMap` and use it for enum fields
 
 ## 1.2.0 (2022-02-20)
 
