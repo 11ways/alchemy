@@ -2,6 +2,7 @@
 
 * `Router#routeUrl()` should strip away regexes
 * Add `Alchemy#createSchema()` method
+* Fix `Element#getCurrentUrl()` returning old url during render in the browser
 
 ## 1.2.0 (2022-02-20)
 
