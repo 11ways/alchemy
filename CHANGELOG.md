@@ -1,3 +1,7 @@
+## 1.2.2 (WIP)
+
+* `Alchemy#requirePlugin(name)` will only execute the plugin if the `plugins` stage has already started
+
 ## 1.2.1 (2022-03-16)
 
 * `Router#routeUrl()` should strip away regexes
