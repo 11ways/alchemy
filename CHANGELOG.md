@@ -3,6 +3,7 @@
 * `Alchemy#requirePlugin(name)` will only execute the plugin if the `plugins` stage has already started
 * Throw an error when a field does not exist during compiling of a criteria
 * Fix `Conduit#handleUrlLocal()` method trying to use an undeclared conduit instance
+* Make `alchemy.use()` use dynamic imports for ESM modules
 
 ## 1.2.1 (2022-03-16)
 
