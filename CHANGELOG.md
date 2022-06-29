@@ -5,6 +5,7 @@
 * Fix `Conduit#handleUrlLocal()` method trying to use an undeclared conduit instance
 * Make `alchemy.use()` use dynamic imports for ESM modules
 * Add `DataProvider` class
+* Make `FieldSet` and `FieldConfig` aware of the model they're working with
 
 ## 1.2.1 (2022-03-16)
 
