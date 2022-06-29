@@ -6,6 +6,7 @@
 * Make `alchemy.use()` use dynamic imports for ESM modules
 * Add `DataProvider` class
 * Make `FieldSet` and `FieldConfig` aware of the model they're working with
+* Allow adding `field_options` when adding an association to a schema
 
 ## 1.2.1 (2022-03-16)
 
