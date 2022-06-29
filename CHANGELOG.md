@@ -7,6 +7,7 @@
 * Add `DataProvider` class
 * Make `FieldSet` and `FieldConfig` aware of the model they're working with
 * Allow adding `field_options` when adding an association to a schema
+* Update paginate component
 
 ## 1.2.1 (2022-03-16)
 
