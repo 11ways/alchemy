@@ -1,4 +1,4 @@
-## 1.2.2 (WIP)
+## 1.2.2 (2022-06-29)
 
 * `Alchemy#requirePlugin(name)` will only execute the plugin if the `plugins` stage has already started
 * Throw an error when a field does not exist during compiling of a criteria
