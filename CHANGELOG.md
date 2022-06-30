@@ -1,6 +1,7 @@
 ## 1.2.3 (WIP)
 
 * Fix `FieldConfig` not reviving model & association fields
+* Also add a `hawkejs` property to the client-side `alchemy` instance
 
 ## 1.2.2 (2022-06-29)
 
