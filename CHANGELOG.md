@@ -1,3 +1,7 @@
+## 1.2.3 (WIP)
+
+* Fix `FieldConfig` not reviving model & association fields
+
 ## 1.2.2 (2022-06-29)
 
 * `Alchemy#requirePlugin(name)` will only execute the plugin if the `plugins` stage has already started
