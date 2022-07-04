@@ -4,6 +4,7 @@
 * Also add a `hawkejs` property to the client-side `alchemy` instance
 * Filter out certain options from serializing for `DocumentList` and `Criteria`
 * Make better use of the `assoc_cache` when populating records
+* Use Hawkejs as a singleton
 
 ## 1.2.2 (2022-06-29)
 
