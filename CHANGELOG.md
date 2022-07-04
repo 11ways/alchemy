@@ -3,6 +3,7 @@
 * Fix `FieldConfig` not reviving model & association fields
 * Also add a `hawkejs` property to the client-side `alchemy` instance
 * Filter out certain options from serializing for `DocumentList` and `Criteria`
+* Make better use of the `assoc_cache` when populating records
 
 ## 1.2.2 (2022-06-29)
 
