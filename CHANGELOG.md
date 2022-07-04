@@ -5,6 +5,7 @@
 * Filter out certain options from serializing for `DocumentList` and `Criteria`
 * Make better use of the `assoc_cache` when populating records
 * Use Hawkejs as a singleton
+* Upgrade `protoblast` and `hawkejs`
 
 ## 1.2.2 (2022-06-29)
 
