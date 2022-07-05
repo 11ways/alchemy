@@ -1,3 +1,7 @@
+## 1.2.4 (WIP)
+
+* Fix infinite loop when looking for the `conduit` property in a Controller instance
+
 ## 1.2.3 (2022-07-04)
 
 * Fix `FieldConfig` not reviving model & association fields
