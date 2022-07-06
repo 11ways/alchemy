@@ -2,6 +2,7 @@
 
 * Fix infinite loop when looking for the `conduit` property in a Controller instance
 * Add `Alchemy#getClientModel()` method
+* Add `Base.getClientClass()` static method, like the existing `ClientBase.getServerClass()`
 
 ## 1.2.3 (2022-07-04)
 
