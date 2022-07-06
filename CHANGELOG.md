@@ -1,4 +1,4 @@
-## 1.2.4 (WIP)
+## 1.2.4 (2022-07-06)
 
 * Fix infinite loop when looking for the `conduit` property in a Controller instance
 * Add `Alchemy#getClientModel()` method
