@@ -6,6 +6,7 @@
 * Allow using private fields client-side when needed
 * Add basic `__` translation method to `Alchemy.Element`
 * Getting a model class with an empty name should just return the base model on the client-side too
+* Don't add a SchemaField's associated data on the client-side
 
 ## 1.2.3 (2022-07-04)
 
