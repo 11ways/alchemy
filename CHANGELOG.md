@@ -4,6 +4,7 @@
 * Add `Alchemy#getClientModel()` method
 * Add `Base.getClientClass()` static method, like the existing `ClientBase.getServerClass()`
 * Allow using private fields client-side when needed
+* Add basic `__` translation method to `Alchemy.Element`
 
 ## 1.2.3 (2022-07-04)
 
