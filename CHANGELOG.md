@@ -1,5 +1,6 @@
 ## 1.2.5 (WIP)
 
+* Prevent `FieldConfig#getModel()` from throwing errors
 
 ## 1.2.4 (2022-07-06)
 
