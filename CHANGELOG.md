@@ -2,6 +2,7 @@
 
 * Prevent `FieldConfig#getModel()` from throwing errors
 * Always add private field info to Document when `keep_private_fields` is enabled, even if the field is empty
+* Fix random fields being removed when sent to Hawkejs
 
 ## 1.2.4 (2022-07-06)
 
