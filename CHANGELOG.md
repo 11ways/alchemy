@@ -5,6 +5,7 @@
 * Fix random fields being removed when sent to Hawkejs
 * `Schema#getFieldChain()` should not return method functions as if they're fields
 * Add translated fields to the `$translated_fields` held option in a Document
+* Add `Criteria.cast()`
 
 ## 1.2.4 (2022-07-06)
 
