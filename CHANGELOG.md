@@ -7,6 +7,7 @@
 * Add translated fields to the `$translated_fields` held option in a Document
 * Add `Criteria.cast()`
 * Make stylesheet reloading smoother (remove old version *after* loading new one)
+* Try to use `sass-embedded` before falling back to the slow `sass` package
 
 ## 1.2.4 (2022-07-06)
 

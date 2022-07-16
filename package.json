@@ -47,7 +47,8 @@
 	"optionalDependencies": {
 		"janeway"          : "~0.3.5",
 		"less"             : "~4.1.1",
-		"sass"             : "~1.49.8",
+		"sass"             : "~1.53.0",
+		"sass-embedded"    : "~1.53.0",
 		"nodent-compiler"  : "~3.2.13",
 		"socket.io-client" : "~2.4.0"
 	},
