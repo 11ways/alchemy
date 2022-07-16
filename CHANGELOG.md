@@ -6,6 +6,7 @@
 * `Schema#getFieldChain()` should not return method functions as if they're fields
 * Add translated fields to the `$translated_fields` held option in a Document
 * Add `Criteria.cast()`
+* Make stylesheet reloading smoother (remove old version *after* loading new one)
 
 ## 1.2.4 (2022-07-06)
 
