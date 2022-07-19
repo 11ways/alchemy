@@ -8,6 +8,7 @@
 * Add `Criteria.cast()`
 * Make stylesheet reloading smoother (remove old version *after* loading new one)
 * Try to use `sass-embedded` before falling back to the slow `sass` package
+* Allow setting a type in a `FieldSet`/`FieldConfig` instance
 
 ## 1.2.4 (2022-07-06)
 
