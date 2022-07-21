@@ -12,6 +12,7 @@
 * Add basic permission support for plugins to implement
 * Fix kept private fields not getting field getters
 * Remember which routes a conduit instance has already been tested against
+* Deduplicate `current_url` logic
 
 ## 1.2.4 (2022-07-06)
 
