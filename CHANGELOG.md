@@ -15,6 +15,7 @@
 * Deduplicate `current_url` logic
 * Fix `Route#generateUrl()` method
 * Allow rewriting a requested url parameter
+* Allow `!Route.languageSwitcher` directive to be used on single anchors
 
 ## 1.2.4 (2022-07-06)
 
