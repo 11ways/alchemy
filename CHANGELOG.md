@@ -14,6 +14,7 @@
 * Remember which routes a conduit instance has already been tested against
 * Deduplicate `current_url` logic
 * Fix `Route#generateUrl()` method
+* Allow rewriting a requested url parameter
 
 ## 1.2.4 (2022-07-06)
 
