@@ -13,6 +13,7 @@
 * Fix kept private fields not getting field getters
 * Remember which routes a conduit instance has already been tested against
 * Deduplicate `current_url` logic
+* Fix `Route#generateUrl()` method
 
 ## 1.2.4 (2022-07-06)
 
