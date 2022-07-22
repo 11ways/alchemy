@@ -16,6 +16,7 @@
 * Fix `Route#generateUrl()` method
 * Allow rewriting a requested url parameter
 * Allow `!Route.languageSwitcher` directive to be used on single anchors
+* Add `alchemy_settings(path)` SASS function
 
 ## 1.2.4 (2022-07-06)
 
