@@ -1,4 +1,4 @@
-## 1.2.5 (WIP)
+## 1.2.5 (2022-07-23)
 
 * Prevent `FieldConfig#getModel()` from throwing errors
 * Always add private field info to Document when `keep_private_fields` is enabled, even if the field is empty
