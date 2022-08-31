@@ -1,3 +1,7 @@
+## 1.2.6 (WIP)
+
+* Don't overwrite existing `Conduit#active_prefix` property with a default value
+
 ## 1.2.5 (2022-07-23)
 
 * Prevent `FieldConfig#getModel()` from throwing errors
