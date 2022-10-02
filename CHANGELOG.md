@@ -1,4 +1,4 @@
-## 1.2.6 (WIP)
+## 1.2.6 (2022-10-02)
 
 * Don't overwrite existing `Conduit#active_prefix` property with a default value
 * Also add translated nested (schemafield) fields to the `$hold.translated_fields` Document property
