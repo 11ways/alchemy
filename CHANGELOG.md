@@ -5,6 +5,7 @@
 * Make class type_name and title configurable
 * Fix records being translated twice when requested over the API
 * Fix `Alchemy#downloadFile()` trying to pipe null into a stream
+* Upgrade `formidable` to v2.0.1 (fixes multiple values)
 
 ## 1.2.5 (2022-07-23)
 

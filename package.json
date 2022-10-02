@@ -20,7 +20,7 @@
 		"body-parser"      : "~1.19.2",
 		"bson"             : "~4.6.1",
 		"chokidar"         : "~3.5.3",
-		"formidable"       : "~1.2.2",
+		"formidable"       : "~2.0.1",
 		"graceful-fs"      : "~4.2.9",
 		"hawkejs"          : "~2.2.10",
 		"jsondiffpatch"    : "~0.4.1",
