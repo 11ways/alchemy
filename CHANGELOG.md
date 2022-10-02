@@ -4,6 +4,7 @@
 * Also add translated nested (schemafield) fields to the `$hold.translated_fields` Document property
 * Make class type_name and title configurable
 * Fix records being translated twice when requested over the API
+* Fix `Alchemy#downloadFile()` trying to pipe null into a stream
 
 ## 1.2.5 (2022-07-23)
 
