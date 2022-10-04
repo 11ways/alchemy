@@ -1,3 +1,7 @@
+## 1.2.7 (WIP)
+
+* Fix uploaded files breaking since last `formidable` upgrade
+
 ## 1.2.6 (2022-10-02)
 
 * Don't overwrite existing `Conduit#active_prefix` property with a default value
