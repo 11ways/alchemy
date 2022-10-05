@@ -1,6 +1,8 @@
 ## 1.2.7 (WIP)
 
 * Fix uploaded files breaking since last `formidable` upgrade
+* Rename `Model#displayField` property to `Model#display_field`
+* Also make `Model#getDisplayTitle()` method available for client-side models
 
 ## 1.2.6 (2022-10-02)
 
