@@ -3,6 +3,7 @@
 * Fix uploaded files breaking since last `formidable` upgrade
 * Rename `Model#displayField` property to `Model#display_field`
 * Also make `Model#getDisplayTitle()` method available for client-side models
+* Fix `Router` directive marking every link as being the active link
 
 ## 1.2.6 (2022-10-02)
 
