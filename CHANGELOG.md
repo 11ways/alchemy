@@ -4,6 +4,7 @@
 * Rename `Model#displayField` property to `Model#display_field`
 * Also make `Model#getDisplayTitle()` method available for client-side models
 * Fix `Router` directive marking every link as being the active link
+* Also use the `Conduit#active_prefix` property for translating items
 
 ## 1.2.6 (2022-10-02)
 
