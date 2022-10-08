@@ -6,6 +6,7 @@
 * Fix `Router` directive marking every link as being the active link
 * Also use the `Conduit#active_prefix` property for translating items
 * Add `allow_fallback_translations` alchemy setting and set it to false by default
+* Add `Conduit#routeUrl()` method (fixes loopback urls using wrong prefix)
 
 ## 1.2.6 (2022-10-02)
 
