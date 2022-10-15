@@ -8,6 +8,7 @@
 * Add `allow_fallback_translations` alchemy setting and set it to false by default
 * Add `Conduit#routeUrl()` method (fixes loopback urls using wrong prefix)
 * Log errors thrown during plugin stage
+* Make `Alchemy#findModule()` module_dir result actually return the directory of the module
 
 ## 1.2.6 (2022-10-02)
 
