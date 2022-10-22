@@ -14,6 +14,7 @@
 * Make `Alchemy#getResource` helper method check available methods first
 * Remove `Base.makeAbstractClass()` method, it's part of Protoblast now
 * Add support for reloading Janeway's screens
+* Add `keep_classnames` option to the terser minifier
 
 ## 1.2.6 (2022-10-02)
 
