@@ -11,6 +11,7 @@
 * Make `Alchemy#findModule()` module_dir result actually return the directory of the module
 * Make style middleware call the next middleware function when no style is found
 * Add available methods to client-side routes data
+* Make `Alchemy#getResource` helper method check available methods first
 
 ## 1.2.6 (2022-10-02)
 
