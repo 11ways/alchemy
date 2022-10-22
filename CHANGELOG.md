@@ -10,6 +10,7 @@
 * Log errors thrown during plugin stage
 * Make `Alchemy#findModule()` module_dir result actually return the directory of the module
 * Make style middleware call the next middleware function when no style is found
+* Add available methods to client-side routes data
 
 ## 1.2.6 (2022-10-02)
 
