@@ -12,6 +12,7 @@
 * Make style middleware call the next middleware function when no style is found
 * Add available methods to client-side routes data
 * Make `Alchemy#getResource` helper method check available methods first
+* Remove `Base.makeAbstractClass()` method, it's part of Protoblast now
 
 ## 1.2.6 (2022-10-02)
 
