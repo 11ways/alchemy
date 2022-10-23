@@ -16,6 +16,7 @@
 * Add support for reloading Janeway's screens
 * Add `keep_classnames` option to the terser minifier
 * Make sure `Criteria` limit, page & skip options are numbers
+* Add client-side `Alchemy#hasPermission(permission)` method
 
 ## 1.2.6 (2022-10-02)
 
