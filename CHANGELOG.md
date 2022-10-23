@@ -15,6 +15,7 @@
 * Remove `Base.makeAbstractClass()` method, it's part of Protoblast now
 * Add support for reloading Janeway's screens
 * Add `keep_classnames` option to the terser minifier
+* Make sure `Criteria` limit, page & skip options are numbers
 
 ## 1.2.6 (2022-10-02)
 
