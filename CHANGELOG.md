@@ -17,6 +17,7 @@
 * Add `keep_classnames` option to the terser minifier
 * Make sure `Criteria` limit, page & skip options are numbers
 * Add client-side `Alchemy#hasPermission(permission)` method
+* Also set the `conduit` property to documents being sent to hawkejs
 
 ## 1.2.6 (2022-10-02)
 
