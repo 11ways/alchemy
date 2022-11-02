@@ -1,4 +1,4 @@
-## 1.2.7 (WIP)
+## 1.2.7 (2022-11-02)
 
 * Fix uploaded files breaking since last `formidable` upgrade
 * Rename `Model#displayField` property to `Model#display_field`
