@@ -11,7 +11,7 @@
 		<header>
 			<div class="header-image">
 				<img class="alchemy-logo" src="/alchemy-logo.png">
-				<h1 class="alchemy-name">Alchemy<br>v<%= versions.alchemy %></h1>
+				<h1 class="alchemy-name">Alchemy<br>v{{ versions.alchemy }}</h1>
 			</div>
 			<div class="content">
 
@@ -20,22 +20,22 @@
 				<div class="row">
 					<article class="engine col">
 						<span>You are running</span>
-						<span class="engine-name"><%= engine %></span>
+						<span class="engine-name">{{ engine }}</span>
 						<span>version</span>
-						<span class="engine-version"><%= versions.node %></span>
+						<span class="engine-version">{{ versions.node }}</span>
 					</article>
 
 					<article class="modules col">
 						<h1>Modules</h1>
 						<div class="table-wrap">
 							<table>
-								<% modules.forEach(function eachModule(module) { %>
+								{% each modules as module %}
 									<tr class=<% module.failed ? 'failed' : '' %>>
-										<td class="package-name"><%= module.name %></td>
-										<td class="package-version"><%= module.package ? module.package.version : '' %></td>
-										<td class="package-description"><%= module.package ? module.package.description : '' %></td>
+										<td class="package-name">{{ module.name }}</td>
+										<td class="package-version">{{ module.package.version }}</td>
+										<td class="package-description">{{ module.package.description }}</td>
 									</tr>
-								<% }) %>
+								{% /each %}
 							</table>
 						</div>
 					</article>
@@ -43,15 +43,20 @@
 					<article class="datasources col">
 						<h1>Datasources</h1>
 						<ul class="checklist">
-						<% Object.each(data_sources, function eachDatasource(datasource, key) { %>
-							<% if (datasource.error) { %>
-								<li class="failed">Could not connect to
-							<% } else { %>
-								<li class="success">Connected to
-							<% } %>
-							 <%= datasource.type %> <strong><%= key %></strong
-							</li>
-						<% }) %>
+							{% each data_sources as key, datasource %}
+								<li>
+									{% if datasource.error %}
+										{% $0.classList.add('failed') %}
+										Could not connect to
+									{% else %}
+										{% $0.classList.add('success') %}
+										Connected to
+									{% /if %}
+
+									{{ datasource.type }}
+									<strong>{{ key }}</strong>
+								</li>
+							{% /each %}
 						</ul>
 					</article>
 				</div>
@@ -60,9 +65,9 @@
 					<article class="plugins col">
 						<h1>Plugins</h1>
 						<ul>
-						<% plugins.forEach(function eachPlugin(plugin) { %>
-							<li><%= plugin %></li>
-						<% }) %>
+							{% each plugins as plugin %}
+								<li>{{ plugin }}</li>
+							{% /each %}
 						</ul>
 					</article>
 
@@ -79,79 +84,79 @@
 
 							<tr>
 								<td>cache</td>
-								<td><%= settings.cache %></td>
+								<td>{{ settings.cache }}</td>
 								<td>Cache has been <%= ['disabled', 'enabled'][Number(!!settings.cache)] %></td>
 							</tr>
 
 							<tr>
 								<td>compression</td>
-								<td><%= settings.compression %></td>
+								<td>{{ settings.compression }}</td>
 								<td>Compression has been <%= ['disabled', 'enabled'][Number(!!settings.compression)] %></td>
 							</tr>
 
 							<tr>
 								<td>cookies</td>
-								<td><%= settings.cookies %></td>
+								<td>{{ settings.cookies }}</td>
 								<td>Cookies have been <%= ['disabled', 'enabled'][Number(!!settings.cookies)] %></td>
 							</tr>
 
 							<tr>
 								<td>debug</td>
-								<td><%= settings.debug %></td>
+								<td>{{ settings.debug }}</td>
 								<td>Debugging has been <%= ['disabled', 'enabled'][Number(!!settings.debug)] %></td>
 							</tr>
 
 							<tr>
 								<td>minify_js</td>
-								<td><%= settings.minify_js %></td>
+								<td>{{ settings.minify_js }}</td>
 								<td>JavaScript minification has been <%= ['disabled', 'enabled'][Number(!!settings.minify_js)] %></td>
 							</tr>
 
 							<tr>
 								<td>model_query_cache_duration</td>
-								<td><%= settings.model_query_cache_duration %></td>
+								<td>{{ settings.model_query_cache_duration }}</td>
 								<td>
-									<% if (settings.model_query_cache_duration) { %>
-										Database query results are cached for <%= settings.model_query_cache_duration %>
-									<% } else { %>
+									{% if settings.model_query_cache_duration %}
+										Database query results are cached for {{ settings.model_query_cache_duration }}
+									{% else %}
 										Database query results are not cached
-									<% } %>
+									{% /else %}
 								</td>
 							</tr>
 
 							<tr>
 								<td>port</td>
-								<td><%= settings.port %></td>
-								<td>The server runs on port <%= settings.port %></td>
+								<td>{{ settings.port }}</td>
+								<td>The server runs on port {{ settings.port }}</td>
 							</tr>
 
 							<tr>
 								<td>kill_on_file_change</td>
-								<td><%= settings.kill_on_file_change %></td>
+								<td>{{ settings.kill_on_file_change }}</td>
 								<td>The process <%= ['will', 'won\'t'][Number(!settings.kill_on_file_change)] %> be killed when a node.js file changes</td>
 							</tr>
 
 							<tr>
 								<td>kill_extensions</td>
-								<td><%= settings.kill_extensions %></td>
+								<td>{{ settings.kill_extensions }}</td>
 								<td></td>
 							</tr>
 
 							<tr>
 								<td>sessions</td>
-								<td><%= settings.session_key %></td>
+								<td>{{ settings.session_key }}</td>
 								<td>Session cookie name</td>
 							</tr>
 
 							<tr>
 								<td>session_length</td>
-								<td><%= settings.session_length %></td>
-								<td>A session lasts for <%= settings.session_length %></td>
+								<td>{{ settings.session_length }}</td>
+								<td>A session lasts for {{ settings.session_length }}</td>
 							</tr>
 
 							<tr>
 								<td>websockets</td>
-								<td><%= settings.websockets %></td>
+								<td>{{ settings.websockets }}</td>
 								<td>Websockets have been <%= ['disabled', 'enabled'][Number(!!settings.websockets)] %></td>
 							</tr>
 						</table>

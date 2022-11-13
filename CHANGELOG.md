@@ -1,3 +1,7 @@
+## 1.2.8 (WIP)
+
+* Fix the info view
+
 ## 1.2.7 (2022-11-02)
 
 * Fix uploaded files breaking since last `formidable` upgrade
