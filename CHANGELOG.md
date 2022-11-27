@@ -1,3 +1,7 @@
+## 1.3.0 (WIP)
+
+* Add `Inode.from(path)` to get the correct Inode instance
+
 ## 1.2.8 (2022-11-13)
 
 * Fix the info view
