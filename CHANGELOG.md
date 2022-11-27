@@ -3,6 +3,7 @@
 * Add `Inode.from(path)` to get the correct Inode instance
 * Add `File#getHash()` and `File#getMimetype()` methods
 * Add `Alchemy#download()` method and deprecate `Alchemy#downloadFile()`
+* Add `file_hash_algorithm` setting
 
 ## 1.2.8 (2022-11-13)
 
