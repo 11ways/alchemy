@@ -4,6 +4,7 @@
 * Add `File#getHash()` and `File#getMimetype()` methods
 * Add `Alchemy#download()` method and deprecate `Alchemy#downloadFile()`
 * Add `file_hash_algorithm` setting
+* Only set `content-type` when serving files if it's not empty
 
 ## 1.2.8 (2022-11-13)
 
