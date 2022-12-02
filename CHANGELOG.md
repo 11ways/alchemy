@@ -10,6 +10,7 @@
 * Improve mimetype detection and move it to `File.getMimetype()`
 * Add `File#createReadStream()`
 * Make `Blast.Types` available as the global `Types` variable
+* Manually set the mimetype of served css & javascript middleware files, so Magic doesn't have to be used
 
 ## 1.2.8 (2022-11-13)
 
