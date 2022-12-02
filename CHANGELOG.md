@@ -7,6 +7,7 @@
 * Only set `content-type` when serving files if it's not empty
 * Fix field rules being added twice when a schema was unserialized
 * Add `setResponseUrl(new_url)` method to `Conduit` and `Controller`, and deprecate `Conduit#overrideResponseUrl(new_url)`
+* Improve mimetype detection and move it to `File.getMimetype()`
 
 ## 1.2.8 (2022-11-13)
 
