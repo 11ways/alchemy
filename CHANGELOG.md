@@ -15,6 +15,7 @@
 * Allow specifying a prefix to `Document#getDisplayFieldValue()` in case it's not translated yet
 * Fix translatable field values always being queried for *any* translation instead of a specific one
 * Add `has_translatable_fields` property to `Model` and `Schema`
+* Add `title` property to routes
 
 ## 1.2.8 (2022-11-13)
 
