@@ -18,6 +18,7 @@
 * Add `title` property to routes
 * Make the helper `Router#routeUrl()` method work without a renderer on the server side
 * Rewrite `Conduit#serveFile()` using Protoblast's new typed method support
+* Add `Sitemap` class for automatically generating a sitemap based on available routes
 
 ## 1.2.8 (2022-11-13)
 
