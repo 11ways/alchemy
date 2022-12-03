@@ -31,7 +31,7 @@
 		"mongodb"          : "~3.6.6",
 		"ncp"              : "~2.0.0",
 		"postcss"          : "~8.4.6",
-		"protoblast"       : "~0.7.24",
+		"protoblast"       : "~0.7.25",
 		"semver"           : "~7.3.5",
 		"socket.io"        : "~2.4.0",
 		"@11ways/socket.io-stream" : "~0.9.2",

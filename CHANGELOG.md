@@ -17,6 +17,7 @@
 * Add `has_translatable_fields` property to `Model` and `Schema`
 * Add `title` property to routes
 * Make the helper `Router#routeUrl()` method work without a renderer on the server side
+* Rewrite `Conduit#serveFile()` using Protoblast's new typed method support
 
 ## 1.2.8 (2022-11-13)
 
