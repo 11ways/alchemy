@@ -12,6 +12,7 @@
 * Make `Blast.Types` available as the global `Types` variable
 * Manually set the mimetype of served css & javascript middleware files, so Magic doesn't have to be used
 * JavaScript mimetype is now `text/javascript` instead of `application/javascript`
+* Allow specifying a prefix to `Document#getDisplayFieldValue()` in case it's not translated yet
 
 ## 1.2.8 (2022-11-13)
 
