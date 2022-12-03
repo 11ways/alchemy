@@ -16,6 +16,7 @@
 * Fix translatable field values always being queried for *any* translation instead of a specific one
 * Add `has_translatable_fields` property to `Model` and `Schema`
 * Add `title` property to routes
+* Make the helper `Router#routeUrl()` method work without a renderer on the server side
 
 ## 1.2.8 (2022-11-13)
 
