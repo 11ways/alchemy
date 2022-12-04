@@ -318,7 +318,7 @@ describe('Alchemy', function() {
 				}
 
 				assert.strictEqual(res.statusCode, 200);
-				assert.strictEqual(res.headers['content-type'], 'application/javascript; charset=utf-8');
+				assert.strictEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
 				assert.strictEqual(body.length > 20, true);
 				done();
 			});
@@ -331,14 +331,19 @@ describe('Alchemy', function() {
 			alchemy.getFileInfo(test_script_path, function gotInfo(err, info) {
 
 				if (err) {
-					throw err;
+					return done(err);
 				}
 
-				assert.strictEqual(info.hash, 'd9ad8ceda0c6617b9166647772c50d72aa793521');
-				assert.strictEqual(info.mimetype, 'text/plain');
-				assert.strictEqual(info.size, 86);
-				assert.strictEqual(info.name, 'test');
-				assert.strictEqual(info.filename, 'test.js');
+				try {
+					assert.strictEqual(info.hash, 'd9ad8ceda0c6617b9166647772c50d72aa793521');
+					assert.strictEqual(info.mimetype, 'text/javascript');
+					assert.strictEqual(info.size, 86);
+					assert.strictEqual(info.name, 'test');
+					assert.strictEqual(info.filename, 'test.js');
+				} catch (err) {
+					done(err);
+					return;
+				}
 
 				done();
 			});
@@ -352,7 +357,7 @@ describe('Alchemy', function() {
 			alchemy.copyFile(test_script_path, target_path, function copied(err) {
 
 				if (err) {
-					throw err;
+					return done(err);
 				}
 
 				done();
@@ -360,40 +365,37 @@ describe('Alchemy', function() {
 		});
 
 		it('should return an error when the source does not exist', function(done) {
+
 			var target_path = libpath.resolve(PATH_TEMP, '__test' + Date.now() + '.js');
 
 			alchemy.copyFile(libpath.resolve(__dirname, 'does_not_exist.js'), target_path, function copied(err) {
-				assert.strictEqual(!!err, true);
+
+				if (!err) {
+					return done(new Error('Expected an error'));
+				}
+
 				done();
 			});
 		});
 	});
 
 	describe('#downloadFile(url, options, callback)', function() {
-		it('should download the file and return the filepath', function(done) {
+		it('should download the file and return the filepath', async function() {
 
 			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/test.js';
 
-			alchemy.downloadFile(url, function downloaded(err, filepath, name) {
+			let file = await alchemy.download(url);
 
-				if (err) {
-					throw err;
-				}
+			console.log(file);
 
-				if (!filepath) {
-					throw new Error('File does not seem to have downloaded');
-				}
+			assert.strictEqual(file.name, 'test.js');
+			assert.strictEqual(await file.getMimetype(), 'text/javascript');
+			
+			let result = await file.readString('utf8');
 
-				assert.strictEqual(name, 'test.js');
-
-				var result = fs.readFileSync(test_script_path, 'utf8');
-
-				if (result.indexOf('This is a test script') == -1) {
-					throw new Error('Test script file does not contain expected content');
-				}
-
-				done();
-			});
+			if (result.indexOf('This is a test script') == -1) {
+				throw new Error('Test script file does not contain expected content');
+			}
 		});
 
 		it('should return a 404 error when downloading non-existing path', function(done) {
