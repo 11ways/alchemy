@@ -21,6 +21,7 @@
 * Add `Sitemap` class for automatically generating a sitemap based on available routes
 * Fix querying on a specific property of a datetime field that seperately stores its units
 * Regenerate exposed route data when new routes have been added after initial generation
+* Add `Conduit#setRouteParameters(parameters)` so that route parameters can be updated instead of totally replaced
 
 ## 1.2.8 (2022-11-13)
 

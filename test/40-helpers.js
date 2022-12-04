@@ -49,9 +49,19 @@ describe('Helper.Alchemy', function() {
 					return next(err);
 				}
 
+				let resource_rendered = body.indexOf('SCT:{') > -1;
+
 				let has_name = body.indexOf('SCT:{"name":"Roel"}') > -1;
 
-				assert.strictEqual(has_name, true, 'The expected resource')
+				let error_start = 'The Alchemy#getResource("Static#content") call ';
+
+				if (!resource_rendered) {
+					return next(new Error(error_start + 'content was not added at all'))
+				}
+
+				if (!has_name) {
+					return next(new Error(error_start + 'did respond, but did not print the parameter data'))
+				}
 
 				next();
 			});
