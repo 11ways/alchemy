@@ -308,6 +308,102 @@ describe('Criteria', function() {
 			// let empty_no_empty_string = await EmptyTester.find('all', crit);
 
 		});
+
+		it('should also work with translatable fields', async function() {
+
+			await createModel(function TranslatableEmptyTester() {
+				this.addField('name', 'String');
+				this.addField('title', 'String', {translatable: true});
+			});
+
+			let EmptyTester = Model.get('TranslatableEmptyTester');
+
+			let doc = EmptyTester.createDocument();
+			doc.name = 'complete-1';
+			doc.title = {en: 'EN1', nl: 'NL1', fr: 'FR1'};
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'complete-2';
+			doc.title = {en: 'EN2', nl: 'NL2', fr: 'FR2'};
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'en-only-3';
+			doc.title = {en: 'EN3'};
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'nl-only-4';
+			doc.title = {nl: 'NL4'};
+			await doc.save();
+
+			doc = EmptyTester.createDocument();
+			doc.name = 'no-english-5';
+			doc.title = {nl: 'NL5', fr: 'FR5'};
+			await doc.save();
+
+			let all = await EmptyTester.find('all');
+
+			assert.strictEqual(all.length, 5, '5 records should have been returned');
+
+			// Get them all, but translated in english
+			let crit = EmptyTester.find();
+			crit.setOption('locale', 'en');
+
+			all = await EmptyTester.find('all', crit);
+
+			assert.strictEqual(all[0].title, 'EN1');
+			assert.strictEqual(all[1].title, 'EN2');
+			assert.strictEqual(all[2].title, 'EN3');
+			assert.strictEqual(all[3].title, undefined);
+			assert.strictEqual(all[4].title, undefined);
+
+			// Only get the ones with a dutch translation
+			crit = EmptyTester.find();
+			crit.setOption('locale', 'nl');
+
+			crit.where('title').not().isEmpty();
+
+			all = await EmptyTester.find('all', crit);
+
+			assert.strictEqual(all.length, 4, 'Only 4 records with a dutch translation should have returned');
+
+			assert.strictEqual(all[0].title, 'NL1');
+			assert.strictEqual(all[1].title, 'NL2');
+			assert.strictEqual(all[2].title, 'NL4');
+			assert.strictEqual(all[3].title, 'NL5');
+
+			// Only get the ones with a french translation
+			crit = EmptyTester.find();
+			crit.setOption('locale', 'fr');
+
+			crit.where('title').not().isEmpty();
+
+			all = await EmptyTester.find('all', crit);
+
+			assert.strictEqual(all.length, 3, 'Only 3 records with a french translation should have returned');
+
+			assert.strictEqual(all[0].title, 'FR1');
+			assert.strictEqual(all[1].title, 'FR2');
+			assert.strictEqual(all[2].title, 'FR5');
+
+			// Get every document that does not have an english translation
+			crit = EmptyTester.find();
+			crit.setOption('locale', 'en');
+			crit.where('title').isEmpty();
+
+			all = await EmptyTester.find('all', crit);
+
+			assert.strictEqual(all.length, 2, 'Only 2 records should have been returned');
+
+			let message = 'An undefined title should have been returned, because fallback translations are disabled and english ones were requested';
+			assert.strictEqual(all[0].title, undefined, message);
+			assert.strictEqual(all[1].title, undefined, message);
+
+			assert.strictEqual(all[0].name, 'nl-only-4');
+			assert.strictEqual(all[1].name, 'no-english-5');
+		});
 	});
 
 	describe('#applyOldConditions(conditions)', function() {

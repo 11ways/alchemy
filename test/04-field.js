@@ -1,4 +1,5 @@
 var assert = require('assert');
+const { cp } = require('fs');
 
 function sameContents(a, b, message) {
 
@@ -105,12 +106,14 @@ describe('Field', function() {
 
 			assert.deepStrictEqual(nl.items, [
 				{
-					foobar: 'een',
-					_prefix_foobar: "nl"
+				  foobar: 'een',
+				  _prefix_foobar: 'nl',
+				  '$translated_fields': { foobar: 'nl' }
 				},
 				{
-					foobar: 'twee',
-					_prefix_foobar: "nl"
+				  foobar: 'twee',
+				  _prefix_foobar: 'nl',
+				  '$translated_fields': { foobar: 'nl' }
 				}
 			]);
 
@@ -125,11 +128,13 @@ describe('Field', function() {
 			assert.deepStrictEqual(en.items, [
 				{
 					foobar: 'one',
-					_prefix_foobar: "en"
+					_prefix_foobar: 'en',
+					'$translated_fields': { foobar: 'en' }
 				},
 				{
 					foobar: 'two',
-					_prefix_foobar: "en"
+					_prefix_foobar: 'en',
+					'$translated_fields': { foobar: 'en' }
 				}
 			]);
 
