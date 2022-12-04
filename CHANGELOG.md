@@ -19,6 +19,7 @@
 * Make the helper `Router#routeUrl()` method work without a renderer on the server side
 * Rewrite `Conduit#serveFile()` using Protoblast's new typed method support
 * Add `Sitemap` class for automatically generating a sitemap based on available routes
+* Fix querying on a specific property of a datetime field that seperately stores its units
 
 ## 1.2.8 (2022-11-13)
 
