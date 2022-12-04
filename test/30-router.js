@@ -87,6 +87,18 @@ describe('Router', function() {
 				name    : 'Static#viewContent',
 				paths   : '/viewcontent'
 			});
+
+			let url = alchemy.routeUrl('Static#content');
+
+			assert.strictEqual(''+url, '/api/static/content');
+
+			url = alchemy.routeUrl('Static#content', {}, {extra_get_parameters: false});
+			assert.strictEqual(''+url, '/api/static/content');
+
+			let conduit = new Classes.Alchemy.Conduit();
+			url = conduit.routeUrl('Static#content');
+
+			assert.strictEqual(''+url, '/api/static/content');
 		});
 
 		// If this is a test that does not include the controller tests,

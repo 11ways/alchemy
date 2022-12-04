@@ -20,6 +20,7 @@
 * Rewrite `Conduit#serveFile()` using Protoblast's new typed method support
 * Add `Sitemap` class for automatically generating a sitemap based on available routes
 * Fix querying on a specific property of a datetime field that seperately stores its units
+* Regenerate exposed route data when new routes have been added after initial generation
 
 ## 1.2.8 (2022-11-13)
 
