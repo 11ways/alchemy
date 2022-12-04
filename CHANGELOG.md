@@ -22,6 +22,7 @@
 * Fix querying on a specific property of a datetime field that seperately stores its units
 * Regenerate exposed route data when new routes have been added after initial generation
 * Add `Conduit#setRouteParameters(parameters)` so that route parameters can be updated instead of totally replaced
+* Set a default `locale` option for new `Criteria` instances when a `Conduit` is available
 
 ## 1.2.8 (2022-11-13)
 
