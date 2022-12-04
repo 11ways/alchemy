@@ -56,9 +56,9 @@
 		"codecov"                 : "~3.8.1",
 		"istanbul-lib-instrument" : "~4.0.3",
 		"mocha"                   : "~8.3.2",
-		"mongo-unit"              : "~2.0.1",
+		"mongo-unit"              : "~3.2.0",
 		"nyc"                     : "^15.1.0",
-		"puppeteer"               : "~9.0.0",
+		"puppeteer"               : "~19.0.0",
 		"source-map"              : "~0.7.3"
 	},
 	"scripts": {
