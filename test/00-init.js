@@ -233,6 +233,9 @@ describe('Alchemy', function() {
 
 	describe('#start(callback)', function() {
 		it('should start the server', function(done) {
+
+			alchemy.settings.port = 3470;
+
 			alchemy.start({silent: true}, function started() {
 
 				setTimeout(function() {

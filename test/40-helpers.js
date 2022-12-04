@@ -194,7 +194,7 @@ describe('Helper.Router', function() {
 
 			assert.strictEqual(nl_span.text, '/nl/static/view/routertest');
 			assert.strictEqual(en_span.text, '/en/static/view/routertest');
-			assert.strictEqual(current_url.text, 'http://127.0.0.1:3000/static/view/routertest');
+			assert.strictEqual(current_url.text, 'http://127.0.0.1:3470/static/view/routertest');
 		});
 	});
 });
