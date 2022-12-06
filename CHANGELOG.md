@@ -24,6 +24,7 @@
 * Add `Conduit#setRouteParameters(parameters)` so that route parameters can be updated instead of totally replaced
 * Set a default `locale` option for new `Criteria` instances when a `Conduit` is available
 * Fix translatable field values not being queried correctly
+* Add a `description` getter to the `Field` class
 
 ## 1.2.8 (2022-11-13)
 
