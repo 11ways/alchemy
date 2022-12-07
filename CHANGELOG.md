@@ -33,6 +33,7 @@
 * Add the `Document#getTranslatedValueOfField()` method, which will re-query the database for translations
 * Refactor the `Route#callController()` and `Route#callControllerAssignments()` methods
 * Add the `visible_location` property to `Route` instances
+* Eagerly supply translated route parameter values for the language switcher
 
 ## 1.2.8 (2022-11-13)
 
