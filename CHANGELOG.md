@@ -31,6 +31,8 @@
 * Add the `option` argument to the `Alchemy#routeUrl()` method, so the prefix/locale can be set
 * Let a `PathDefinition` instance know what prefix it is for
 * Add the `Document#getTranslatedValueOfField()` method, which will re-query the database for translations
+* Refactor the `Route#callController()` and `Route#callControllerAssignments()` methods
+* Add the `visible_location` property to `Route` instances
 
 ## 1.2.8 (2022-11-13)
 
