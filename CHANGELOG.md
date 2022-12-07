@@ -35,6 +35,7 @@
 * Add the `visible_location` property to `Route` instances
 * Eagerly supply translated route parameter values for the language switcher
 * Don't use urls with missing parameters in the language switcher
+* Set the response url using the `visible_location` route property if it's set
 
 ## 1.2.8 (2022-11-13)
 
