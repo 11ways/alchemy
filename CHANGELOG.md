@@ -26,6 +26,7 @@
 * Fix translatable field values not being queried correctly
 * Add a `description` getter to the `Field` class
 * Add `Router#isLocalUrl(url)` method to the Router helper
+* Make the `Base#issueEvent()` method return a pledge
 
 ## 1.2.8 (2022-11-13)
 
