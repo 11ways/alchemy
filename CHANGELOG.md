@@ -37,6 +37,7 @@
 * Don't use urls with missing parameters in the language switcher
 * Set the response url using the `visible_location` route property if it's set
 * Add support for the new `getDescendant(name)` class method of Protoblast to the `getMember()` class method
+* Re-check the mimetype of uploaded files, because browsers lie
 
 ## 1.2.8 (2022-11-13)
 
