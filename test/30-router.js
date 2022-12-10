@@ -146,6 +146,44 @@ describe('Router', function() {
 				done();
 			});
 		});
+
+		it('should support field paths in a type check', function(done) {
+
+			Router.add({
+				name    : 'Person#typeCheckView',
+				paths   : '/typecheckview/person/{[Person.slug]name}',
+				methods : 'get'
+			});
+
+			url = alchemy.routeUrl('Person#typeCheckView', {name: 'jelle'}, {absolute: true});
+			url = RURL.parse(url);
+
+			url.host = 'localhost';
+			url.protocol = 'http';
+			url.port = alchemy.settings.port;
+
+			url = String(url);
+
+			PersonController.setAction(function typeCheckView(conduit, person) {
+				conduit.end('Person: ' + person.firstname + ' ' + person.lastname);
+			});
+
+			Blast.fetch(url, function gotResponse(err, res, body) {
+
+				if (err) {
+					return done(err);
+				}
+
+				try {
+					assert.strictEqual(body, 'Person: Jelle De Loecker');
+				} catch (err) {
+					return done(err);
+				}
+
+				done();
+			});
+
+		});
 	});
 
 });

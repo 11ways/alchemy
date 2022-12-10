@@ -174,6 +174,8 @@ describe('Model', function() {
 				this.belongsTo('Parent', 'Person');
 				this.hasMany('Children', 'Person', {foreignKey: 'parent_id'});
 
+				this.addBehaviour('Sluggable', {source: 'firstname'});
+
 				done();
 			});
 		});
@@ -661,6 +663,10 @@ describe('Model', function() {
 
 					// Save this for later tests
 					global.person_doc = document;
+
+					if (document.slug != 'jelle') {
+						return done(new Error('Expected the document to get the slug "jelle", but got: "' + document.slug + '"'));
+					}
 
 					next(null, document);
 				});
