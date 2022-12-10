@@ -594,6 +594,50 @@ describe('Document', function() {
 			assert.strictEqual(doc.hasChanged('subschema'), false);
 			assert.strictEqual(doc.hasChanged('subschema.subname'), false);
 		});
+
+		it('should still be correct in the beforeSave method', async function() {
+
+			let subname_has_changed = null,
+			    entries_has_changed = null;
+
+			const ChildModel = Function.inherits('Alchemy.Model.WithSchemaField', 'BeforeSaveSchemaField');
+
+			ChildModel.setMethod(function beforeSave(document) {
+				console.log('Doing beforeSave of doc', document.hasChanged(), document.$attributes.original_record)
+				subname_has_changed = document.hasChanged('subschema.subname');
+				entries_has_changed = document.hasChanged('entries');
+			});
+
+			let model = Model.get('BeforeSaveSchemaField'),
+			    doc = model.createDocument();
+
+			doc.subschema = {
+				subname: 'subname',
+				subvalue: 'subvalue'
+			};
+
+			doc.entries = [
+				{entryname: 'first'},
+				{entryname: 'second'}
+			];
+
+			await doc.save();
+
+			assert.strictEqual(subname_has_changed, true);
+			assert.strictEqual(entries_has_changed, true);
+
+			doc.entries[0].entryname = 'first-changed';
+			await doc.save();
+
+			assert.strictEqual(subname_has_changed, false);
+			assert.strictEqual(entries_has_changed, true);
+
+			doc.subschema.subname = 'modified-subname';
+			await doc.save();
+
+			assert.strictEqual(subname_has_changed, true);
+			assert.strictEqual(entries_has_changed, false);
+		});
 	});
 
 	describe('#needsToBeSaved()', function() {

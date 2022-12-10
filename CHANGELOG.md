@@ -40,6 +40,7 @@
 * Re-check the mimetype of uploaded files, because browsers lie
 * Always store the original document's record if it contains object fields
 * Accept paths in `Document#hasChanged(name)`
+* Fix `Document#hasChanged()` methods reporting wrong value in `Model#beforeSave()` methods
 
 ## 1.2.8 (2022-11-13)
 
