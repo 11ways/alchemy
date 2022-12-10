@@ -585,13 +585,14 @@ describe('Document', function() {
 			doc.subschema.subname = 'newname';
 
 			assert.strictEqual(doc.hasChanged(), true);
-
 			assert.strictEqual(doc.hasChanged('subschema'), true);
+			assert.strictEqual(doc.hasChanged('subschema.subname'), true);
 
 			await doc.save();
 
 			assert.strictEqual(doc.hasChanged(), false);
 			assert.strictEqual(doc.hasChanged('subschema'), false);
+			assert.strictEqual(doc.hasChanged('subschema.subname'), false);
 		});
 	});
 

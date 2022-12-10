@@ -39,6 +39,7 @@
 * Add support for the new `getDescendant(name)` class method of Protoblast to the `getMember()` class method
 * Re-check the mimetype of uploaded files, because browsers lie
 * Always store the original document's record if it contains object fields
+* Accept paths in `Document#hasChanged(name)`
 
 ## 1.2.8 (2022-11-13)
 
