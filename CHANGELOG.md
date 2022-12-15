@@ -42,6 +42,7 @@
 * Accept paths in `Document#hasChanged(name)`
 * Fix `Document#hasChanged()` methods reporting wrong value in `Model#beforeSave()` methods
 * Don't log missing schema warnings when not debugging
+* Add the `FieldSet#clear()` method to remove all added fields
 
 ## 1.2.8 (2022-11-13)
 
