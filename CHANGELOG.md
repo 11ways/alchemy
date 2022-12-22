@@ -43,6 +43,7 @@
 * Fix `Document#hasChanged()` methods reporting wrong value in `Model#beforeSave()` methods
 * Don't log missing schema warnings when not debugging
 * Add the `FieldSet#clear()` method to remove all added fields
+* Add `Alchemy#distinctProblem(id, message, options)` logger
 
 ## 1.2.8 (2022-11-13)
 
