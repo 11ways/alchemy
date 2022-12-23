@@ -1,4 +1,4 @@
-## 1.3.0 (WIP)
+## 1.3.0 (2022-12-23)
 
 * Add `Inode.from(path)` to get the correct Inode instance
 * Add `File#getHash()` and `File#getMimetype()` methods
