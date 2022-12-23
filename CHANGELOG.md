@@ -44,6 +44,7 @@
 * Don't log missing schema warnings when not debugging
 * Add the `FieldSet#clear()` method to remove all added fields
 * Add `Alchemy#distinctProblem(id, message, options)` logger
+* Fix serving dependency files breaking after the first serve
 
 ## 1.2.8 (2022-11-13)
 
