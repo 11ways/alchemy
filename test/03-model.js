@@ -162,6 +162,7 @@ describe('Model', function() {
 	 * Adding fields to the new Model
 	 */
 	describe('.addField(name, type, options)', function() {
+
 		it('should add fields (during constitution) - Person example', function(done) {
 			Person.constitute(function addFields() {
 
@@ -263,6 +264,107 @@ describe('Model', function() {
 
 				next();
 			});
+		});
+
+		it('should be able to add cloned schemas', function(done) {
+
+			global.ClonedSchemas = Function.inherits('Alchemy.Model', 'ClonedSchemas');
+
+			ClonedSchemas.constitute(async function addFields() {
+
+				let components = alchemy.createSchema();
+				components.addField('uid', 'ObjectId', {default: alchemy.ObjectId});
+
+				let connections = alchemy.createSchema();
+				let connection = alchemy.createSchema();
+				let anchor = alchemy.createSchema();
+				anchor.addField('node_uid', 'ObjectId');
+				anchor.addField('anchor_name', 'String');
+
+				connection.addField('source', JSON.clone(anchor));
+				connection.addField('target', JSON.clone(anchor));
+
+				connections.addField('in', JSON.clone(connection), {array: true});
+				connections.addField('out', JSON.clone(connection), {array: true});
+
+				components.addField('connections', connections);
+
+				this.addField('components', components, {array: true});
+
+				try {
+					await testClonedSchemas();
+				} catch (err) {
+					done(err);
+				}
+			});
+
+			async function testClonedSchemas() {
+
+				let doc = Model.get('ClonedSchemas').createDocument();
+
+				doc.components = [
+					{
+						connections: {
+							in : [{
+								source : {
+									node_uid : alchemy.ObjectId(),
+									anchor_name : 'in-source-1',
+								},
+								target : {
+									node_uid : alchemy.ObjectId(),
+									anchor_name : 'in-target-1'
+								}
+							}],
+							out : [{
+								source : {
+									node_uid : alchemy.ObjectId(),
+									anchor_name : 'out-source-1',
+								},
+								target : {
+									node_uid : alchemy.ObjectId(),
+									anchor_name : 'out-target-1'
+								}
+							}]
+						}
+					}
+				];
+
+				await doc.save();
+
+				let refetched = await Model.get('ClonedSchemas').findByPk(doc._id);
+
+				let comp = refetched.components?.[0];
+
+				if (!comp) {
+					throw new Error('The `components` field was not saved properly');
+				}
+
+				let connections = comp.connections;
+
+				if (!connections) {
+					throw new Error('The `connections` sub-field of the `components` field was not saved properly');
+				}
+
+				if (!connections.in?.[0] || !connections.out?.[0]) {
+					throw new Error('The `in` and `out` sub-fields of the `connections` field were not saved properly');
+				}
+
+				let in_val = connections.in[0],
+				    out_val = connections.out[0];
+
+				assert.strictEqual(in_val.source.anchor_name, 'in-source-1');
+				assert.strictEqual(in_val.target.anchor_name, 'in-target-1');
+
+				assert.strictEqual(out_val.source.anchor_name, 'out-source-1');
+				assert.strictEqual(out_val.target.anchor_name, 'out-target-1');
+
+				assert.strictEqual(in_val.source.node_uid.constructor.name, 'ObjectID');
+				assert.strictEqual(in_val.target.node_uid.constructor.name, 'ObjectID');
+				assert.strictEqual(out_val.source.node_uid.constructor.name, 'ObjectID');
+				assert.strictEqual(out_val.target.node_uid.constructor.name, 'ObjectID');
+
+				done();
+			}
 		});
 
 		it('should be able to add translatable & array schema fields', function(next) {
@@ -437,6 +539,120 @@ describe('Model', function() {
 
 				next();
 			});
+		});
+
+		it('should be able to handle nested enum schemas', function (next) {
+
+			next = Function.regulate(next);
+
+			const WidgetsField = Function.inherits('Alchemy.Field.Schema', function Widgets(schema, name, options) {
+
+				if (!options) {
+					options = {};
+				}
+			
+				if (!options.schema) {
+					options.schema = Classes.Alchemy.Widget.Container.schema.clone();
+				}
+			
+				Widgets.super.call(this, schema, name, options);
+			});
+
+			const Widget = Function.inherits('Alchemy.Base', 'Alchemy.Widget', function Widget(config) {
+
+				// The configuration of this widget
+				if (config) {
+					this.config = config;
+				}
+			
+				this.originalconfig = this.config;
+			
+				// Are we currently editing?
+				this.editing = false;
+			
+				// The parent instance
+				this.parent_instance = null;
+			});
+
+			Widget.makeAbstractClass();
+			Widget.startNewGroup('widgets');
+
+			Widget.setProperty(function schema() {
+				return this.constructor.schema;
+			});
+
+			Widget.constitute(function prepareSchema() {
+				this.schema = alchemy.createSchema();
+			});
+
+			const Container = Function.inherits('Alchemy.Widget', 'Container');
+
+			Container.constitute(function prepareSchema() {
+
+				let widgets = alchemy.createSchema();
+			
+				widgets.addField('type', 'Enum', {values: alchemy.getClassGroup('widgets')});
+				widgets.addField('config', 'Schema', {schema: 'type'});
+			
+				this.schema.addField('widgets', widgets, {array: true});
+			});
+
+			const List = Function.inherits('Alchemy.Widget.Container', 'List');
+			const Text = Function.inherits('Alchemy.Widget', 'Text');
+			Text.constitute(function prepareSchema() {
+				this.schema.addField('content', 'Text');
+			});
+
+			let WithWidgets = Function.inherits('Alchemy.Model', 'WithWidgets');
+
+			WithWidgets.constitute(async function prepareSchema() {
+				this.addField('widgets', 'Widgets');
+
+				try {
+					await Pledge.after(50);
+					await testWidgets();
+				} catch (err) {
+					next(err);
+				}
+			});
+
+			async function testWidgets() {
+
+				const WithWidgets = Model.get('WithWidgets');
+
+				let doc = WithWidgets.createDocument();
+
+				doc.widgets = [
+					{
+						type : 'text',
+						config : {
+							content : 'text1'
+						}
+					},
+					{
+						type : 'list',
+						config : {
+							widgets : [
+								{
+									type : 'text',
+									config: {
+										content: 'nested-text2'
+									}
+								}
+							]
+						}
+					}
+				];
+
+				await doc.save();
+
+				let refetched = await WithWidgets.findByPk(doc.$pk);
+
+				console.log('Refetched:', refetched);
+
+				process.exit();
+				done();
+			}
 		});
 	});
 
