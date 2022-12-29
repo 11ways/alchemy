@@ -606,7 +606,7 @@ describe('Model', function() {
 			let WithWidgets = Function.inherits('Alchemy.Model', 'WithWidgets');
 
 			WithWidgets.constitute(async function prepareSchema() {
-				this.addField('widgets', 'Widgets');
+				this.addField('widgets', 'Widgets', {translatable: true});
 
 				try {
 					await Pledge.after(50);
@@ -622,36 +622,68 @@ describe('Model', function() {
 
 				let doc = WithWidgets.createDocument();
 
-				doc.widgets = [
-					{
-						type : 'text',
-						config : {
-							content : 'text1'
-						}
-					},
-					{
-						type : 'list',
-						config : {
-							widgets : [
-								{
-									type : 'text',
-									config: {
-										content: 'nested-text2'
-									}
+				doc.widgets = {
+					en: {
+						widgets: [
+							{
+								type : 'text',
+								config : {
+									content : 'text1'
 								}
-							]
-						}
+							},
+							{
+								type : 'list',
+								config : {
+									widgets : [
+										{
+											type : 'text',
+											config: {
+												content: 'nested-text2'
+											}
+										}
+									]
+								}
+							}
+						]
 					}
-				];
+				};
 
 				await doc.save();
 
 				let refetched = await WithWidgets.findByPk(doc.$pk);
 
-				console.log('Refetched:', refetched);
+				let en = refetched?.widgets?.en;
 
-				process.exit();
-				done();
+				if (!en) {
+					throw new Error('The english widgets were not saved');
+				}
+
+				let widgets = en.widgets;
+
+				if (!widgets || !widgets.length) {
+					throw new Error('The widgets were not saved');
+				}
+
+				let text = widgets[0],
+				    list = widgets[1];
+				
+				assert.strictEqual(text?.type, 'text');
+				assert.strictEqual(text?.config?.content, 'text1');
+
+				assert.strictEqual(list?.type, 'list');
+
+				let contents = list?.config?.widgets;
+
+				if (!contents) {
+					throw new Error('The nested list widget has no contents');
+				}
+
+				let sub_text = contents[0];
+
+				assert.strictEqual(sub_text?.type, 'text');
+				assert.strictEqual(sub_text?.config?.content, 'nested-text2');
+
+				next();
 			}
 		});
 	});
