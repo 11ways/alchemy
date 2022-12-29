@@ -1,3 +1,7 @@
+## 1.3.1 (WIP)
+
+* Catch errors when cloning current document data
+
 ## 1.3.0 (2022-12-23)
 
 * Add `Inode.from(path)` to get the correct Inode instance
