@@ -109,7 +109,7 @@ describe('RevisionBehaviour', function() {
 			let updated_delta = updated_revision.delta;
 
 			for (let key in created_delta) {
-				assert.strictEqual(created_delta[key].length, 1, 'The delta arrays for the created save should have only 1 entry');
+				assert.strictEqual(created_delta[key].length, 1, 'The delta arrays for the created save should have exactly 1 entry');
 			}
 
 			assert.strictEqual(String(created_delta._id[0]), String(created_revision.record_id));
