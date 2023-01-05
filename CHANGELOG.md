@@ -1,6 +1,7 @@
 ## 1.3.1 (WIP)
 
 * Catch errors when cloning current document data
+* Fix bug where SchemaField schema can't be processed properly
 
 ## 1.3.0 (2022-12-23)
 
