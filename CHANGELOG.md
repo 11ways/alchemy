@@ -2,6 +2,8 @@
 
 * Catch errors when cloning current document data
 * Fix bug where SchemaField schema can't be processed properly
+* Add `Field#getOptionsForDrying()` method
+* Fix SchemaField & Enum schema nesting issues
 
 ## 1.3.0 (2022-12-23)
 
