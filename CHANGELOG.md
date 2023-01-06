@@ -5,6 +5,7 @@
 * Add `Field#getOptionsForDrying()` method
 * Fix SchemaField & Enum schema nesting issues
 * Fix nested `SchemaField` not being processed correctly
+* Also set the `primary_key` and `display_field` property on client-side Model classes
 
 ## 1.3.0 (2022-12-23)
 
