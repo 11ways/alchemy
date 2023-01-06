@@ -603,7 +603,6 @@ describe('Document', function() {
 			const ChildModel = Function.inherits('Alchemy.Model.WithSchemaField', 'BeforeSaveSchemaField');
 
 			ChildModel.setMethod(function beforeSave(document) {
-				console.log('Doing beforeSave of doc', document.hasChanged(), document.$attributes.original_record)
 				subname_has_changed = document.hasChanged('subschema.subname');
 				entries_has_changed = document.hasChanged('entries');
 			});

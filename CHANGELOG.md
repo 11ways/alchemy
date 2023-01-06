@@ -4,6 +4,7 @@
 * Fix bug where SchemaField schema can't be processed properly
 * Add `Field#getOptionsForDrying()` method
 * Fix SchemaField & Enum schema nesting issues
+* Fix nested `SchemaField` not being processed correctly
 
 ## 1.3.0 (2022-12-23)
 

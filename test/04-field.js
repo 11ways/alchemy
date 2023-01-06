@@ -428,5 +428,140 @@ describe('Field.DateTime', function() {
 
 		assert.strictEqual(unit_query_result.length, 0);
 	});
+});
 
+describe('Field.Schema', function() {
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		let to_app_counter = 0;
+
+		const FlobotonumField = Function.inherits('Alchemy.Field', 'Flobotonum');
+		FlobotonumField.setDatatype('object');
+		FlobotonumField.setSelfContained(true);
+		FlobotonumField.setMethod(function _toApp(query, options, value, callback) {
+
+			let result = {
+				type     : 'flobotonum',
+				value    : value,
+				to_apped : true,
+				to_app_counter : ++to_app_counter,
+			};
+
+			callback(null, result);
+		});
+
+		FlobotonumField.setMethod(function _toDatasource(value, data, datasource, callback) {
+			callback(null, value.value);
+		});
+
+		let QuestComponents = alchemy.getClassGroup('all_quest_component');
+		const QuestComponent = Function.inherits('Alchemy.Base', 'Alchemy.Quest.Component', 'QuestComponent');
+		QuestComponent.makeAbstractClass();
+		QuestComponent.startNewGroup('all_quest_component');
+		QuestComponent.setProperty(function schema() {
+			return this.constructor.schema;
+		});
+		QuestComponent.constitute(function setSchema() {
+			this.schema = alchemy.createSchema();
+		});
+
+		const Sleep = Function.inherits('Alchemy.Quest.Component.QuestComponent', 'Sleep');
+		Sleep.constitute(function setSchema() {
+			// Set the sleep time
+			this.schema.addField('duration', 'Number');
+			this.schema.addField('flobotonum', 'Flobotonum');
+		});
+
+		const QuestTest = Function.inherits('Alchemy.Model', 'QuestTest');
+		QuestTest.constitute(async function addFields() {
+
+			let schema = alchemy.createSchema();
+
+			schema.addField('type', 'Enum', {values: QuestComponents});
+			schema.addField('settings', 'Schema', {schema: 'type'});
+
+			this.addField('objectives', schema, {array: true});
+
+			await Pledge.after(1);
+			next();
+		});
+	});
+
+	it('should correctly handle nested schemas', async function() {
+		const Quest = Model.get('QuestTest');
+		let doc = Quest.createDocument();
+
+		doc.objectives = [
+			{
+				type : 'sleep',
+				settings : {
+					duration : 1,
+					flobotonum: {
+						value : {
+							stuff : true
+						}
+					}
+				}
+			},
+			{
+				type : 'sleep',
+				settings : {
+					duration : 2,
+					flobotonum: {
+						value : {
+							morestuff : true
+						}
+					}
+				}
+			}
+		];
+
+		await doc.save();
+
+		let first,
+		    second;
+
+		assert.strictEqual(!!doc._id, true, 'The saved document should have an _id');
+		assert.strictEqual(doc.objectives.length, 2, 'The saved document should have 2 objectives');
+
+		first = doc.objectives[0];
+		second = doc.objectives[1];
+		
+		assert.strictEqual(first.type, 'sleep');
+		assert.strictEqual(first.settings?.duration, 1);
+		assert.strictEqual(first.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
+		assert.strictEqual(first.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
+		assert.strictEqual(first.settings?.flobotonum?.value?.stuff, true, 'The inner flobotonum value should have been saved');
+		assert.strictEqual(first.settings?.flobotonum?.to_app_counter, 1, 'This should have been the first `toApp` call for this field');
+
+		assert.strictEqual(second.type, 'sleep');
+		assert.strictEqual(second.settings?.duration, 2);
+		assert.strictEqual(second.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
+		assert.strictEqual(second.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
+		assert.strictEqual(second.settings?.flobotonum?.value?.morestuff, true, 'The inner flobotonum value should have been saved');
+		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 2, 'This should have been the second `toApp` call for this field');
+
+		doc = await Quest.findByPk(doc._id);
+
+		assert.strictEqual(doc.objectives.length, 2, 'The saved document should have 2 objectives');
+
+		first = doc.objectives[0];
+		second = doc.objectives[1];
+		
+		assert.strictEqual(first.type, 'sleep');
+		assert.strictEqual(first.settings?.duration, 1);
+		assert.strictEqual(first.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
+		assert.strictEqual(first.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
+		assert.strictEqual(first.settings?.flobotonum?.value?.stuff, true, 'The inner flobotonum value should have been saved');
+		assert.strictEqual(first.settings?.flobotonum?.to_app_counter, 3, 'This should have been the third `toApp` call for this field');
+
+		assert.strictEqual(second.type, 'sleep');
+		assert.strictEqual(second.settings?.duration, 2);
+		assert.strictEqual(second.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
+		assert.strictEqual(second.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
+		assert.strictEqual(second.settings?.flobotonum?.value?.morestuff, true, 'The inner flobotonum value should have been saved');
+		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 4, 'This should have been the fourth `toApp` call for this field');
+	});
 });
