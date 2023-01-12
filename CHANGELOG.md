@@ -7,6 +7,7 @@
 * Fix nested `SchemaField` not being processed correctly
 * Also set the `primary_key` and `display_field` property on client-side Model classes
 * Fix client-side model inheritance order issues
+* Let the `Router` directive also check an element's internal variables for route parameters
 
 ## 1.3.0 (2022-12-23)
 
