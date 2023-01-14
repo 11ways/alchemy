@@ -22,7 +22,7 @@
 		"chokidar"         : "~3.5.3",
 		"formidable"       : "~2.0.1",
 		"graceful-fs"      : "~4.2.9",
-		"hawkejs"          : "~2.2.23",
+		"hawkejs"          : "~2.3.0",
 		"jsondiffpatch"    : "~0.4.1",
 		"mime"             : "~3.0.0",
 		"minimist"         : "~1.2.5",
@@ -45,7 +45,7 @@
 		"index.js"
 	],
 	"optionalDependencies": {
-		"janeway"          : "~0.3.6",
+		"janeway"          : "~0.4.0",
 		"less"             : "~4.1.1",
 		"sass"             : "~1.53.0",
 		"sass-embedded"    : "~1.53.0",
