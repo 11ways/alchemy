@@ -13,6 +13,7 @@
 * Upgrade hawkejs to version 2.3.0
 * Add `Types` and `Classes` global on the client-side
 * Statically expose the `alchemy_layout` settings
+* Only log 404 errors when on a development environment
 
 ## 1.3.0 (2022-12-23)
 
