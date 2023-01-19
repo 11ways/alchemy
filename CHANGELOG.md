@@ -11,6 +11,7 @@
 * Let migrations handle raw datasource data
 * Upgrade protoblast to version 0.8.0
 * Upgrade hawkejs to version 2.3.0
+* Add `Types` and `Classes` global on the client-side
 
 ## 1.3.0 (2022-12-23)
 
