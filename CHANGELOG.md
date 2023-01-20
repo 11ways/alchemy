@@ -14,6 +14,7 @@
 * Add `Types` and `Classes` global on the client-side
 * Statically expose the `alchemy_layout` settings
 * Only log 404 errors when on a development environment
+* Implement method signature for `Validator#validateFieldValue()`
 
 ## 1.3.0 (2022-12-23)
 
