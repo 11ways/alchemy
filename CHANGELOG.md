@@ -20,6 +20,7 @@
 * Fix `ip` property of `Socket` conduit
 * Add `lagInMs()`, `isTooBusy()` and `isTooBusyForAjax()` methods to the `Alchemy` class
 * Add `lag_menu` setting, which will display the current lag as a Janeway menu item
+* Add the `can_be_postponed` option to routes
 
 ## 1.3.0 (2022-12-23)
 
