@@ -15,6 +15,8 @@
 * Statically expose the `alchemy_layout` settings
 * Only log 404 errors when on a development environment
 * Implement method signature for `Validator#validateFieldValue()`
+* Rename `Conduit#postpone()` to `Conduit#postponeResponse()`
+* Add `Conduit#postponeRequest()` to also delay the processing of the request
 
 ## 1.3.0 (2022-12-23)
 
