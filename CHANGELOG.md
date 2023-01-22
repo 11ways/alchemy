@@ -18,6 +18,7 @@
 * Rename `Conduit#postpone()` to `Conduit#postponeResponse()`
 * Add `Conduit#postponeRequest()` to also delay the processing of the request
 * Fix `ip` property of `Socket` conduit
+* Add `lagInMs()`, `isTooBusy()` and `isTooBusyForAjax()` methods to the `Alchemy` class
 
 ## 1.3.0 (2022-12-23)
 
