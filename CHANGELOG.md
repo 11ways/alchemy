@@ -28,6 +28,7 @@
 * Add `Alchemy#systemLoad()` method to get the total system load as a percentage
 * Add `Alchemy#http_request_counter` property to keep track of the total number of requests
 * Add `Postponement.total_postponement_counter` property getter to keep track of the total number of queued requests
+* Add the `postpone_requests_on_overload` setting
 
 ## 1.3.0 (2022-12-23)
 
