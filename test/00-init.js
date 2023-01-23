@@ -235,6 +235,7 @@ describe('Alchemy', function() {
 		it('should start the server', function(done) {
 
 			alchemy.settings.port = 3470;
+			alchemy.settings.postpone_requests_on_overload = false;
 
 			alchemy.start({silent: true}, function started() {
 

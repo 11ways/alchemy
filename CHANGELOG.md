@@ -1,4 +1,4 @@
-## 1.3.1 (WIP)
+## 1.3.1 (2023-01-23)
 
 * Catch errors when cloning current document data
 * Fix bug where SchemaField schema can't be processed properly
