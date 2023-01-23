@@ -24,6 +24,7 @@
 * Automatically postpone requests when the server becomes too busy
 * Add the `Postponement` class
 * Put new requests in a queue when the server becomes too busy
+* Show simple error text messages when the server is too busy
 
 ## 1.3.0 (2022-12-23)
 
