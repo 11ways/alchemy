@@ -23,6 +23,7 @@
 * Add the `can_be_postponed` option to routes
 * Automatically postpone requests when the server becomes too busy
 * Add the `Postponement` class
+* Put new requests in a queue when the server becomes too busy
 
 ## 1.3.0 (2022-12-23)
 
