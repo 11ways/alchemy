@@ -1,3 +1,7 @@
+## 1.3.2 (WIP)
+
+* Fix calling non-existing `next()` method in the client-side Base class
+
 ## 1.3.1 (2023-01-23)
 
 * Catch errors when cloning current document data
