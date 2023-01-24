@@ -1,4 +1,4 @@
-## 1.3.2 (WIP)
+## 1.3.2 (2023-01-24)
 
 * Fix calling non-existing `next()` method in the client-side Base class
 * Only expire postponements after 3 minutes instead of 30 seconds
