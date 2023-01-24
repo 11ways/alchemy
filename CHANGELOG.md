@@ -3,6 +3,7 @@
 * Fix calling non-existing `next()` method in the client-side Base class
 * Only expire postponements after 3 minutes instead of 30 seconds
 * Handle postponement expiry better
+* Rename `toobusy` setting to `max_event_loop_lag`
 
 ## 1.3.1 (2023-01-23)
 
