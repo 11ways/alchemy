@@ -4,6 +4,7 @@
 * Only expire postponements after 3 minutes instead of 30 seconds
 * Handle postponement expiry better
 * Rename `toobusy` setting to `max_event_loop_lag`
+* Add `max_system_load` setting
 
 ## 1.3.1 (2023-01-23)
 
