@@ -1,3 +1,7 @@
+## 1.3.3 (WIP)
+
+* Add `fallback` option to `Document#getDisplayFieldValue(options)`, so it can return null if no useful value is available
+
 ## 1.3.2 (2023-01-24)
 
 * Fix calling non-existing `next()` method in the client-side Base class
