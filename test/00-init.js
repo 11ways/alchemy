@@ -26,8 +26,23 @@ process.env.NO_ALCHEMY_LOAD_WARNING = 1;
 // Require alchemymvc
 require('../index.js');
 
+let connect = false;
+
 async function loadBrowser() {
-	global.browser = await puppeteer.launch();
+
+	if (connect) {
+		global.browser = await puppeteer.connect({
+			'browserURL': 'http://127.0.0.1:9333/',
+			defaultViewport: {
+				width: 1680,
+				height: 1050,
+			},
+			devtools: true,
+		});
+	} else {
+		global.browser = await puppeteer.launch();
+	}
+
 	global.page = await browser.newPage();
 
 	page.on('console', function(msg) {
@@ -438,7 +453,7 @@ describe('Alchemy', function() {
 
 // This will run after ALL the files have executed (not just this file)
 after(async function() {
-	if (global.browser) {
+	if (global.browser && !connect) {
 		await browser.close();
 	}
 });
