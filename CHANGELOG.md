@@ -3,6 +3,7 @@
 * Add `fallback` option to `Document#getDisplayFieldValue(options)`, so it can return null if no useful value is available
 * Don't add sitemap entries without a valid title
 * Fix validation throwing an error when checking unexisting nested values
+* Actually use `source_map` setting
 
 ## 1.3.2 (2023-01-24)
 
