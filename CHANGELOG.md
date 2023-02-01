@@ -1,3 +1,7 @@
+## 1.3.4 (WIP)
+
+* Add XML generation support to the `Sitemap` class
+
 ## 1.3.3 (2023-01-30)
 
 * Add `fallback` option to `Document#getDisplayFieldValue(options)`, so it can return null if no useful value is available
