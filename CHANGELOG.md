@@ -1,6 +1,7 @@
 ## 1.3.4 (WIP)
 
 * Add XML generation support to the `Sitemap` class
+* Log error instances during request handling on development environments
 
 ## 1.3.3 (2023-01-30)
 
