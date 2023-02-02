@@ -2,6 +2,7 @@
 
 * Add XML generation support to the `Sitemap` class
 * Log error instances during request handling on development environments
+* Throw an error when trying to select an association on a `Criteria` without an attached model
 
 ## 1.3.3 (2023-01-30)
 
