@@ -4,6 +4,7 @@
 * Log error instances during request handling on development environments
 * Throw an error when trying to select an association on a `Criteria` without an attached model
 * Allow disabling minification of certain javascript client files using `@alchemy.minify.false` annotation
+* Allow supplying a model instance to a new Criteria on init
 
 ## 1.3.3 (2023-01-30)
 
