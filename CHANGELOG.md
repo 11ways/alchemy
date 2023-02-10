@@ -5,6 +5,7 @@
 * Throw an error when trying to select an association on a `Criteria` without an attached model
 * Allow disabling minification of certain javascript client files using `@alchemy.minify.false` annotation
 * Allow supplying a model instance to a new Criteria on init
+* Fix `DocumentList` instances having the wrong number of `available` records
 
 ## 1.3.3 (2023-01-30)
 
