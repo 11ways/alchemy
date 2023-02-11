@@ -6,6 +6,7 @@
 * Allow disabling minification of certain javascript client files using `@alchemy.minify.false` annotation
 * Allow supplying a model instance to a new Criteria on init
 * Fix `DocumentList` instances having the wrong number of `available` records
+* Add relationship methods to the client-side `Schema` class too
 
 ## 1.3.3 (2023-01-30)
 
