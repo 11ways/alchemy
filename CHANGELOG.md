@@ -2,6 +2,7 @@
 
 * Upgrade `socket.io` dependencies
 * Upgrade `mocha` dependency
+* Upgrade `formidable` dependency (but stay on `v2.1.x`)
 
 ## 1.3.4 (2023-02-11)
 
