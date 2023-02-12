@@ -1,3 +1,7 @@
+## 1.3.5 (WIP)
+
+* Upgrade `socket.io` dependencies
+
 ## 1.3.4 (2023-02-11)
 
 * Add XML generation support to the `Sitemap` class
