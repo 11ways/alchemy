@@ -1,6 +1,7 @@
 ## 1.3.5 (WIP)
 
 * Upgrade `socket.io` dependencies
+* Upgrade `mocha` dependency
 
 ## 1.3.4 (2023-02-11)
 
