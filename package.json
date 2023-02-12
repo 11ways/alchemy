@@ -36,7 +36,7 @@
 		"socket.io"        : "~4.6.0",
 		"@11ways/socket.io-stream" : "~0.9.2",
 		"sputnik"          : "~0.1.0",
-		"terser"           : "~5.10.0",
+		"terser"           : "~5.16.3",
 		"toobusy-js"       : "~0.5.1",
 		"useragent"        : "~2.3.0"
 	},
