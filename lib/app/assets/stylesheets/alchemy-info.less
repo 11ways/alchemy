@@ -25,15 +25,13 @@ body {
 .row {
 	display: flex;
 	margin-bottom: 2rem;
+	flex-flow: wrap;
+	gap: 2rem;
 }
 
 .col {
 	flex: 1 0 auto;
 	background: #E8F3F8;
-}
-
-.col:not(:last-child) {
-	margin-right: 2rem;
 }
 
 .header-image {
@@ -56,6 +54,17 @@ body {
 	}
 }
 
+tr:nth-child(even) {
+	td {
+		background-color: rgba(100, 100, 100, 0.1);
+	}
+}
+
+td {
+	vertical-align: top;
+	padding: 1rem 0.2rem;
+}
+
 .package-description {
 	max-width: 350px;
 }
@@ -71,6 +80,10 @@ body {
 		h1 {
 			margin-top: 0;
 		}
+	}
+
+	@media screen and (max-width: 1500px)  {
+		padding: 2rem 1rem;
 	}
 }
 
@@ -129,13 +142,18 @@ li.failed::before {
 }
 
 .settings {
-	max-width: 50%;
 
 	th {
 		text-align: left;
 		border-bottom: 1px solid black;
 	}
 
+	table {
+		width: 100%;
+	}
+}
+
+.table-wrap {
 	table {
 		width: 100%;
 	}

@@ -5,6 +5,8 @@
 		<% set_title('Alchemy Info Page') %>
 		<% this.foundation({protoblast: true}) %>
 		<% style('alchemy-info') %>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
 
@@ -64,11 +66,25 @@
 				<div class="row">
 					<article class="plugins col">
 						<h1>Plugins</h1>
-						<ul>
-							{% each plugins as plugin %}
+						{% with plugins as plugin %}
+
+							{% none %}
+								<p class="none">No plugins are loaded</p>
+							{% /none %}
+
+							{% all %}
+								<ul>
+							{% /all %}
+
+							{% each %}
 								<li>{{ plugin }}</li>
 							{% /each %}
-						</ul>
+
+							{% all %}
+								</ul>
+							{% /all %}
+
+						{% /with %}
 					</article>
 
 					<article class="settings col">

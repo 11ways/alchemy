@@ -5,6 +5,7 @@
 * Upgrade `formidable` dependency (but stay on `v2.1.x`)
 * Upgrade `terser` dependency to `v5.16.3`
 * Show a default listening-url when starting with a port number
+* Fix some issues on the default info page
 
 ## 1.3.4 (2023-02-11)
 
