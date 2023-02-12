@@ -4,6 +4,7 @@
 * Upgrade `mocha` dependency
 * Upgrade `formidable` dependency (but stay on `v2.1.x`)
 * Upgrade `terser` dependency to `v5.16.3`
+* Show a default listening-url when starting with a port number
 
 ## 1.3.4 (2023-02-11)
 
