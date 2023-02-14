@@ -1,6 +1,7 @@
 ## 1.3.6 (WIP)
 
 * Don't retrieve sessions via browser fingerprint
+* Let helper method `Router#routeConfig()` return early when no name is given
 
 ## 1.3.5 (2023-02-12)
 
