@@ -3,6 +3,7 @@
 * Don't retrieve sessions via browser fingerprint
 * Let helper method `Router#routeConfig()` return early when no name is given
 * Only call `Field#checkIndexes()` when it's attached to a schema
+* Turn MongoDB write errors into violations
 
 ## 1.3.5 (2023-02-12)
 
