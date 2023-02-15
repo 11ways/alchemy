@@ -5,6 +5,7 @@
 * Only call `Field#checkIndexes()` when it's attached to a schema
 * Turn MongoDB write errors into violations
 * Add `BigInt` field
+* Properly parse class paths in `PathParamDefinition`
 
 ## 1.3.5 (2023-02-12)
 
