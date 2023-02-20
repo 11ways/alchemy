@@ -6,6 +6,7 @@
 * Turn MongoDB write errors into violations
 * Add `BigInt` field
 * Properly parse class paths in `PathParamDefinition`
+* Make sure redirects to an external website are turned into hard redirects
 
 ## 1.3.5 (2023-02-12)
 
