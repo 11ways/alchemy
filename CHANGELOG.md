@@ -1,3 +1,7 @@
+## 1.3.7 (WIP)
+
+* Make models sort by descending primary key by default, instead of ascending created date
+
 ## 1.3.6 (2023-02-20)
 
 * Don't retrieve sessions via browser fingerprint
