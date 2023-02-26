@@ -2,6 +2,7 @@
 
 * Make models sort by descending primary key by default, instead of ascending created date
 * Add `Field#valueHasContent(value)` method, to check if the given value can be considered not-empty
+* Add schema and parameter definitions to routes + allow use of documents as route parameters
 
 ## 1.3.6 (2023-02-20)
 
