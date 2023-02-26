@@ -1,4 +1,4 @@
-## 1.3.7 (WIP)
+## 1.3.7 (2023-02-26)
 
 * Make models sort by descending primary key by default, instead of ascending created date
 * Add `Field#valueHasContent(value)` method, to check if the given value can be considered not-empty
