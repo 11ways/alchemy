@@ -1,6 +1,7 @@
 ## 1.3.8 (WIP)
 
 * Use `Conduit#active_prefix` property instead of `Conduit#prefix` to set a criteria's locale
+* Add `Alchemy#getRoutes()` to get a live map of all the routes
 
 ## 1.3.7 (2023-02-26)
 
