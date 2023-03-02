@@ -4,6 +4,7 @@
 * Add `Alchemy#getRoutes()` to get a live map of all the routes
 * Only remove sheets that still have a parent node on stylesheet reload
 * Fix the language switcher's fallback route generation
+* Add the `Breadcrumb` class and use it for marking the active link
 
 ## 1.3.7 (2023-02-26)
 
