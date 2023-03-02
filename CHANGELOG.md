@@ -2,6 +2,7 @@
 
 * Use `Conduit#active_prefix` property instead of `Conduit#prefix` to set a criteria's locale
 * Add `Alchemy#getRoutes()` to get a live map of all the routes
+* Only remove sheets that still have a parent node on stylesheet reload
 
 ## 1.3.7 (2023-02-26)
 
