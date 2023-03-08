@@ -1,3 +1,7 @@
+## 1.3.9 (WIP)
+
+* Prevent the `Router#routeUrl()` helper from destroying the original parameters object
+
 ## 1.3.8 (2023-03-02)
 
 * Use `Conduit#active_prefix` property instead of `Conduit#prefix` to set a criteria's locale
