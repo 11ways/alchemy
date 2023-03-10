@@ -1,4 +1,4 @@
-## 1.3.9 (WIP)
+## 1.3.9 (2023-03-10)
 
 * Prevent the `Router#routeUrl()` helper from destroying the original parameters object
 
