@@ -2,6 +2,7 @@
 
 * Emit the `ending` event when a conduit ends its response
 * Add the `SessionScene` class
+* Don't let the browser create the same websocket link twice
 
 ## 1.3.9 (2023-03-10)
 
