@@ -6,6 +6,7 @@
 * Add the `scene_id` property getter to the `Linkup` class
 * Let the `Linkup` class wait for the `connected_to_server` event before becoming ready
 * Don't just unlink `Linkup` instances when they're destroyed, emit events and inform the other side
+* Add the `Syncable` class: synchronized instances between server & browser over websockets
 
 ## 1.3.9 (2023-03-10)
 
