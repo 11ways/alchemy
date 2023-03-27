@@ -4,6 +4,7 @@
 * Add the `SessionScene` class
 * Don't let the browser create the same websocket link twice
 * Add the `scene_id` property getter to the `Linkup` class
+* Let the `Linkup` class wait for the `connected_to_server` event before becoming ready
 
 ## 1.3.9 (2023-03-10)
 
