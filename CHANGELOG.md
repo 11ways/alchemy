@@ -1,3 +1,7 @@
+## 1.3.10 (WIP)
+
+* Emit the `ending` event when a conduit ends its response
+
 ## 1.3.9 (2023-03-10)
 
 * Prevent the `Router#routeUrl()` helper from destroying the original parameters object
