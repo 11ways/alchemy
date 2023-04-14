@@ -8,6 +8,7 @@
 * Don't just unlink `Linkup` instances when they're destroyed, emit events and inform the other side
 * Add the `Syncable` class: synchronized instances between server & browser over websockets
 * Disable ajax navigation to routes in a different section
+* Fix `Document` instances no longer being applied correctly when using in `Router#routeUrl()` helper
 
 ## 1.3.9 (2023-03-10)
 
