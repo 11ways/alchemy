@@ -9,6 +9,7 @@
 * Add the `Syncable` class: synchronized instances between server & browser over websockets
 * Disable ajax navigation to routes in a different section
 * Fix `Document` instances no longer being applied correctly when using in `Router#routeUrl()` helper
+* Also send the `scene_id` to the client as an exposed variable
 
 ## 1.3.9 (2023-03-10)
 
