@@ -7,6 +7,7 @@
 * Let the `Linkup` class wait for the `connected_to_server` event before becoming ready
 * Don't just unlink `Linkup` instances when they're destroyed, emit events and inform the other side
 * Add the `Syncable` class: synchronized instances between server & browser over websockets
+* Disable ajax navigation to routes in a different section
 
 ## 1.3.9 (2023-03-10)
 
