@@ -12,6 +12,7 @@
 * Also send the `scene_id` to the client as an exposed variable
 * Destroy linkups correctly when their sockets disconnect
 * Make `Syncable` queue calls happen in their original order
+* Add the `Document#getTranslatedValueOfFieldForRoute()` method
 
 ## 1.3.9 (2023-03-10)
 
