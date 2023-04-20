@@ -1,4 +1,4 @@
-## 1.3.10 (WIP)
+## 1.3.10 (2023-04-20)
 
 * Emit the `ending` event when a conduit ends its response
 * Add the `SessionScene` class
