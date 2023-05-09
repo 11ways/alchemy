@@ -1,4 +1,4 @@
-## 1.3.11 (WIP)
+## 1.3.11 (2023-05-09)
 
 * Add `Alchemy#registerErrorHandler(fnc)` and `Alchemy#registerError(err, info)` methods
 * Add `handle_uncaught` config
