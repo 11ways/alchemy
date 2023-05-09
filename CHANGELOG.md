@@ -1,3 +1,8 @@
+## 1.3.11 (WIP)
+
+* Add `Alchemy#registerErrorHandler(fnc)` and `Alchemy#registerError(err, info)` methods
+* Add `handle_uncaught` config
+
 ## 1.3.10 (2023-04-20)
 
 * Emit the `ending` event when a conduit ends its response
