@@ -1,4 +1,4 @@
-## 1.3.12 (WIP)
+## 1.3.12 (2023-05-29)
 
 * Fix path param definitions with fields starting with a non-letter breaking
 * Add `context` config to `DataProvider` class
