@@ -1,3 +1,7 @@
+## 1.3.12 (WIP)
+
+* Fix path param definitions with fields starting with a non-letter breaking
+
 ## 1.3.11 (2023-05-09)
 
 * Add `Alchemy#registerErrorHandler(fnc)` and `Alchemy#registerError(err, info)` methods
