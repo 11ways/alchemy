@@ -2,6 +2,7 @@
 
 * Add `Alchemy#getDisplayTitle(value, max_length)` method
 * Add `DataProvider#getById(id)` method
+* Implement missing `RemoteDataProvider` methods
 
 ## 1.3.12 (2023-05-29)
 
