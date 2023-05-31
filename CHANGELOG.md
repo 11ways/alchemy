@@ -1,3 +1,7 @@
+## 1.3.13 (WIP)
+
+* Add `Alchemy#getDisplayTitle(value, max_length)` method
+
 ## 1.3.12 (2023-05-29)
 
 * Fix path param definitions with fields starting with a non-letter breaking
