@@ -1,4 +1,4 @@
-## 1.3.13 (WIP)
+## 1.3.13 (2023-06-17)
 
 * Add `Alchemy#getDisplayTitle(value, max_length)` method
 * Add `DataProvider#getById(id)` method
