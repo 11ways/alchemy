@@ -4,6 +4,7 @@
 * Add `DataProvider#getById(id)` method
 * Implement missing `RemoteDataProvider` methods
 * Set the `content-length` response header when serving files
+* Add `getDisplayTitleOrNull` method to model & document
 
 ## 1.3.12 (2023-05-29)
 
