@@ -1,3 +1,7 @@
+## 1.3.14 (WIP)
+
+* Disable sourcemaps when minification is on
+
 ## 1.3.13 (2023-06-17)
 
 * Add `Alchemy#getDisplayTitle(value, max_length)` method
