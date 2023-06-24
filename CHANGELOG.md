@@ -1,6 +1,7 @@
 ## 1.3.14 (WIP)
 
 * Disable sourcemaps when minification is on
+* Do not send response headers that were set to `null`
 
 ## 1.3.13 (2023-06-17)
 
