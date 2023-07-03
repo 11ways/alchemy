@@ -1,6 +1,6 @@
 ## 1.3.15 (WIP)
 
-* Make `Conduit#redirect()` correctly use the `url` property
+* Make `Conduit#redirect()` reset the tested middlewares set
 
 ## 1.3.14 (2023-06-24)
 
