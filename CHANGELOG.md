@@ -1,3 +1,7 @@
+## 1.3.15 (WIP)
+
+* Make `Conduit#redirect()` correctly use the `url` property
+
 ## 1.3.14 (2023-06-24)
 
 * Disable sourcemaps when minification is on
