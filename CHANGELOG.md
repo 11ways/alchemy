@@ -1,3 +1,7 @@
+## 1.3.16 (WIP)
+
+* Fix `Document#saveRecord()` throwing an error when a related record does not exist
+
 ## 1.3.15 (WIP)
 
 * Make `Conduit#redirect()` reset the tested middlewares set
