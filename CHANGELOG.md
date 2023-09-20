@@ -1,8 +1,10 @@
 ## 1.3.16 (WIP)
 
 * Fix `Document#saveRecord()` throwing an error when a related record does not exist
+* Allow `File#read()` to receive only a string for the encoding
+* Fix `Model#getDisplayTitle` undefined variable reference
 
-## 1.3.15 (WIP)
+## 1.3.15 (2023-07-03)
 
 * Make `Conduit#redirect()` reset the tested middlewares set
 
