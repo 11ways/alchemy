@@ -3,6 +3,7 @@
 * Fix `Document#saveRecord()` throwing an error when a related record does not exist
 * Allow `File#read()` to receive only a string for the encoding
 * Fix `Model#getDisplayTitle` undefined variable reference
+* Throw useful error when Sluggable behaviour finds no source fields
 
 ## 1.3.15 (2023-07-03)
 
