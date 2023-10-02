@@ -4,6 +4,7 @@
 * Allow `File#read()` to receive only a string for the encoding
 * Fix `Model#getDisplayTitle` undefined variable reference
 * Throw useful error when Sluggable behaviour finds no source fields
+* Fix querying on datetime units when the field is nested
 
 ## 1.3.15 (2023-07-03)
 
