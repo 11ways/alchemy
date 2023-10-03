@@ -7,6 +7,7 @@
 * Fix querying on datetime units when the field is nested
 * Make sure errors thrown in the `handleResults` function of `Datesource#read` get propagated properly
 * Add `Field.Schema#force_array_contents` feature, so a field like ACL's `Permission` field can use it
+* Add the `is_system_route` property in `Route` to signify routes designed for non-end-user interaction.
 
 ## 1.3.15 (2023-07-03)
 
