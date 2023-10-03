@@ -6,6 +6,7 @@
 * Throw useful error when Sluggable behaviour finds no source fields
 * Fix querying on datetime units when the field is nested
 * Make sure errors thrown in the `handleResults` function of `Datesource#read` get propagated properly
+* Add `Field.Schema#force_array_contents` feature, so a field like ACL's `Permission` field can use it
 
 ## 1.3.15 (2023-07-03)
 
