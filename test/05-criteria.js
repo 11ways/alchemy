@@ -295,9 +295,10 @@ describe('Criteria', function() {
 			let not_empty_or_first = await EmptyTester.find('all', crit);
 			assert.strictEqual(not_empty_or_first.length, 3);
 
-			assert.strictEqual(not_empty_or_first[0].name, 'second');
+			// Results should sort by descending primary key by default
+			assert.strictEqual(not_empty_or_first[2].name, 'second');
 			assert.strictEqual(not_empty_or_first[1].name, 'third');
-			assert.strictEqual(not_empty_or_first[2].name, 'fourth');
+			assert.strictEqual(not_empty_or_first[0].name, 'fourth');
 
 			// @TODO: this doesn't work yet
 			// crit = EmptyTester.find();
@@ -350,6 +351,7 @@ describe('Criteria', function() {
 			// Get them all, but translated in english
 			let crit = EmptyTester.find();
 			crit.setOption('locale', 'en');
+			crit.sort({created: 1});
 
 			all = await EmptyTester.find('all', crit);
 
@@ -362,6 +364,7 @@ describe('Criteria', function() {
 			// Only get the ones with a dutch translation
 			crit = EmptyTester.find();
 			crit.setOption('locale', 'nl');
+			crit.sort({_id: 1});
 
 			crit.where('title').not().isEmpty();
 
@@ -377,6 +380,7 @@ describe('Criteria', function() {
 			// Only get the ones with a french translation
 			crit = EmptyTester.find();
 			crit.setOption('locale', 'fr');
+			crit.sort({created: 1});
 
 			crit.where('title').not().isEmpty();
 
@@ -392,6 +396,7 @@ describe('Criteria', function() {
 			crit = EmptyTester.find();
 			crit.setOption('locale', 'en');
 			crit.where('title').isEmpty();
+			crit.sort({created: 1});
 
 			all = await EmptyTester.find('all', crit);
 

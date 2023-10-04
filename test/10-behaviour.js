@@ -89,7 +89,10 @@ describe('RevisionBehaviour', function() {
 
 			bird_dr = Model.get('BirdDataRevision');
 
-			let records = await bird_dr.find('all');
+			let crit = bird_dr.find();
+			crit.sort({_id: 1});
+
+			let records = await bird_dr.find('all', crit);
 
 			assert.strictEqual(records.length, 2, 'There should be 2 revision records already: one for the create & one for the update');
 
@@ -439,7 +442,10 @@ describe('SluggableBehaviour', function() {
 
 		it('should generate the same slug for an existing record', async function() {
 
-			var doc = await sp_model.find('first'),
+			let crit = sp_model.find();
+			crit.sort({_id: 1});
+
+			let doc = await sp_model.find('first', crit),
 			    slug = 'this-is-a-document';
 
 			assert.strictEqual(doc.name, 'This is a document');
