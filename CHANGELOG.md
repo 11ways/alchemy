@@ -13,6 +13,7 @@
 * Upgrade `mongodb` client from `3.6.6` to `6.1.0`, requiring quite a few fixes
 * Minimum node version is now also `v16.20.1` because of the mongodb upgrade
 * Upgrade all dependencies
+* Don't log `.js.map` 404 errors
 
 ## 1.3.15 (2023-07-03)
 
