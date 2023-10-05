@@ -23,6 +23,10 @@
 			<input id="nested_text" name="nestedtext[first][second]" type="text">
 			<input id="nested_array" name="nestedarray[first][second][]" type="text">
 
+			{% if add_files %}
+				<input id="file_one" name="file_one" type="file">
+			{% /if %}
+
 			<input id="submitbutton" type="submit" title="Submit">
 		</form>
 	</div>

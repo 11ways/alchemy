@@ -152,6 +152,10 @@ global.evalPage = function evalPage(fnc, ...args) {
 	return page.evaluate(fnc, ...args);
 };
 
+global.getElementHandle = function getElementHandle(query) {
+	return page.$(query);
+};
+
 global.despace = function despace(text) {
 	return text.trim().replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
 };
@@ -248,6 +252,43 @@ global.setElementValue = async function setElementValue(query, value) {
 	}, query, value);
 
 	return result;
+};
+
+global.setFileInputPath = async function setFileInputPath(query, path) {
+
+	let handle = await getElementHandle(query);
+
+	if (!handle) {
+		return false;
+	}
+
+	return handle.uploadFile(path);
+};
+
+global.setFileInputBlob = async function setFileInputBlob(query, content) {
+
+	let result = await evalPage(function(query, content) {
+		let element = document.querySelector(query);
+
+		if (!element) {
+			return false;
+		}
+
+		element.files = [new File([new Blob([content], {type: 'text/plain'})], 'test.txt', {type: 'text/plain'})];
+
+		let result = {
+			html       : element.outerHTML,
+			text       : element.textContent,
+			location   : document.location.pathname,
+			scroll_top : document.scrollingElement.scrollTop,
+			value      : element.value,
+		};
+
+		return result;
+	}, query, content);
+
+	return result;
+
 };
 
 global.setElementValueOrThrow = async function setElementValueOrThrow(query, value) {

@@ -1,4 +1,7 @@
 const assert = require('assert');
+const libfs = require('fs');
+
+let post_pledge;
 
 describe('Controller', function() {
 
@@ -8,8 +11,6 @@ describe('Controller', function() {
 
 	describe('#body', function() {
 		it('should parse the body of any encoding type', async function() {
-
-			let post_pledge;
 
 			Router.add({
 				name    : 'ConduitTest#bodyTest',
@@ -26,6 +27,7 @@ describe('Controller', function() {
 						body    : conduit.body,
 						params  : conduit.params,
 						headers : conduit.headers,
+						files   : conduit.files,
 					};
 
 					if (post_pledge) {
@@ -42,6 +44,9 @@ describe('Controller', function() {
 				let disable_hawkejs = conduit.param('disable_hawkejs');
 				this.set('disable_hawkejs', disable_hawkejs);
 
+				let add_files = conduit.param('add_files');
+				this.set('add_files', add_files);
+
 				this.render('static/conduit_body_test');
 			});
 
@@ -56,15 +61,32 @@ describe('Controller', function() {
 		});
 	});
 
+	describe('#files', function() {
+		it('should parse submitted files', async function() {
+			post_pledge = new Pledge();
+			await testFormSubmission(post_pledge, 'addfiles');
+		});
+	});
 });
 
 async function testFormSubmission(post_pledge, enctype) {
 
 	let base_url = global.getRouteUrl('ConduitTest#bodyTest');
 	let actual_url = '' + base_url;
+	let add_files = false;
+	let file_contents = '';
+
+	if (enctype == 'addfiles') {
+		add_files = true;
+		enctype = 'multipart/form-data';
+	}
 
 	if (enctype) {
 		actual_url += '?&enctype=' + enctype + '&disable_hawkejs=true';
+
+		if (add_files) {
+			actual_url += '&add_files=true';
+		}
 	}
 
 	if (enctype == 'json') {
@@ -107,6 +129,14 @@ async function testFormSubmission(post_pledge, enctype) {
 		await setElementValueOrThrow('#nested_text', 'Nested text');
 		await setElementValueOrThrow('#nested_array', 'Nested array');
 
+		if (add_files) {
+			let {path, fd} = Blast.openTempFileSync();
+			file_contents = 'Hello: ' + Crypto.randomHex(32);
+			libfs.writeSync(fd, file_contents);
+
+			await setFileInputPath('#file_one', path);
+		}
+
 		let submit_result = await clickElement('#submitbutton');
 
 		if (!submit_result) {
@@ -143,4 +173,12 @@ async function testFormSubmission(post_pledge, enctype) {
 	assert.deepStrictEqual(body.single_entry_list, ['Single']);
 	assert.deepStrictEqual(body.nestedtext, {first: {second: 'Nested text'}});
 	assert.deepStrictEqual(body.nestedarray, {first: {second: ['Nested array']}});
+
+	if (add_files) {
+		let file = result.files.file_one;
+
+		let contents = await file.read('utf8');
+
+		assert.strictEqual(contents, file_contents);
+	}
 }
