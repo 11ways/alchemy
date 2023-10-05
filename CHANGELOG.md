@@ -14,6 +14,7 @@
 * Minimum node version is now also `v16.20.1` because of the mongodb upgrade
 * Upgrade all dependencies
 * Don't log `.js.map` 404 errors
+* Add `Conduit.Socket#is_connected` property
 
 ## 1.3.15 (2023-07-03)
 
