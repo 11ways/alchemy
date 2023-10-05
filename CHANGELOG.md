@@ -1,4 +1,4 @@
-## 1.3.16 (WIP)
+## 1.3.16 (2023-10-05)
 
 * Fix `Document#saveRecord()` throwing an error when a related record does not exist
 * Allow `File#read()` to receive only a string for the encoding
