@@ -16,6 +16,7 @@
 * Don't log `.js.map` 404 errors
 * Add `Conduit.Socket#is_connected` property
 * Add checksum support to the `ObjectId` class
+* Add `Conduit#getController(controller_name)` to get/create a controller instance
 
 ## 1.3.15 (2023-07-03)
 
