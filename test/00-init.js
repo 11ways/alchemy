@@ -40,7 +40,9 @@ async function loadBrowser() {
 			devtools: true,
 		});
 	} else {
-		global.browser = await puppeteer.launch();
+		global.browser = await puppeteer.launch({
+			headless: 'new',
+		});
 	}
 
 	global.page = await browser.newPage();

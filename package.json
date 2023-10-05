@@ -55,11 +55,11 @@
 	},
 	"devDependencies": {
 		"codecov"                 : "~3.8.1",
-		"istanbul-lib-instrument" : "~4.0.3",
+		"istanbul-lib-instrument" : "~6.0.1",
 		"mocha"                   : "~10.2.0",
 		"mongo-unit"              : "~3.3.0",
 		"nyc"                     : "^15.1.0",
-		"puppeteer"               : "~19.0.0",
+		"puppeteer"               : "~21.3.6",
 		"source-map"              : "~0.7.3"
 	},
 	"scripts": {
