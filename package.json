@@ -28,7 +28,7 @@
 		"minimist"         : "~1.2.5",
 		"mkdirp"           : "~3.0.1",
 		"mmmagic"          : "~0.5.3",
-		"mongodb"          : "~3.6.6",
+		"mongodb"          : "~6.1.0",
 		"ncp"              : "~2.0.0",
 		"postcss"          : "~8.4.6",
 		"protoblast"       : "~0.8.9",
@@ -57,7 +57,7 @@
 		"codecov"                 : "~3.8.1",
 		"istanbul-lib-instrument" : "~4.0.3",
 		"mocha"                   : "~10.2.0",
-		"mongo-unit"              : "~3.2.0",
+		"mongo-unit"              : "~3.3.0",
 		"nyc"                     : "^15.1.0",
 		"puppeteer"               : "~19.0.0",
 		"source-map"              : "~0.7.3"
@@ -71,6 +71,6 @@
 	"main": "lib/bootstrap.js",
 	"license": "MIT",
 	"engines": {
-		"node" : ">=14.0.0"
+		"node" : ">=16.20.1"
 	}
 }

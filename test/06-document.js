@@ -347,7 +347,7 @@ describe('Document', function() {
 
 			var doc = await Model.get('Person').find('first');
 
-			assert.strictEqual(doc.hasChanged(), false);
+			assert.strictEqual(doc.hasChanged(), false, 'The document should not have been marked as changed yet');
 
 			assert.strictEqual(doc.firstname, 'Griet');
 

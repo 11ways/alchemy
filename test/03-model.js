@@ -331,6 +331,8 @@ describe('Model', function() {
 
 				await doc.save();
 
+				assert.strictEqual(!!doc._id, true, 'The _id property is missing');
+
 				let refetched = await Model.get('ClonedSchemas').findByPk(doc._id);
 
 				let comp = refetched.components?.[0];
@@ -358,10 +360,10 @@ describe('Model', function() {
 				assert.strictEqual(out_val.source.anchor_name, 'out-source-1');
 				assert.strictEqual(out_val.target.anchor_name, 'out-target-1');
 
-				assert.strictEqual(in_val.source.node_uid.constructor.name, 'ObjectID');
-				assert.strictEqual(in_val.target.node_uid.constructor.name, 'ObjectID');
-				assert.strictEqual(out_val.source.node_uid.constructor.name, 'ObjectID');
-				assert.strictEqual(out_val.target.node_uid.constructor.name, 'ObjectID');
+				assert.strictEqual(in_val.source.node_uid.constructor.name, 'ObjectId');
+				assert.strictEqual(in_val.target.node_uid.constructor.name, 'ObjectId');
+				assert.strictEqual(out_val.source.node_uid.constructor.name, 'ObjectId');
+				assert.strictEqual(out_val.target.node_uid.constructor.name, 'ObjectId');
 
 				done();
 			}

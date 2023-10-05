@@ -10,6 +10,8 @@
 * Add the `is_system_route` property in `Route` to signify routes designed for non-end-user interaction.
 * Add `size` property to the `FieldSet` class
 * When filtering on a translatable field, don't restrict it solely to the presently set locale when the translation functionality is switched off
+* Upgrade `mongodb` client from `3.6.6` to `6.1.0`, requiring quite a few fixes
+* Minimum node version is now also `v16.20.1` because of the mongodb upgrade
 
 ## 1.3.15 (2023-07-03)
 
