@@ -15,6 +15,7 @@
 * Upgrade all dependencies
 * Don't log `.js.map` 404 errors
 * Add `Conduit.Socket#is_connected` property
+* Add checksum support to the `ObjectId` class
 
 ## 1.3.15 (2023-07-03)
 
