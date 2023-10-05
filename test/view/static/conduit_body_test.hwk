@@ -1,0 +1,29 @@
+{% extend "base" %}
+
+{% block "body" %}
+	<span id="currenturl">{{ Router.current_url }}</span>
+	<br>
+
+	<div class="form-wrapper">
+		<form
+			method="POST"
+			enctype={% form_enctype %}
+		>
+			<% if (disable_hawkejs) $0.dataset.heLink = 'false' %>
+			<input name="set_type" type="hidden" value={% form_enctype %}>
+			<input id="firstname" name="firstname" type="text">
+			<input id="lastname" name="lastname" type="text">
+
+			<input id="list_one" name="list[]" type="text">
+			<input id="list_two" name="list[]" type="text">
+			<input id="list_three" name="list[]" type="text">
+
+			<input id="single_entry_list" name="single_entry_list[]" type="text">
+
+			<input id="nested_text" name="nestedtext[first][second]" type="text">
+			<input id="nested_array" name="nestedarray[first][second][]" type="text">
+
+			<input id="submitbutton" type="submit" title="Submit">
+		</form>
+	</div>
+{% /block %}

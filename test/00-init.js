@@ -225,6 +225,63 @@ global.createModel = function createModel(creator) {
 	return pledge;
 };
 
+global.setElementValue = async function setElementValue(query, value) {
+
+	let result = await evalPage(function(query, value) {
+		let element = document.querySelector(query);
+
+		if (!element) {
+			return false;
+		}
+
+		element.value = value;
+
+		let result = {
+			html       : element.outerHTML,
+			text       : element.textContent,
+			location   : document.location.pathname,
+			scroll_top : document.scrollingElement.scrollTop,
+			value      : element.value,
+		};
+
+		return result;
+	}, query, value);
+
+	return result;
+};
+
+global.setElementValueOrThrow = async function setElementValueOrThrow(query, value) {
+
+	let result = await setElementValue(query, value);
+
+	if (!result) {
+		throw new Error('Failed to find the `' + query + '` element, unable to set value to "' + value + '"');
+	}
+
+	if (result.value != value) {
+		throw new Error('The `' + query + '` element has the value "' + result.value + '", but "' + value + '" was expected');
+	}
+
+	return result;
+};
+
+global.clickElement = async function clickElement(query) {
+
+	let result = await evalPage(function(query) {
+		let element = document.querySelector(query);
+
+		if (!element) {
+			return false;
+		}
+
+		element.click();
+
+		return true;
+	}, query);
+
+	return result;
+};
+
 describe('require(\'alchemymvc\')', function() {
 	it('should create the global alchemy object', function() {
 		assert.equal('object', typeof alchemy);
@@ -403,8 +460,6 @@ describe('Alchemy', function() {
 			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/test.js';
 
 			let file = await alchemy.download(url);
-
-			console.log(file);
 
 			assert.strictEqual(file.name, 'test.js');
 			assert.strictEqual(await file.getMimetype(), 'text/javascript');
