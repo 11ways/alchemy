@@ -1,3 +1,7 @@
+## 1.3.17 (WIP)
+
+* Fix `Alchemy#findModule()` assuming some package is a module too fast
+
 ## 1.3.16 (2023-10-05)
 
 * Fix `Document#saveRecord()` throwing an error when a related record does not exist
