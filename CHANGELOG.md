@@ -1,6 +1,7 @@
 ## 1.3.17 (WIP)
 
 * Fix `Alchemy#findModule()` assuming some package is a module too fast
+* Make `Alchemy#segment()` helper method print a comment when it fails
 
 ## 1.3.16 (2023-10-05)
 
