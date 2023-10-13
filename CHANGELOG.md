@@ -3,6 +3,7 @@
 * Fix `Alchemy#findModule()` assuming some package is a module too fast
 * Make `Alchemy#segment()` helper method print a comment when it fails
 * Do a fallback call to `Conduit#prepareViewRender()` when starting rendering
+* Add `Cron` class to work with cron expressions
 
 ## 1.3.16 (2023-10-05)
 
