@@ -10,6 +10,7 @@
 * Add some more popup-options to `Conduit#redirect(url, options)`
 * Implement index recreation if identical-named index exists with different options in Mongo datasource
 * Also automatically set the `type_path` of a class, in addition to its `type_name`
+* Add a MongoDB specific `Model#executeMongoPipeline(pipeline)` method
 
 ## 1.3.16 (2023-10-05)
 
