@@ -9,6 +9,7 @@
 * If `alchemy.settings.url` is not set, use the first incoming request's url as the base url
 * Add some more popup-options to `Conduit#redirect(url, options)`
 * Implement index recreation if identical-named index exists with different options in Mongo datasource
+* Also automatically set the `type_path` of a class, in addition to its `type_name`
 
 ## 1.3.16 (2023-10-05)
 
