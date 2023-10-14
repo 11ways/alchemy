@@ -5,6 +5,7 @@
 * Do a fallback call to `Conduit#prepareViewRender()` when starting rendering
 * Add `Cron` class to work with cron expressions
 * Let `Datasource.Mongo#collection()` return a promise
+* Add `Conduit#in_webview` boolean property (based on `x-protoblast-webview` request header)
 
 ## 1.3.16 (2023-10-05)
 
