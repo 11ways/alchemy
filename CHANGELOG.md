@@ -8,6 +8,7 @@
 * Add `Conduit#in_webview` boolean property (based on `x-protoblast-webview` request header)
 * If `alchemy.settings.url` is not set, use the first incoming request's url as the base url
 * Add some more popup-options to `Conduit#redirect(url, options)`
+* Implement index recreation if identical-named index exists with different options in Mongo datasource
 
 ## 1.3.16 (2023-10-05)
 
