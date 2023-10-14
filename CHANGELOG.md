@@ -12,6 +12,7 @@
 * Also automatically set the `type_path` of a class, in addition to its `type_name`
 * Add a MongoDB specific `Model#executeMongoPipeline(pipeline)` method
 * Add `Alchemy#afterStart()` method
+* Add `Alchemy#isProcessRunning(pid)` method
 
 ## 1.3.16 (2023-10-05)
 
