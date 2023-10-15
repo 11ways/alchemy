@@ -16,6 +16,7 @@
 * Complete Task system implementation
 * Added task menu item to Janeway + added actions to it & the session menu
 * Sort the items in the `session` and `task` indicator menus
+* Add a `start_task` menu to manually start tasks
 
 ## 1.3.16 (2023-10-05)
 
