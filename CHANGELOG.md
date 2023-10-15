@@ -14,6 +14,7 @@
 * Add `Alchemy#afterStart()` method
 * Add `Alchemy#isProcessRunning(pid)` method
 * Complete Task system implementation
+* Added task menu item to Janeway + added actions to it & the session menu
 
 ## 1.3.16 (2023-10-05)
 
