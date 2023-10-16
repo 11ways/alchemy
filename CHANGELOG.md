@@ -1,3 +1,7 @@
+## 1.3.18 (WIP)
+
+* Add `Alchemy#setMaxEventLoopLag(max_lag)` method
+
 ## 1.3.17 (2023-10-15)
 
 * Fix `Alchemy#findModule()` assuming some package is a module too fast
