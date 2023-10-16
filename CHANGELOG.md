@@ -2,6 +2,7 @@
 
 * Add `Alchemy#setMaxEventLoopLag(max_lag)` method
 * Set the `domain` property of cookies by default, based on `alchemy.settings.cookie_domain`
+* Allow POSTed bodies to be plain text
 
 ## 1.3.17 (2023-10-15)
 
