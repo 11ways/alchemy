@@ -3,6 +3,7 @@
 * Add `Alchemy#setMaxEventLoopLag(max_lag)` method
 * Set the `domain` property of cookies by default, based on `alchemy.settings.cookie_domain`
 * Allow POSTed bodies to be plain text
+* Add a `Conduit#session_cookie_name` property getter
 
 ## 1.3.17 (2023-10-15)
 
