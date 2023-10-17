@@ -1,4 +1,4 @@
-## 1.3.18 (WIP)
+## 1.3.18 (2023-10-17)
 
 * Add `Alchemy#setMaxEventLoopLag(max_lag)` method
 * Set the `domain` property of cookies by default, based on `alchemy.settings.cookie_domain`
