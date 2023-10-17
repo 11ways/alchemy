@@ -111,7 +111,7 @@ describe('Controller', function() {
 						throw new Error('Response is missing the `set-cookie` header');
 					}
 
-					assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/') > -1, true);
+					assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/; domain=localhost') > -1, true);
 					assert.strictEqual(body, '');
 					next();
 				});
@@ -127,7 +127,7 @@ describe('Controller', function() {
 						return next(err);
 					}
 
-					assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/') > -1, true);
+					assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/; domain=localhost') > -1, true);
 					assert.strictEqual(body, 'SENTVALUE');
 					next();
 				});
@@ -146,7 +146,7 @@ describe('Controller', function() {
 					return next(err);
 				}
 
-				assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/') > -1, true);
+				assert.deepStrictEqual(res.headers['set-cookie'].indexOf('my_cookie=some_value; path=/; domain=localhost') > -1, true);
 				assert.strictEqual(body, 'whatever');
 				done();
 			});
