@@ -1,3 +1,7 @@
+## 1.3.19 (WIP)
+
+* Fix `Conduit#parseUrl()` not being able to parse the host & protocol of http2 requests
+
 ## 1.3.18 (2023-10-17)
 
 * Add `Alchemy#setMaxEventLoopLag(max_lag)` method
