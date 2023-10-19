@@ -1,6 +1,7 @@
 ## 1.3.20 (WIP)
 
 * Make `Base#callOrNext(name, args, next)` handle methods without callbacks
+* Add `Model#beforeCommit(document, options)` support
 
 ## 1.3.19 (2023-10-18)
 
