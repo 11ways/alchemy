@@ -1,3 +1,7 @@
+## 1.3.20 (WIP)
+
+* Make `Base#callOrNext(name, args, next)` handle methods without callbacks
+
 ## 1.3.19 (2023-10-18)
 
 * Fix `Conduit#parseUrl()` not being able to parse the host & protocol of http2 requests
