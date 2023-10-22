@@ -3,6 +3,7 @@
 * Make `Base#callOrNext(name, args, next)` handle methods without callbacks
 * Add `Model#beforeCommit(document, options)` support
 * Add `castToBigInt` and `convertBigIntForDatasource` to `Datasource` class
+* Add `LocalDateTime`, `LocalDate` and `LocalTime` fields
 
 ## 1.3.19 (2023-10-18)
 

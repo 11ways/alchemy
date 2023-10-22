@@ -462,6 +462,202 @@ describe('Field.DateTime', function() {
 	});
 });
 
+describe('Field.LocalTemporal', function() {
+
+	let LocalDtf,
+	    first_input_doc,
+	    first_output_doc;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		LocalDtf = Function.inherits('Alchemy.Model', 'LocalDtf');
+
+		LocalDtf.constitute(function addFields() {
+			this.addField('name', 'String');
+			this.addField('datetime', 'LocalDateTime');
+			this.addField('date', 'LocalDate');
+			this.addField('time', 'LocalTime');
+			next();
+		});
+	});
+
+	it('should store Local Date & Time fields in the database', async function() {
+
+		let LocalDtf = Model.get('LocalDtf');
+
+		first_input_doc = LocalDtf.createDocument();
+
+		let date_time = new Classes.Develry.LocalDateTime('2023-10-22 13:08:14');
+		let date = new Classes.Develry.LocalDate('2023-10-24');
+		let time = new Classes.Develry.LocalTime('11:14:23');
+
+		first_input_doc.name = 'first';
+		first_input_doc.datetime = date_time.clone();
+		first_input_doc.date = date.clone();
+		first_input_doc.time = time.clone();
+
+		await first_input_doc.save();
+
+		assert.strictEqual(String(first_input_doc._id).isObjectId(), true);
+	});
+
+	it('should revive Local Date & Time fields in the database', async function() {
+
+		let LocalDtf = Model.get('LocalDtf');
+
+		first_output_doc = await LocalDtf.find('first');
+
+		assert.strictEqual(first_output_doc.name, 'first');
+		assert.strictEqual(Number(first_output_doc.datetime), Number(first_input_doc.datetime));
+		assert.strictEqual(Number(first_output_doc.date), Number(first_input_doc.date));
+		assert.strictEqual(Number(first_output_doc.time), Number(first_input_doc.time));
+
+		assert.strictEqual(first_output_doc.datetime.constructor.name, 'LocalDateTime');
+		assert.strictEqual(first_output_doc.date.constructor.name, 'LocalDate');
+		assert.strictEqual(first_output_doc.time.constructor.name, 'LocalTime');
+	});
+
+	it('should be possible to query LocalDateTime fields', async function() {
+
+		let LocalDtf = Model.get('LocalDtf');
+
+		// Create another doc
+		let input_doc = LocalDtf.createDocument();
+
+		let date_time = new Classes.Develry.LocalDateTime('2022-09-11 14:11:23');
+		let date = new Classes.Develry.LocalDate('2022-09-11');
+		let time = new Classes.Develry.LocalTime('14:12:11');
+
+		input_doc.name = 'second';
+		input_doc.datetime = date_time.clone();
+		input_doc.date = date.clone();
+		input_doc.time = time.clone();
+
+		await input_doc.save();
+
+		input_doc = LocalDtf.createDocument();
+		input_doc.name = 'third';
+		input_doc.datetime = '1999-06-14 14:22:31';
+
+		await input_doc.save();
+
+		let crit = LocalDtf.find();
+		crit.sort({datetime: 1});
+
+		let all_docs = await LocalDtf.find('all', crit);
+		assert.strictEqual(all_docs.length, 3);
+		assert.strictEqual(all_docs[0].name, 'third');
+		assert.strictEqual(all_docs[1].name, 'second');
+		assert.strictEqual(all_docs[2].name, 'first');
+
+		crit = LocalDtf.find();
+		crit.where('datetime').equals(date_time);
+
+		let found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'second');
+
+		crit = LocalDtf.find();
+		crit.where('datetime').gte('2022-11-01');
+		crit.sort({datetime: -1});
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'first');
+
+		crit = LocalDtf.find();
+		crit.where('datetime').lte('2022-11-01');
+		crit.sort({datetime: 1});
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'third');
+		assert.strictEqual(found[1].name, 'second');
+
+		crit = LocalDtf.find();
+		crit.where('datetime').lte(new Classes.Develry.LocalDateTime('2022-11-01'));
+		crit.sort({datetime: -1});
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'second');
+		assert.strictEqual(found[1].name, 'third');
+	});
+
+	it('should be possible to query LocalDate fields', async function() {
+
+		let LocalDtf = Model.get('LocalDtf');
+
+		let crit = LocalDtf.find();
+		crit.sort({date: 1});
+		crit.where('date').not().isEmpty();
+
+		let found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'second');
+		assert.strictEqual(found[1].name, 'first');
+
+		crit = LocalDtf.find();
+		crit.sort({date: 1});
+		crit.where('date').equals('2022-09-11');
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'second');
+
+		crit = LocalDtf.find();
+		crit.sort({date: 1});
+		crit.where('date').gt('2022-09-11');
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'first');
+		assert.strictEqual(found[0].date.toString(), '2023-10-24');
+
+		crit = LocalDtf.find();
+		crit.sort({date: 1});
+		crit.where('date').gte('2022-09-11');
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'second');
+		assert.strictEqual(found[0].date.toString(), '2022-09-11');
+		assert.strictEqual(found[1].name, 'first');
+		assert.strictEqual(found[1].date.toString(), '2023-10-24');
+	});
+
+	it('should be possible to query LocalTime fields', async function() {
+
+		let LocalDtf = Model.get('LocalDtf');
+
+		let crit = LocalDtf.find();
+		crit.sort({time: 1});
+		crit.where('time').not().isEmpty();
+
+		let found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'first');
+		assert.strictEqual(found[1].name, 'second');
+
+		crit = LocalDtf.find();
+		crit.sort({time: 1});
+		crit.where('time').equals('14:12:11');
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'second');
+
+		crit = LocalDtf.find();
+		crit.sort({time: 1});
+		crit.where('time').lte('12:00:00');
+
+		found = await LocalDtf.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'first');
+	});
+});
+
 describe('Field.Schema', function() {
 
 	before(function(next) {
