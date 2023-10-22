@@ -354,7 +354,39 @@ describe('Field.String', function() {
 			assert.strictEqual(field.cast('a'), 'a');
 		});
 	});
+});
 
+describe('Field.BigInt', function() {
+
+	let BigIntModel;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		BigIntModel = Function.inherits('Alchemy.Model', 'BigInt');
+
+		BigIntModel.constitute(function addFields() {
+			this.addField('name', 'String');
+			this.addField('big_int', 'BigInt');
+			next();
+		});
+	});
+
+	it('should store & revive big integers', async function() {
+
+		let BigInt = Model.get('BigInt');
+		let doc = BigInt.createDocument();
+
+		doc.name = 'first';
+		doc.big_int = 1234567867890n;
+
+		await doc.save();
+
+		let output_doc = await BigInt.find('first');
+
+		assert.strictEqual(output_doc.name, 'first');
+		assert.strictEqual(output_doc.big_int, 1234567867890n);
+	});
 });
 
 describe('Field.DateTime', function() {
