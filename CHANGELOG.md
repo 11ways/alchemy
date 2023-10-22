@@ -4,6 +4,7 @@
 * Add `Model#beforeCommit(document, options)` support
 * Add `castToBigInt` and `convertBigIntForDatasource` to `Datasource` class
 * Add `LocalDateTime`, `LocalDate` and `LocalTime` fields
+* Make `TaskSchedules#startFromMenu()` return the started instance
 
 ## 1.3.19 (2023-10-18)
 
