@@ -606,6 +606,19 @@ describe('Field.LocalTemporal', function() {
 		assert.strictEqual(found.length, 1);
 		assert.strictEqual(found[0].name, 'second');
 
+		let record = await LocalDtf.findByValues({
+			date : LocalDate.create('2022-09-11'),
+		});
+
+		assert.strictEqual(record?.name, 'second');
+
+		record = await LocalDtf.findByValues({
+			_id  : record.$pk,
+			date : LocalDate.create('2022-09-11'),
+		});
+
+		assert.strictEqual(record?.name, 'second');
+
 		crit = LocalDtf.find();
 		crit.sort({date: 1});
 		crit.where('date').gt('2022-09-11');
