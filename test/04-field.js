@@ -671,6 +671,146 @@ describe('Field.LocalTemporal', function() {
 	});
 });
 
+describe('Field.Decimal', function() {
+
+	let DecimalTester;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		DecimalTester = Function.inherits('Alchemy.Model', 'DecimalTester');
+
+		DecimalTester.constitute(function addFields() {
+			this.addField('name', 'String');
+			this.addField('decimal', 'Decimal');
+			next();
+		});
+	});
+
+	it('should store decimal fields in the database', async function() {
+
+		let DecimalTester = Model.get('DecimalTester');
+
+		let doc = DecimalTester.createDocument();
+		doc.name = 'first';
+		doc.decimal = new Classes.Develry.Decimal('1.123');
+		await doc.save();
+
+		let refetch = await DecimalTester.find('first');
+
+		assert.strictEqual(refetch.name, 'first');
+		assert.strictEqual(refetch.decimal.toString(), '1.123');
+		assert.strictEqual(refetch.decimal.constructor.name, 'Decimal');
+	});
+
+	it('should be possible to query decimal fields', async function() {
+
+		let DecimalTester = Model.get('DecimalTester');
+
+		let doc = DecimalTester.createDocument();
+		doc.name = 'second';
+		doc.decimal = new Classes.Develry.Decimal('2.12345678901234567');
+		await doc.save();
+
+		let crit = DecimalTester.find();
+		crit.sort({decimal: 1});
+
+		let all_docs = await DecimalTester.find('all', crit);
+		assert.strictEqual(all_docs.length, 2);
+		assert.strictEqual(all_docs[0].name, 'first');
+		assert.strictEqual(all_docs[1].name, 'second');
+
+		crit = DecimalTester.find();
+		crit.where('decimal').equals('2.12345678901234567');
+
+		let found = await DecimalTester.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'second');
+
+		crit = DecimalTester.find();
+		crit.where('decimal').gt('1.123');
+
+		found = await DecimalTester.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'second');
+
+		crit = DecimalTester.find();
+		crit.where('decimal').gte('1.123');
+		crit.sort({decimal: 1});
+
+		found = await DecimalTester.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'first');
+		assert.strictEqual(found[1].name, 'second');
+
+		crit = DecimalTester.find();
+		crit.where('decimal').lt('2.1234567890123457');
+		crit.sort({decimal: -1});
+
+		found = await DecimalTester.find('all', crit);
+		assert.strictEqual(found.length, 2);
+		assert.strictEqual(found[0].name, 'second');
+	});
+});
+
+describe('Field.FixedDecimal', function() {
+
+	let FixedDecimalTester;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		FixedDecimalTester = Function.inherits('Alchemy.Model', 'FixedDecimalTester');
+
+		FixedDecimalTester.constitute(function addFields() {
+			this.addField('name', 'String');
+			this.addField('decimal', 'FixedDecimal', {scale: 2});
+			next();
+		});
+	});
+
+	it('should store decimal fields in the database', async function() {
+
+		let FixedDecimalTester = Model.get('FixedDecimalTester');
+
+		let doc = FixedDecimalTester.createDocument();
+		doc.name = 'first';
+		doc.decimal = new Classes.Develry.Decimal('1.123');
+		await doc.save();
+
+		let refetch = await FixedDecimalTester.find('first');
+
+		assert.strictEqual(refetch.name, 'first');
+		assert.strictEqual(refetch.decimal.toString(), '1.12');
+		assert.strictEqual(refetch.decimal.constructor.name, 'FixedDecimal');
+	});
+
+	it('should be possible to query decimal fields', async function() {
+
+		let FixedDecimalTester = Model.get('FixedDecimalTester');
+
+		let doc = FixedDecimalTester.createDocument();
+		doc.name = 'second';
+		doc.decimal = new Classes.Develry.Decimal('2.12345678901234567');
+		await doc.save();
+
+		let crit = FixedDecimalTester.find();
+		crit.sort({decimal: 1});
+
+		let all_docs = await FixedDecimalTester.find('all', crit);
+		assert.strictEqual(all_docs.length, 2);
+		assert.strictEqual(all_docs[0].name, 'first');
+		assert.strictEqual(all_docs[1].name, 'second');
+
+		crit = FixedDecimalTester.find();
+		crit.where('decimal').equals('1.12');
+
+		let found = await FixedDecimalTester.find('all', crit);
+		assert.strictEqual(found.length, 1);
+		assert.strictEqual(found[0].name, 'first');
+	});
+});
+
 describe('Field.Schema', function() {
 
 	before(function(next) {
