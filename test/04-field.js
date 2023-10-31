@@ -673,18 +673,37 @@ describe('Field.LocalTemporal', function() {
 
 describe('Field.Decimal', function() {
 
-	let DecimalTester;
+	let DecimalTester,
+	    DecimalInSubSchema;
 
 	before(function(next) {
 		next = Function.regulate(next);
 
 		DecimalTester = Function.inherits('Alchemy.Model', 'DecimalTester');
+		DecimalInSubSchema = Function.inherits('Alchemy.Model', 'DecimalInSubSchema');
 
-		DecimalTester.constitute(function addFields() {
-			this.addField('name', 'String');
-			this.addField('decimal', 'Decimal');
-			next();
-		});
+		Function.parallel(function firstModel(next) {
+
+			DecimalTester.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.addField('decimal', 'Decimal');
+				next();
+			});
+
+		}, function secondModel(next) {
+
+			DecimalInSubSchema.constitute(function addFields() {
+				this.addField('name', 'String');
+
+				let schema = alchemy.createSchema();
+				schema.addField('entry_name', 'String');
+				schema.addField('decimal', 'Decimal');
+
+				this.addField('decimals', schema, {is_array: true});
+				next();
+			});
+
+		}, next);
 	});
 
 	it('should store decimal fields in the database', async function() {
@@ -701,6 +720,38 @@ describe('Field.Decimal', function() {
 		assert.strictEqual(refetch.name, 'first');
 		assert.strictEqual(refetch.decimal.toString(), '1.123');
 		assert.strictEqual(refetch.decimal.constructor.name, 'Decimal');
+	});
+
+	it('should store decimal fields in subschemas', async function() {
+
+		let DecimalInSubSchema = Model.get('DecimalInSubSchema');
+
+		let doc = DecimalInSubSchema.createDocument();
+		doc.name = 'first';
+		doc.decimals = [
+			{
+				entry_name: 'first',
+				decimal: new Classes.Develry.Decimal('1.123')
+			},
+			{
+				entry_name: 'second',
+				decimal: new Classes.Develry.Decimal('2.123')
+			}
+		];
+
+		await doc.save();
+
+		let refetch = await DecimalInSubSchema.find('first');
+		assert.strictEqual(refetch.name, 'first');
+
+		assert.strictEqual(refetch.decimals[0].entry_name, 'first');
+		assert.strictEqual(refetch.decimals[0].decimal.toString(), '1.123');
+
+		assert.strictEqual(refetch.decimals[1].entry_name, 'second');
+		assert.strictEqual(refetch.decimals[1].decimal.toString(), '2.123');
+
+		assert.strictEqual(refetch.decimals[0].decimal.constructor.name, 'Decimal');
+		assert.strictEqual(refetch.decimals[1].decimal.constructor.name, 'Decimal');
 	});
 
 	it('should be possible to query decimal fields', async function() {
@@ -853,6 +904,7 @@ describe('Field.Schema', function() {
 			// Set the sleep time
 			this.schema.addField('duration', 'Number');
 			this.schema.addField('flobotonum', 'Flobotonum');
+			this.schema.addField('decimal_duration', 'FixedDecimal', {scale: 2});
 		});
 
 		const QuestTest = Function.inherits('Alchemy.Model', 'QuestTest');
@@ -864,6 +916,9 @@ describe('Field.Schema', function() {
 			schema.addField('settings', 'Schema', {schema: 'type'});
 
 			this.addField('objectives', schema, {array: true});
+
+			this.addField('main_type', 'Enum', {values: QuestComponents});
+			this.addField('main_settings', 'Schema', {schema: 'main_type'});
 
 			await Pledge.after(1);
 			next();
@@ -879,6 +934,7 @@ describe('Field.Schema', function() {
 				type : 'sleep',
 				settings : {
 					duration : 1,
+					decimal_duration: '1.03',
 					flobotonum: {
 						value : {
 							stuff : true
@@ -890,6 +946,7 @@ describe('Field.Schema', function() {
 				type : 'sleep',
 				settings : {
 					duration : 2,
+					decimal_duration: '2.22',
 					flobotonum: {
 						value : {
 							morestuff : true
@@ -898,6 +955,17 @@ describe('Field.Schema', function() {
 				}
 			}
 		];
+
+		doc.main_type = 'sleep';
+		doc.main_settings = {
+			duration : 3,
+			decimal_duration: '3.13',
+			flobotonum: {
+				value : {
+					mainstuff : true
+				}
+			}
+		};
 
 		await doc.save();
 
@@ -909,20 +977,35 @@ describe('Field.Schema', function() {
 
 		first = doc.objectives[0];
 		second = doc.objectives[1];
+		let main = doc;
 		
 		assert.strictEqual(first.type, 'sleep');
 		assert.strictEqual(first.settings?.duration, 1);
 		assert.strictEqual(first.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
 		assert.strictEqual(first.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
 		assert.strictEqual(first.settings?.flobotonum?.value?.stuff, true, 'The inner flobotonum value should have been saved');
-		assert.strictEqual(first.settings?.flobotonum?.to_app_counter, 1, 'This should have been the first `toApp` call for this field');
+		assert.strictEqual(first.settings?.flobotonum?.to_app_counter, 2, 'This should have been the second `toApp` call for this field');
+
+		assert.strictEqual(first.settings?.decimal_duration?.toString(), '1.03');
+		assert.strictEqual(first.settings?.decimal_duration?.constructor?.name, 'FixedDecimal');
 
 		assert.strictEqual(second.type, 'sleep');
 		assert.strictEqual(second.settings?.duration, 2);
 		assert.strictEqual(second.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
 		assert.strictEqual(second.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
 		assert.strictEqual(second.settings?.flobotonum?.value?.morestuff, true, 'The inner flobotonum value should have been saved');
-		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 2, 'This should have been the second `toApp` call for this field');
+		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 3, 'This should have been the third `toApp` call for this field');
+		assert.strictEqual(second.settings?.decimal_duration?.toString(), '2.22');
+		assert.strictEqual(second.settings?.decimal_duration?.constructor?.name, 'FixedDecimal');
+
+		assert.strictEqual(main.main_type, 'sleep');
+		assert.strictEqual(main.main_settings?.duration, 3);
+		assert.strictEqual(main.main_settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
+		assert.strictEqual(main.main_settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
+		assert.strictEqual(main.main_settings?.flobotonum?.value?.mainstuff, true, 'The inner flobotonum value should have been saved');
+		assert.strictEqual(main.main_settings?.flobotonum?.to_app_counter, 1, 'This should have been the first `toApp` call for this field');
+		assert.strictEqual(main.main_settings?.decimal_duration?.toString(), '3.13');
+		assert.strictEqual(main.main_settings?.decimal_duration?.constructor?.name, 'FixedDecimal');
 
 		doc = await Quest.findByPk(doc._id);
 
@@ -930,19 +1013,30 @@ describe('Field.Schema', function() {
 
 		first = doc.objectives[0];
 		second = doc.objectives[1];
+		main = doc;
+
+		assert.strictEqual(main.main_type, 'sleep');
+		assert.strictEqual(main.main_settings?.duration, 3);
+		assert.strictEqual(main.main_settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
+		assert.strictEqual(main.main_settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
+		assert.strictEqual(main.main_settings?.flobotonum?.value?.mainstuff, true, 'The inner flobotonum value should have been saved');
+		assert.strictEqual(main.main_settings?.flobotonum?.to_app_counter, 4, 'This should have been the fourth `toApp` call for this field');
+		assert.strictEqual(main.main_settings?.decimal_duration?.toString(), '3.13');
+		assert.strictEqual(main.main_settings?.decimal_duration?.constructor?.name, 'FixedDecimal');
 		
 		assert.strictEqual(first.type, 'sleep');
 		assert.strictEqual(first.settings?.duration, 1);
 		assert.strictEqual(first.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
 		assert.strictEqual(first.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
 		assert.strictEqual(first.settings?.flobotonum?.value?.stuff, true, 'The inner flobotonum value should have been saved');
-		assert.strictEqual(first.settings?.flobotonum?.to_app_counter, 3, 'This should have been the third `toApp` call for this field');
+		assert.strictEqual(first.settings?.flobotonum?.to_app_counter, 5, 'This should have been the fifth `toApp` call for this field');
 
 		assert.strictEqual(second.type, 'sleep');
 		assert.strictEqual(second.settings?.duration, 2);
 		assert.strictEqual(second.settings?.flobotonum?.to_apped, true, 'The value should have been passed through `toApp`');
 		assert.strictEqual(second.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
 		assert.strictEqual(second.settings?.flobotonum?.value?.morestuff, true, 'The inner flobotonum value should have been saved');
-		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 4, 'This should have been the fourth `toApp` call for this field');
+		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 6, 'This should have been the sixth `toApp` call for this field');
+
 	});
 });

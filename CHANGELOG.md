@@ -6,6 +6,7 @@
 * Add `LocalDateTime`, `LocalDate` and `LocalTime` fields
 * Make `TaskSchedules#startFromMenu()` return the started instance
 * Add `Field.Decimal` and `Field.FixedDecimal` fields
+* Fix `Field.Schema` schema resolution issue for dependent fields in root model schema
 
 ## 1.3.19 (2023-10-18)
 
