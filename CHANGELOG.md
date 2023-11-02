@@ -8,6 +8,7 @@
 * Fix `Field.Schema` schema resolution issue for dependent fields in root model schema
 * Add `Model#beforeNormalize()` & `Model#beforeValidate()` saving callback methods
 * Move `Model#beforeSave()` to after validation
+* Make the `Decimal` classes globally available
 
 ## 1.3.19 (2023-10-18)
 
