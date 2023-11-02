@@ -1,12 +1,13 @@
 ## 1.3.20 (WIP)
 
 * Make `Base#callOrNext(name, args, next)` handle methods without callbacks
-* Add `Model#beforeCommit(document, options)` support
 * Add `castToBigInt` and `convertBigIntForDatasource` to `Datasource` class
 * Add `LocalDateTime`, `LocalDate` and `LocalTime` fields
 * Make `TaskSchedules#startFromMenu()` return the started instance
 * Add `Field.Decimal` and `Field.FixedDecimal` fields
 * Fix `Field.Schema` schema resolution issue for dependent fields in root model schema
+* Add `Model#beforeNormalize()` & `Model#beforeValidate()` saving callback methods
+* Move `Model#beforeSave()` to after validation
 
 ## 1.3.19 (2023-10-18)
 
