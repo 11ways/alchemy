@@ -10,6 +10,7 @@
 * Move `Model#beforeSave()` to after validation
 * Make the `Decimal` classes globally available
 * Allow passing a custom context to `PathEvaluator#getValue(context)`
+* Fix `TaskService#initSchedules()` attempting to recreate already existing system schedules
 
 ## 1.3.19 (2023-10-18)
 
