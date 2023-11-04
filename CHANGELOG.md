@@ -1,4 +1,4 @@
-## 1.3.20 (WIP)
+## 1.3.20 (2023-11-04)
 
 * Make `Base#callOrNext(name, args, next)` handle methods without callbacks
 * Add `castToBigInt` and `convertBigIntForDatasource` to `Datasource` class
