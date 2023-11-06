@@ -691,6 +691,56 @@ describe('Model', function() {
 	});
 
 	/**
+	 * Adding computed fields to the new Model
+	 */
+	describe('.addComputedField(name, type, options)', function() {
+
+		it('should add synchronous computed fields', function(done) {
+
+			const ComputedPerson = Function.inherits('Alchemy.Model', 'ComputedPerson');
+
+			ComputedPerson.constitute(function addFields() {
+				this.addField('firstname', 'String');
+				this.addField('lastname',  'String');
+				this.addComputedField('fullname', 'String', {
+					required_fields: ['firstname'],
+					optional_fields: ['lastname'],
+					compute_method: 'getFullname',
+				});
+
+				done();
+			});
+
+			ComputedPerson.setDocumentMethod(function getFullname() {
+				let result = this.firstname;
+
+				if (this.lastname) {
+					result += ' ' + this.lastname;
+				}
+
+				return result;
+			});
+		});
+
+		it('should generate the field values on save', async function() {
+
+			let doc = Model.get('ComputedPerson').createDocument();
+
+			doc.firstname = 'Jelle';
+			doc.lastname = 'De Loecker';
+
+			await doc.save();
+
+			assert.strictEqual(doc.fullname, 'Jelle De Loecker');
+
+			doc.firstname = 'Jellie';
+			await doc.save();
+
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+		});
+	});
+
+	/**
 	 * Adding validation rules to the model
 	 */
 	describe('.addRule(validation_name, options)', function() {
