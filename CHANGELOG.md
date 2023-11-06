@@ -1,3 +1,7 @@
+## 1.3.21 (WIP)
+
+* Add `Schema#addComputedField()` method
+
 ## 1.3.20 (2023-11-04)
 
 * Make `Base#callOrNext(name, args, next)` handle methods without callbacks
@@ -11,7 +15,6 @@
 * Make the `Decimal` classes globally available
 * Allow passing a custom context to `PathEvaluator#getValue(context)`
 * Fix `TaskService#initSchedules()` attempting to recreate already existing system schedules
-* Add `Schema#addComputedField()` method
 
 ## 1.3.19 (2023-10-18)
 

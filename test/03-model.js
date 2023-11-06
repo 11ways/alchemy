@@ -700,6 +700,7 @@ describe('Model', function() {
 			const ComputedPerson = Function.inherits('Alchemy.Model', 'ComputedPerson');
 
 			ComputedPerson.constitute(function addFields() {
+				this.addField('number', 'Integer');
 				this.addField('firstname', 'String');
 				this.addField('lastname',  'String');
 				this.addComputedField('fullname', 'String', {
@@ -726,6 +727,7 @@ describe('Model', function() {
 
 			let doc = Model.get('ComputedPerson').createDocument();
 
+			doc.number = 1;
 			doc.firstname = 'Jelle';
 			doc.lastname = 'De Loecker';
 
@@ -737,6 +739,38 @@ describe('Model', function() {
 			await doc.save();
 
 			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+		});
+
+		it('should update synchronous field values on get', async function() {
+			
+			let doc = Model.get('ComputedPerson').createDocument();
+
+			doc.number = 2;
+			doc.firstname = 'Jelle';
+			doc.lastname = 'De Loecker';
+
+			assert.strictEqual(doc.fullname, 'Jelle De Loecker');
+
+			doc.firstname = 'Jellie';
+
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+
+			await doc.save();
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+			assert.strictEqual(doc.$main.fullname, 'Jellie De Loecker');
+
+			doc.$main.fullname = null;
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+			assert.strictEqual(doc.$main.fullname, 'Jellie De Loecker');
+
+			doc.$main.fullname = null;
+			await doc.save();
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+			assert.strictEqual(doc.$main.fullname, 'Jellie De Loecker');
+
+			doc = await Model.get('ComputedPerson').findByValues({number: 2});
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+			assert.strictEqual(doc.$main.fullname, 'Jellie De Loecker');
 		});
 	});
 
