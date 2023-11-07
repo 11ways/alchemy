@@ -709,6 +709,42 @@ describe('Model', function() {
 					compute_method: 'getFullname',
 				});
 
+				assert.strictEqual(this.schema.has_computed_fields, 1);
+
+				// @TODO: Nice to have for the future
+				// let subschema = alchemy.createSchema();
+				// subschema.addField('monday', 'Decimal');
+				// subschema.addField('tuesday', 'Decimal');
+				// subschema.addField('wednesday', 'Decimal');
+				// subschema.addField('thursday', 'Decimal');
+				// subschema.addField('friday', 'Decimal');
+				// subschema.addField('saturday', 'Decimal');
+				// subschema.addField('sunday', 'Decimal');
+				// subschema.addComputedField('total', 'Decimal', {
+				// 	compute_method: 'getTotalHours',
+				// });
+
+				// this.addField('hours', subschema);
+
+				// assert.strictEqual(subschema.has_computed_fields, 1);
+				// assert.strictEqual(this.schema.has_computed_fields, 2);
+
+				assert.throws(() => {
+					let subschema = alchemy.createSchema();
+					subschema.addComputedField('total', 'Decimal', {
+						compute_method: 'getTotalHours',
+					});
+				});
+
+				assert.throws(() => {
+					let subschema = alchemy.createSchema();
+					this.addField('empty_subschema', subschema);
+					
+					subschema.addComputedField('total', 'Decimal', {
+						compute_method: 'getTotalHours',
+					});
+				});
+
 				done();
 			});
 
