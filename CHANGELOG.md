@@ -2,6 +2,7 @@
 
 * Add `Schema#addComputedField()` method
 * Add `registerCustomHandler(type, fnc, weight)`, `getCustomHandler(type)` and `getAllCustomHandlers(type)` method to `Alchemy` class
+* Let `Schema#getFieldChain(path)` accept PathEvaluator instances
 
 ## 1.3.20 (2023-11-04)
 
