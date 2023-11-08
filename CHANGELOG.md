@@ -4,6 +4,7 @@
 * Add `registerCustomHandler(type, fnc, weight)`, `getCustomHandler(type)` and `getAllCustomHandlers(type)` method to `Alchemy` class
 * Let `Schema#getFieldChain(path)` accept PathEvaluator instances
 * Add support for `constraints` option for associations, currently only used for front-end validation
+* Added support for 'required' field option in schema association arguments
 
 ## 1.3.20 (2023-11-04)
 
