@@ -7,6 +7,7 @@
 * Added support for 'required' field option in schema association arguments
 * Add `Model#beforeRemove(id)` support
 * Allow adding validators to a model without options
+* Fix `BigIntField#_castCondition(value)` method
 
 ## 1.3.20 (2023-11-04)
 
