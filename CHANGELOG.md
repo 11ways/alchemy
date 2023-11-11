@@ -9,6 +9,7 @@
 * Allow adding validators to a model without options
 * Fix `BigIntField#_castCondition(value)` method
 * Add `Criteria#notEquals(value)` method
+* Fix accessing `original_path` property of a `SocketConduit`
 
 ## 1.3.20 (2023-11-04)
 
