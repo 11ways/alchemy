@@ -10,6 +10,7 @@
 * Fix `BigIntField#_castCondition(value)` method
 * Add `Criteria#notEquals(value)` method
 * Fix accessing `original_path` property of a `SocketConduit`
+* Add `compute_after_find` option to computed fields
 
 ## 1.3.20 (2023-11-04)
 
