@@ -709,7 +709,13 @@ describe('Model', function() {
 					compute_method: 'getFullname',
 				});
 
-				assert.strictEqual(this.schema.has_computed_fields, 1);
+				this.addComputedField('initials', 'String', {
+					allow_manual_set: true,
+					required_fields: ['firstname'],
+					compute_method: 'getInitials',
+				});
+
+				assert.strictEqual(this.schema.has_computed_fields, 2);
 
 				// @TODO: Nice to have for the future
 				// let subschema = alchemy.createSchema();
@@ -726,8 +732,8 @@ describe('Model', function() {
 
 				// this.addField('hours', subschema);
 
-				// assert.strictEqual(subschema.has_computed_fields, 1);
-				// assert.strictEqual(this.schema.has_computed_fields, 2);
+				// assert.strictEqual(subschema.has_computed_fields, 2);
+				// assert.strictEqual(this.schema.has_computed_fields, 3);
 
 				assert.throws(() => {
 					let subschema = alchemy.createSchema();
@@ -757,6 +763,25 @@ describe('Model', function() {
 
 				return result;
 			});
+
+			ComputedPerson.setDocumentMethod(function getInitials() {
+
+				if (!this.firstname && !this.lastname) {
+					return;
+				}
+				
+				let result = this.firstname.split(' ').map(function(part) {
+					return part[0];
+				}).join('');
+
+				if (this.lastname) {
+					result += this.lastname.split(' ').map(function(part) {
+						return part[0];
+					}).join('');
+				}
+
+				return result;
+			});
 		});
 
 		it('should generate the field values on save', async function() {
@@ -770,6 +795,7 @@ describe('Model', function() {
 			await doc.save();
 
 			assert.strictEqual(doc.fullname, 'Jelle De Loecker');
+			assert.strictEqual(doc.initials, 'JDL');
 
 			doc.firstname = 'Jellie';
 			await doc.save();
@@ -807,6 +833,23 @@ describe('Model', function() {
 			doc = await Model.get('ComputedPerson').findByValues({number: 2});
 			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
 			assert.strictEqual(doc.$main.fullname, 'Jellie De Loecker');
+		});
+
+		it('should allow manual overrides if so configured', async function () {
+
+			let doc = Model.get('ComputedPerson').createDocument();
+
+			doc.number = 3;
+			await doc.save();
+
+			assert.strictEqual(doc.initials, undefined);
+
+			doc.initials = 'RVG';
+			await doc.save();
+			assert.strictEqual(doc.initials, 'RVG');
+
+			doc = await Model.get('ComputedPerson').findByValues({number: 3});
+			assert.strictEqual(doc.initials, 'RVG');
 		});
 	});
 
