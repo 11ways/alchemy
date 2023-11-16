@@ -11,6 +11,7 @@
 * Add `Criteria#notEquals(value)` method
 * Fix accessing `original_path` property of a `SocketConduit`
 * Add `compute_after_find` option to computed fields
+* Allow routes to have specific cache settings, and use them on the browser
 
 ## 1.3.20 (2023-11-04)
 
