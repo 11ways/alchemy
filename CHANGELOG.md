@@ -14,6 +14,7 @@
 * Allow routes to have specific cache settings, and use them on the browser
 * Begin work on implementing subschema fields based on associated data
 * Add the `Mixed` field type
+* Add ability for tasks to throttle when the system is too busy
 
 ## 1.3.20 (2023-11-04)
 
