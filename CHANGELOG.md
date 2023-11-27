@@ -1,4 +1,4 @@
-## 1.3.21 (WIP)
+## 1.3.21 (2023-11-27)
 
 * Add `Schema#addComputedField()` method
 * Add `registerCustomHandler(type, fnc, weight)`, `getCustomHandler(type)` and `getAllCustomHandlers(type)` method to `Alchemy` class
