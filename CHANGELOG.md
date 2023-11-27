@@ -13,6 +13,7 @@
 * Add `compute_after_find` option to computed fields
 * Allow routes to have specific cache settings, and use them on the browser
 * Begin work on implementing subschema fields based on associated data
+* Add the `Mixed` field type
 
 ## 1.3.20 (2023-11-04)
 
