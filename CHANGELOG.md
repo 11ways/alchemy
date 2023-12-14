@@ -2,6 +2,7 @@
 
 * Allow ending a non-file-serve `Conduit` response with a stream
 * Actually only load the main app routes during the `routes` stage
+* Pass the `debug` option to Protoblast's `Blast.getClientPath` method
 
 ## 1.3.21 (2023-11-27)
 
