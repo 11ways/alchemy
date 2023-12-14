@@ -1,3 +1,7 @@
+## 1.3.22 (WIP)
+
+* Allow ending a non-file-serve `Conduit` response with a stream
+
 ## 1.3.21 (2023-11-27)
 
 * Add `Schema#addComputedField()` method
