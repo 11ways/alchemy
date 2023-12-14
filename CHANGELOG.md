@@ -4,6 +4,7 @@
 * Actually only load the main app routes during the `routes` stage
 * Pass the `debug` option to Protoblast's `Blast.getClientPath` method
 * Add the `File#overwrite(contents)` method
+* Add the document being removed to the `Model` `beforeRemove` callback argument
 
 ## 1.3.21 (2023-11-27)
 
