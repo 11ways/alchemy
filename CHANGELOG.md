@@ -3,6 +3,7 @@
 * Allow ending a non-file-serve `Conduit` response with a stream
 * Actually only load the main app routes during the `routes` stage
 * Pass the `debug` option to Protoblast's `Blast.getClientPath` method
+* Add the `File#overwrite(contents)` method
 
 ## 1.3.21 (2023-11-27)
 
