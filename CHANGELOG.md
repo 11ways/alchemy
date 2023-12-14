@@ -6,6 +6,7 @@
 * Add the `File#overwrite(contents)` method
 * Add the document being removed to the `Model` `beforeRemove` callback argument
 * Don't let `Object` fields throw errors when storing/reviving strings
+* Add the `Syncable.setClientMethod` static method
 
 ## 1.3.21 (2023-11-27)
 
