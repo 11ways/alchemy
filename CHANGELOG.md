@@ -8,6 +8,7 @@
 * Don't let `Object` fields throw errors when storing/reviving strings
 * Add the `Syncable.setClientMethod` static method
 * Catch errors in `#issueEvent()` calls
+* Make `getDifference` and `getShared` helper methods support Maps
 
 ## 1.3.21 (2023-11-27)
 
