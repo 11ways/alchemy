@@ -1,4 +1,4 @@
-## 1.3.22 (WIP)
+## 1.3.22 (2023-12-21)
 
 * Allow ending a non-file-serve `Conduit` response with a stream
 * Actually only load the main app routes during the `routes` stage
