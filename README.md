@@ -3,9 +3,9 @@
   <b>Alchemy</b>
 </h1>
 <div align="center">
-  <!-- CI - TravisCI -->
-  <a href="https://travis-ci.org/11ways/alchemy">
-    <img src="https://travis-ci.org/11ways/alchemy.svg?branch=master" alt="Mac/Linux Build Status" />
+  <!-- CI - Github Actions -->
+  <a href="https://github.com/11ways/alchemy/actions/workflows/unit_test.yaml">
+    <img src="https://github.com/11ways/alchemy/actions/workflows/unit_test.yaml/badge.svg" alt="Node.js CI (Linux, MacOS, Windows)" />
   </a>
 
   <!-- Coverage - Codecov -->
