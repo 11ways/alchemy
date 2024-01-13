@@ -1,7 +1,7 @@
 /**
  * My-button custom element
  *
- * @author   Jelle De Loecker   <jelle@elevenways.be>
+ * @author   Jelle De Loecker <jelle@elevenways.be>
  * @since    1.1.7
  * @version  1.1.7
  */
@@ -10,7 +10,7 @@ const MyDocumentList = Blast.Bound.Function.inherits('Alchemy.Element', 'MyDocum
 /**
  * The template to use for the content of this element
  *
- * @author   Jelle De Loecker   <jelle@elevenways.be>
+ * @author   Jelle De Loecker <jelle@elevenways.be>
  * @since    1.1.7
  * @version  1.1.7
  */
@@ -19,7 +19,7 @@ MyDocumentList.setTemplateFile('elements/my_document_list');
 /**
  * The model attribute: which model to use
  *
- * @author   Jelle De Loecker   <jelle@elevenways.be>
+ * @author   Jelle De Loecker <jelle@elevenways.be>
  * @since    1.1.7
  * @version  1.1.7
  */
@@ -28,7 +28,7 @@ MyDocumentList.setAttribute('model');
 /**
  * Assigned value
  *
- * @author   Jelle De Loecker   <jelle@elevenways.be>
+ * @author   Jelle De Loecker <jelle@elevenways.be>
  * @since    1.1.5
  * @version  1.1.5
  */
