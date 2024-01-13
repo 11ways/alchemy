@@ -63,7 +63,6 @@
 		"source-map"              : "~0.7.3"
 	},
 	"scripts": {
-		"appveyor"        : "mocha --exit --reporter spec --bail --timeout 20000 --file test/00-init.js",
 		"coverage"        : "nyc --reporter=text --reporter=lcov mocha --exit --timeout 200000 --bail --file test/00-init.js",
 		"report-coverage" : "nyc report --reporter=lcov && cat ./coverage/lcov.info | codecov",
 		"test"            : "mocha --exit --reporter spec --bail --timeout 50000 --file test/00-init.js"
