@@ -2,6 +2,7 @@
 
 * Implement new settings system
 * Replace old `sputnik` dependency with a new stages system
+* Add default `App` classes
 
 ## 1.3.22 (2023-12-21)
 
