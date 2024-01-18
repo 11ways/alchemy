@@ -324,8 +324,8 @@ global.clickElement = async function clickElement(query) {
 };
 
 describe('require(\'alchemymvc\')', function() {
-	it('should create the global alchemy object', function() {
-		assert.equal('object', typeof alchemy);
+	it('should create the global STAGES instance', function() {
+		assert.equal('object', typeof STAGES);
 	});
 });
 
@@ -349,17 +349,20 @@ describe('Alchemy', function() {
 	describe('#start(callback)', function() {
 		it('should start the server', function(done) {
 
-			alchemy.settings.port = 3470;
-			alchemy.settings.postpone_requests_on_overload = false;
+			alchemy.setSetting('network.port', 3470);
+			alchemy.setSetting('network.postpone_requests_on_overload', false);
 
-			alchemy.start({silent: true}, function started() {
+			STAGES.getStage('load_core').addPostTask(() => {
 
-				setTimeout(function() {
-					// Also create the mongodb datasource
-					Datasource.create('mongo', 'default', {uri: mongo_uri});
-				}, 50);
+				alchemy.start({silent: true}, function started() {
 
-				done();
+					setTimeout(function() {
+						// Also create the mongodb datasource
+						Datasource.create('mongo', 'default', {uri: mongo_uri});
+					}, 50);
+
+					done();
+				});
 			});
 		});
 	});
