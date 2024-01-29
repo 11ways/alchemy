@@ -5,6 +5,7 @@
 * Add default `App` classes
 * Add `Plugin` class
 * Refactor loading of requirements
+* The `Alchemy.ClientSession` class should now be used as a map to store session data
 
 ## 1.3.22 (2023-12-21)
 
