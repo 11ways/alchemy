@@ -7,6 +7,7 @@
 * Refactor loading of requirements
 * The `Alchemy.ClientSession` class should now be used as a map to store session data
 * Fix `Field.Schema` contents not being converted from database representation when the schema also has a relation
+* Make `Criteria#contains(value)` work as expected on array fields
 
 ## 1.3.22 (2023-12-21)
 
