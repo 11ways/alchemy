@@ -9,6 +9,8 @@
 * Fix `Field.Schema` contents not being converted from database representation when the schema also has a relation
 * Make `Criteria#contains(value)` work as expected on array fields
 * Don't cast empty strings to `0` values in numeric `Field` types
+* Add `Field#is_nullable` option property
+* `Field#cast()` should now handle null checks
 
 ## 1.3.22 (2023-12-21)
 
