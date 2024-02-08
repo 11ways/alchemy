@@ -66,10 +66,12 @@ describe('Model', function() {
 
 	describe('.cache_duration', function() {
 		it('gets the current cache_duration', function() {
-			assert.strictEqual(Person.cache_duration, undefined);
+			assert.strictEqual(Person.cache_duration, Classes.Alchemy.Setting.SYSTEM.get('data_management').get('model_query_cache_duration').default_value);
 		});
 
 		it('gets the cache duration from the settings', function() {
+
+			Person.cache_duration = null;
 
 			alchemy.setSetting('data_management.model_query_cache_duration', '1 second');
 			assert.strictEqual(Person.cache_duration, '1 second');
