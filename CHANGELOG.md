@@ -11,6 +11,7 @@
 * Don't cast empty strings to `0` values in numeric `Field` types
 * Add `Field#is_nullable` option property
 * `Field#cast()` should now handle null checks
+* Split the `Criteria` class into `Criteria.Criteria` and `Criteria.Model` classes
 
 ## 1.3.22 (2023-12-21)
 
