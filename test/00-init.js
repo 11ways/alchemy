@@ -23,6 +23,8 @@ global.do_coverage = !!global.__coverage__;
 // Do not log load warnings
 process.env.NO_ALCHEMY_LOAD_WARNING = 1;
 
+process.env.PATH_ROOT = libpath.resolve(__dirname, 'test_root');
+
 // Require alchemymvc
 require('../index.js');
 
@@ -352,9 +354,9 @@ describe('Alchemy', function() {
 			alchemy.setSetting('network.port', 3470);
 			alchemy.setSetting('network.postpone_requests_on_overload', false);
 
-			STAGES.getStage('load_core').addPostTask(() => {
+			STAGES.getStage('load_core').addPostTask(async () => {
 
-				alchemy.start({silent: true}, function started() {
+				let pledge = alchemy.start({silent: true}, function started() {
 
 					setTimeout(function() {
 						// Also create the mongodb datasource
