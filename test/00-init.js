@@ -454,9 +454,9 @@ describe('Alchemy', function() {
 				}
 
 				try {
-					assert.strictEqual(info.hash, 'd9ad8ceda0c6617b9166647772c50d72aa793521');
+					assert.strictEqual(info.hash, '0f6813d0c0164e3625d1a83f07a442882c1d06f2');
 					assert.strictEqual(info.mimetype, 'text/javascript');
-					assert.strictEqual(info.size, 86);
+					assert.strictEqual(info.size, 77);
 					assert.strictEqual(info.name, 'test');
 					assert.strictEqual(info.filename, 'test.js');
 				} catch (err) {

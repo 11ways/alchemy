@@ -48,3 +48,5 @@ yarn.lock
 # Ignore test files
 scratch*
 log.json
+
+test/test_root/temp/
