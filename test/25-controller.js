@@ -61,7 +61,7 @@ describe('Controller', function() {
 		it('should return the value of the cookie', function(done) {
 
 			// Make sure cookies are DISABLED
-			alchemy.settings.cookies = false;
+			alchemy.setSetting('frontend.cookies.enabled', false);
 
 			Router.add({
 				name    : 'Cookietest',
@@ -97,7 +97,7 @@ describe('Controller', function() {
 			}, function setACookie(next) {
 
 				// Enable cookies
-				alchemy.settings.cookies = true;
+				alchemy.setSetting('frontend.cookies.enabled', true);
 
 				Blast.Classes.Develry.Request.cache.reset();
 
@@ -168,7 +168,7 @@ describe('Controller', function() {
 
 			url.host = 'localhost';
 			url.protocol = 'http';
-			url.port = alchemy.settings.port;
+			url.port = alchemy.settings.network.port;
 
 			url = String(url);
 

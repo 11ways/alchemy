@@ -123,7 +123,7 @@ describe('Helper.Alchemy', function() {
 
 			let url = global.getRouteUrl('Static#rootview', {view: 'segment_test'});
 
-			alchemy.settings.debug = true;
+			alchemy.settings.debugging.debug = true;
 
 			await setLocation(url);
 
@@ -145,7 +145,7 @@ describe('Helper.Alchemy', function() {
 				return ids;
 			});
 
-			alchemy.settings.debug = false;
+			alchemy.settings.debugging.debug = false;
 
 			let expected_ids = [
 				'hserverside-0',

@@ -113,7 +113,7 @@ describe('Router', function() {
 
 			url.host = 'localhost';
 			url.protocol = 'http';
-			url.port = alchemy.settings.port;
+			url.port = alchemy.settings.network.port;
 
 			people_url = String(url);
 
@@ -160,7 +160,7 @@ describe('Router', function() {
 
 			url.host = 'localhost';
 			url.protocol = 'http';
-			url.port = alchemy.settings.port;
+			url.port = alchemy.settings.network.port;
 
 			url = String(url);
 

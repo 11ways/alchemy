@@ -136,7 +136,7 @@ global.setLocation = async function setLocation(path) {
 	}
 
 	if (path.indexOf('http') == -1) {
-		url = 'http://127.0.0.1:' + alchemy.settings.port + path;
+		url = 'http://127.0.0.1:' + alchemy.settings.network.port + path;
 	} else {
 		url = path;
 	}
@@ -168,7 +168,7 @@ global.getRouteUrl = function getRouteUrl(route, options) {
 
 	url.host = 'localhost';
 	url.protocol = 'http';
-	url.port = alchemy.settings.port;
+	url.port = alchemy.settings.network.port;
 
 	return String(url);
 };
@@ -396,7 +396,7 @@ describe('Alchemy', function() {
 		}
 
 		it('is the middleware that compiles & serves CSS, LESS & SCSS files', function(done) {
-			var url = 'http://localhost:' + alchemy.settings.port + '/stylesheets/alchemy-info.css';
+			var url = 'http://localhost:' + alchemy.settings.network.port + '/stylesheets/alchemy-info.css';
 
 			Blast.fetch(url, function gotResponse(err, res, body) {
 
@@ -428,7 +428,7 @@ describe('Alchemy', function() {
 		// should test with something else
 		it('is the middleware that serves script files', function(done) {
 
-			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/test.js';
+			var url = 'http://localhost:' + alchemy.settings.network.port + '/scripts/test.js';
 
 			Blast.fetch(url, function gotResponse(err, res, body) {
 
@@ -501,7 +501,7 @@ describe('Alchemy', function() {
 	describe('#downloadFile(url, options, callback)', function() {
 		it('should download the file and return the filepath', async function() {
 
-			var url = 'http://localhost:' + alchemy.settings.port + '/scripts/test.js';
+			var url = 'http://localhost:' + alchemy.settings.network.port + '/scripts/test.js';
 
 			let file = await alchemy.download(url);
 
@@ -516,7 +516,7 @@ describe('Alchemy', function() {
 		});
 
 		it('should return a 404 error when downloading non-existing path', function(done) {
-			alchemy.downloadFile('http://localhost:' + alchemy.settings.port + '/scripts/does_not_exist.js', function downloaded(err, filepath, name) {
+			alchemy.downloadFile('http://localhost:' + alchemy.settings.network.port + '/scripts/does_not_exist.js', function downloaded(err, filepath, name) {
 
 				assert.strictEqual(filepath, undefined);
 				assert.strictEqual(name, undefined);

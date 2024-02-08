@@ -70,11 +70,11 @@ describe('Model', function() {
 		});
 
 		it('gets the cache duration from the settings', function() {
-			alchemy.settings.model_query_cache_duration = '1 second';
 
+			alchemy.setSetting('data_management.model_query_cache_duration', '1 second');
 			assert.strictEqual(Person.cache_duration, '1 second');
 
-			alchemy.settings.model_query_cache_duration = '2 seconds';
+			alchemy.setSetting('data_management.model_query_cache_duration', '2 seconds');
 			assert.strictEqual(Person.cache_duration, '1 second', 'Changing the settings should not have affected the existing duration');
 
 			Person.cache_duration = null;
