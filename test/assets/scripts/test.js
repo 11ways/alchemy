@@ -1,5 +1,3 @@
-if (typeof describe == 'function') {
-	return;
+if (typeof describe != 'function') {
+	console.log('This is a test script');
 }
-
-console.log('This is a test script');
