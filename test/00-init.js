@@ -354,15 +354,13 @@ describe('Alchemy', function() {
 			alchemy.setSetting('network.port', 3470);
 			alchemy.setSetting('network.postpone_requests_on_overload', false);
 
+			STAGES.getStage('datasource').addPostTask(() => {
+				Datasource.create('mongo', 'default', {uri: mongo_uri});
+			});
+
 			STAGES.getStage('load_core').addPostTask(async () => {
 
 				let pledge = alchemy.start({silent: true}, function started() {
-
-					setTimeout(function() {
-						// Also create the mongodb datasource
-						Datasource.create('mongo', 'default', {uri: mongo_uri});
-					}, 50);
-
 					done();
 				});
 			});
