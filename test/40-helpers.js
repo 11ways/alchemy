@@ -185,8 +185,12 @@ describe('Helper.Router', function() {
 					return next(err);
 				}
 
-				assert.strictEqual(res, `<a href="/api/test"></a>`);
-				done();
+				try {
+					assert.strictEqual(res, `<a href="/api/test"></a>`);
+					done();
+				} catch (err) {
+					done(err);
+				}
 			});
 		});
 	});

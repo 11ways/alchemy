@@ -676,8 +676,8 @@ describe('Field.Decimal', function() {
 	let DecimalTester,
 	    DecimalInSubSchema;
 
-	before(function(next) {
-		next = Function.regulate(next);
+	before(function(done) {
+		done = Function.regulate(done);
 
 		DecimalTester = Function.inherits('Alchemy.Model', 'DecimalTester');
 		DecimalInSubSchema = Function.inherits('Alchemy.Model', 'DecimalInSubSchema');
@@ -690,7 +690,7 @@ describe('Field.Decimal', function() {
 				next();
 			});
 
-		}, function secondModel(next) {
+		}, async function secondModel(next) {
 
 			DecimalInSubSchema.constitute(function addFields() {
 				this.addField('name', 'String');
@@ -702,8 +702,7 @@ describe('Field.Decimal', function() {
 				this.addField('decimals', schema, {is_array: true});
 				next();
 			});
-
-		}, next);
+		}, done);
 	});
 
 	it('should store decimal fields in the database', async function() {

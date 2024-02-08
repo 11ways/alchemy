@@ -844,7 +844,7 @@ describe('Model', function() {
 			doc.number = 3;
 			await doc.save();
 
-			assert.strictEqual(doc.initials, undefined);
+			assert.strictEqual(doc.initials, null);
 
 			doc.initials = 'RVG';
 			await doc.save();

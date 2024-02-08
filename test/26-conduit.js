@@ -10,8 +10,8 @@ describe('Controller', function() {
 	});
 
 	describe('#body', function() {
-		it('should parse the body of any encoding type', async function() {
 
+		before(() => {
 			Router.add({
 				name    : 'ConduitTest#bodyTest',
 				paths   : '/conduit/body_test',
@@ -49,13 +49,20 @@ describe('Controller', function() {
 
 				this.render('static/conduit_body_test');
 			});
+		});
 
+		it('should parse the body of a url-encoded form', async function() {
 			post_pledge = new Pledge();
 			await testFormSubmission(post_pledge, 'application/x-www-form-urlencoded');
 
+		});
+
+		it('should parse the body of a multipart form', async function() {
 			post_pledge = new Pledge();
 			await testFormSubmission(post_pledge, 'multipart/form-data');
+		});
 
+		it('should parse the body of a json-encoded form', async function() {
 			post_pledge = new Pledge();
 			await testFormSubmission(post_pledge, 'json');
 		});
@@ -115,6 +122,9 @@ async function testFormSubmission(post_pledge, enctype) {
 	} else {
 		// Use Puppeteer for normal form submissions
 		await setLocation(actual_url);
+
+		let html = await getDocumentHTML();
+		console.log(html)
 
 		await queryElementData('.form-wrapper');
 

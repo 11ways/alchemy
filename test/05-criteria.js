@@ -2,7 +2,7 @@ var assert = require('assert'),
     Person;
 
 function makeCriteria() {
-	return new Classes.Alchemy.Criteria();
+	return new Classes.Alchemy.Criteria.Model();
 }
 
 describe('Criteria', function() {
@@ -26,9 +26,9 @@ describe('Criteria', function() {
 
 			assert.strictEqual(!!record._id, true, 'The _id should always be selected');
 			assert.strictEqual(typeof record.firstname, 'string');
-			assert.strictEqual(typeof record.lastname, 'undefined');
-			assert.strictEqual(typeof record.birthdate, 'undefined');
-			assert.strictEqual(typeof record.male, 'undefined');
+			assert.strictEqual(record.lastname, null);
+			assert.strictEqual(record.birthdate, null);
+			assert.strictEqual(record.male, null);
 			assert.strictEqual(typeof record.Parent, 'undefined');
 			assert.strictEqual(typeof records[1].Parent, 'undefined');
 		});
@@ -72,7 +72,7 @@ describe('Criteria', function() {
 			assert.strictEqual(!!record.Parent, true, 'The Parent record wasn\'t selected');
 			assert.strictEqual(!!record.Parent._id, true, 'The Parent should have an _id field');
 			assert.strictEqual(record.Parent.firstname, 'Griet', 'The wrong record was selected as Parent');
-			assert.strictEqual(typeof record.Parent.lastname, 'undefined', 'The parent record should only have an _id and firstname field');
+			assert.strictEqual(record.Parent.lastname, null, 'The parent record should only have an _id and firstname field');
 		});
 	});
 

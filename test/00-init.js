@@ -150,6 +150,12 @@ global.setLocation = async function setLocation(path) {
 	}
 };
 
+global.getDocumentHTML = async function getDocumentHTML() {
+	return await evalPage(function() {
+		return document.documentElement.outerHTML;
+	});
+};
+
 global.evalPage = function evalPage(fnc, ...args) {
 	return page.evaluate(fnc, ...args);
 };
@@ -177,6 +183,10 @@ global.queryElementData = async function queryElementData(query) {
 
 	let result = await evalPage(function(query) {
 		let block = document.querySelector(query);
+
+		if (!block) {
+			return false;
+		}
 
 		let result = {
 			html       : block.outerHTML,
@@ -352,7 +362,7 @@ describe('Alchemy', function() {
 		it('should start the server', function(done) {
 
 			alchemy.setSetting('network.port', 3470);
-			alchemy.setSetting('network.postpone_requests_on_overload', false);
+			alchemy.setSetting('performance.postpone_requests_on_overload', false);
 
 			STAGES.getStage('datasource').addPostTask(() => {
 				Datasource.create('mongo', 'default', {uri: mongo_uri});

@@ -123,8 +123,8 @@ describe('Document', function() {
 
 			assert.strictEqual(child.firstname, 'Jelle');
 			assert.strictEqual(child.lastname, 'De Loecker');
-			assert.strictEqual(child.male, undefined);
-			assert.deepStrictEqual(child.nicknames, undefined);
+			assert.strictEqual(child.male, null);
+			assert.deepStrictEqual(child.nicknames, []);
 
 			let jelle = await Model.get('Person').findByValues({firstname: 'Jelle'});
 
@@ -144,7 +144,7 @@ describe('Document', function() {
 			await clone.populate(['Parent.firstname', 'Parent.male']);
 
 			assert.strictEqual(clone.Parent.firstname, 'Griet');
-			assert.strictEqual(clone.Parent.lastname, undefined);
+			assert.strictEqual(clone.Parent.lastname, null);
 			assert.strictEqual(clone.Parent.male, false);
 		});
 	});

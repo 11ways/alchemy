@@ -220,11 +220,14 @@ describe('Controller', function() {
 	});
 
 	describe('#beforeAction(name)', function() {
-		it('should be called before an action is called', async function() {
 
-			let last_called,
-			    calls = 0,
-			    pledge = new Blast.Classes.Pledge();
+		let last_called,
+		    calls = 0,
+		    pledge;
+
+		it('should be called before an action is called (direct)', async function() {
+
+			pledge = new Blast.Classes.Pledge();
 
 			PersonController.setMethod(function beforeAction(name) {
 				last_called = name;
@@ -238,14 +241,16 @@ describe('Controller', function() {
 
 			assert.strictEqual(last_called, 'rendertest');
 			assert.strictEqual(calls, 1);
+		});
 
-			result = await openHeUrl('/render_test?view=body');
+		it('should be called before an action is called (ajax)', async function() {
+
+			let result = await openHeUrl('/render_test?view=body');
 
 			assert.strictEqual(result.location, '/render_test');
 
 			assert.strictEqual(last_called, 'rendertest');
 			assert.strictEqual(calls, 2);
-
 		});
 	});
 });
