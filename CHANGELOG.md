@@ -12,6 +12,7 @@
 * Add `Field#is_nullable` option property
 * `Field#cast()` should now handle null checks
 * Split the `Criteria` class into `Criteria.Criteria` and `Criteria.Model` classes
+* Remove the deprecated `DbQuery` class
 
 ## 1.3.22 (2023-12-21)
 
