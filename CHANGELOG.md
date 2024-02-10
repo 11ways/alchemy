@@ -13,6 +13,7 @@
 * `Field#cast()` should now handle null checks
 * Split the `Criteria` class into `Criteria.Criteria` and `Criteria.Model` classes
 * Remove the deprecated `DbQuery` class
+* Let field/association constraints be a `Criteria` instance
 
 ## 1.3.22 (2023-12-21)
 
