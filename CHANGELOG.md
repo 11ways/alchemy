@@ -14,6 +14,7 @@
 * Split the `Criteria` class into `Criteria.Criteria` and `Criteria.Model` classes
 * Remove the deprecated `DbQuery` class
 * Let field/association constraints be a `Criteria` instance
+* Add "AQL" (Alchemy Query Language) implementation
 
 ## 1.3.22 (2023-12-21)
 
