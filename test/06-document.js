@@ -798,4 +798,24 @@ describe('Client.Document', function() {
 			assert.strictEqual(clone.name, 'screen');
 		});
 	});
+
+	describe('Namespaces', () => {
+		it('should handle namespaces', async () => {
+
+			let Task = Model.get('System.Task');
+			assert.strictEqual(Task.model_name, 'System_Task');
+
+			let doc = Task.createDocument();
+			let client = JSON.clone(doc, 'toHawkejs');
+
+			assert.strictEqual(doc.constructor.namespace, 'Alchemy.Document.System');
+			assert.strictEqual(client.constructor.namespace, 'Alchemy.Client.Document.System');
+
+			doc.title = 'TEST';
+			await doc.save();
+
+			client = JSON.clone(doc, 'toHawkejs');
+			assert.strictEqual(client.title, 'TEST');
+		});
+	});
 });
