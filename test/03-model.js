@@ -1153,6 +1153,39 @@ describe('Model', function() {
 		});
 	});
 
+	describe('#findOne(string)', () => {
+		it('should find a single document by an AQL query', async () => {
+
+			const Person = Model.get('Person');
+
+			let record = await Person.findOne('_id = "' + _id + '"');
+			assert.strictEqual(String(_id), String(record._id));
+
+			record = await Person.findOne('birthdate < "1980-01-01"');
+			assert.strictEqual(record.firstname, 'Griet');
+
+			record = await Person.findOne('birthdate > "1980-01-01"');
+			assert.strictEqual(record.firstname, 'Jelle');
+		});
+	});
+
+	describe('#findAll(string)', () => {
+		it('should find all documents matching an AQL query', async () => {
+
+			const Person = Model.get('Person');
+
+			let records = await Person.findAll('_id = "' + _id + '"');
+			assert.strictEqual(records.length, 1);
+			assert.strictEqual(String(_id), String(records[0]._id));
+
+			records = await Person.findAll('birthdate < "2000-01-01"');
+			assert.strictEqual(records.length, 2);
+
+			records = await Person.findAll('birthdate > "1980-01-01"');
+			assert.strictEqual(records.length, 1);
+		});
+	});
+
 	describe('#findById(object_id, callback)', function() {
 		it('should find a single document by ObjectId instance', function(done) {
 			Model.get('Person').findById(_id, function gotPerson(err, person) {

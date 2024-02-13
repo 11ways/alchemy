@@ -15,6 +15,7 @@
 * Remove the deprecated `DbQuery` class
 * Let field/association constraints be a `Criteria` instance
 * Add "AQL" (Alchemy Query Language) implementation
+* Add `Model#findOne(conditions, options)` and `Model#findAll(conditions, options)`
 
 ## 1.3.22 (2023-12-21)
 
