@@ -228,7 +228,7 @@ global.createModel = function createModel(creator) {
 	    pledge = new Classes.Pledge();
 
 	let fnc = Function.create(name, function model(options) {
-		model.wrapper.super.call(this, options);
+		model.super.call(this, options);
 	});
 
 	Function.inherits('Alchemy.Model', fnc);
