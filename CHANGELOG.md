@@ -1,4 +1,4 @@
-## 1.4.0 (WIP)
+## 1.4.0-alpha.1 (2024-02-13)
 
 * Implement new settings system
 * Replace old `sputnik` dependency with a new stages system
@@ -16,6 +16,7 @@
 * Let field/association constraints be a `Criteria` instance
 * Add "AQL" (Alchemy Query Language) implementation
 * Add `Model#findOne(conditions, options)` and `Model#findAll(conditions, options)`
+* Make the `beforeAction`` method stop the action when explicit false is returned
 
 ## 1.3.22 (2023-12-21)
 
