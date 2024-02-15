@@ -1,4 +1,4 @@
-## 1.4.0-alpha.1 (2024-02-13)
+## 1.4.0-alpha.1 (2024-02-15)
 
 * Implement new settings system
 * Replace old `sputnik` dependency with a new stages system
