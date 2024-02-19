@@ -1,3 +1,7 @@
+## 1.4.0-alpha.2 (WIP)
+
+* Drop the correct already-existing index when trying to create a similar one
+
 ## 1.4.0-alpha.1 (2024-02-15)
 
 * Implement new settings system
