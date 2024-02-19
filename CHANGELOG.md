@@ -1,4 +1,4 @@
-## 1.4.0-alpha.2 (WIP)
+## 1.4.0-alpha.2 (2024-02-19)
 
 * Drop the correct already-existing index when trying to create a similar one
 * Use field path when creating index names instead of field names
