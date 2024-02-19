@@ -2,6 +2,7 @@
 
 * Drop the correct already-existing index when trying to create a similar one
 * Use field path when creating index names instead of field names
+* Create Revision behaviour indexes, and do it on boot
 
 ## 1.4.0-alpha.1 (2024-02-15)
 
