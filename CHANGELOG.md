@@ -1,3 +1,7 @@
+## 1.4.0-alpha.3 (WIP)
+
+* Also define the shared constants as globals in Hawkejs templates
+
 ## 1.4.0-alpha.2 (2024-02-19)
 
 * Drop the correct already-existing index when trying to create a similar one
