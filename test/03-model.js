@@ -853,6 +853,87 @@ describe('Model', function() {
 			doc = await Model.get('ComputedPerson').findByValues({number: 3});
 			assert.strictEqual(doc.initials, 'RVG');
 		});
+
+		it('should also support asynchronous computed fields', async function() {
+
+			const AsyncComputedPerson = Function.inherits('Alchemy.Model', 'AsyncComputedPerson');
+			let constitute_wait = new Pledge();
+
+			AsyncComputedPerson.constitute(function addFields() {
+				this.addField('number', 'Integer');
+				this.addField('firstname', 'String');
+				this.addField('lastname',  'String');
+				this.addComputedField('fullname', 'String', {
+					required_fields: ['firstname'],
+					optional_fields: ['lastname'],
+					compute_method: 'getFullname',
+				});
+
+				this.addComputedField('initials', 'String', {
+					allow_manual_set: true,
+					required_fields: ['firstname'],
+					compute_method: 'getInitials',
+				});
+
+				assert.strictEqual(this.schema.has_computed_fields, 2);
+
+				constitute_wait.resolve();
+			});
+
+			AsyncComputedPerson.setDocumentMethod(async function getFullname() {
+
+				// Have to add sime timeout for race conditions
+				await Pledge.after(5);
+
+				let result = this.firstname;
+
+				if (this.lastname) {
+					result += ' ' + this.lastname;
+				}
+
+				return result;
+			});
+
+			AsyncComputedPerson.setDocumentMethod(async function getInitials() {
+
+				// Have to add sime timeout for race conditions
+				await Pledge.after(5);
+
+				if (!this.firstname && !this.lastname) {
+					return;
+				}
+				
+				let result = this.firstname.split(' ').map(function(part) {
+					return part[0];
+				}).join('');
+
+				if (this.lastname) {
+					result += this.lastname.split(' ').map(function(part) {
+						return part[0];
+					}).join('');
+				}
+
+				return result;
+			});
+
+			await constitute_wait;
+
+			let doc = Model.get('AsyncComputedPerson').createDocument();
+
+			doc.number = 1;
+			doc.firstname = 'Jelle';
+			doc.lastname = 'De Loecker';
+
+			await doc.save();
+
+			assert.strictEqual(doc.fullname, 'Jelle De Loecker');
+			assert.strictEqual(doc.initials, 'JDL');
+
+			doc.firstname = 'Jellie';
+			await doc.save();
+
+			assert.strictEqual(doc.fullname, 'Jellie De Loecker');
+		});
 	});
 
 	/**

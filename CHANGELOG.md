@@ -4,6 +4,7 @@
 * Add `Alchemy#extractCSSExport(css_path)`
 * Implement custom SCSS importer logic
 * Add `Alchemy#registerRequiredStylesheet(css_path)` and add it to the virtual "alchemy" SCSS module
+* Fix asynchronous "computed" fields not being awaited before saving
 
 ## 1.4.0-alpha.2 (2024-02-19)
 
