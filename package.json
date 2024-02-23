@@ -46,8 +46,8 @@
 	"optionalDependencies": {
 		"janeway"          : "~0.4.4",
 		"less"             : "~4.2.0",
-		"sass"             : "~1.68.0",
-		"sass-embedded"    : "~1.67.0",
+		"sass"             : "~1.71.1",
+		"sass-embedded"    : "~1.71.1",
 		"nodent-compiler"  : "~3.2.13",
 		"socket.io-client" : "~4.7.2",
 		"socket.io-msgpack-parser": "~3.0.2"

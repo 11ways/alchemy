@@ -1,6 +1,9 @@
 ## 1.4.0-alpha.3 (WIP)
 
 * Also define the shared constants as globals in Hawkejs templates
+* Add `Alchemy#extractCSSExport(css_path)`
+* Implement custom SCSS importer logic
+* Add `Alchemy#registerRequiredStylesheet(css_path)` and add it to the virtual "alchemy" SCSS module
 
 ## 1.4.0-alpha.2 (2024-02-19)
 
