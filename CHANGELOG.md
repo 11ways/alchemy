@@ -6,6 +6,7 @@
 * Add `Alchemy#registerRequiredStylesheet(css_path)` and add it to the virtual "alchemy" SCSS module
 * Fix asynchronous "computed" fields not being awaited before saving
 * Fix `Loopback` conduits not having some GET parameters available
+* Add more information to enums (icons, color, ...)
 
 ## 1.4.0-alpha.2 (2024-02-19)
 
