@@ -8,6 +8,7 @@
 * Fix `Loopback` conduits not having some GET parameters available
 * Add more information to enums (icons, color, ...)
 * Fix helper `Router#routeUrl()` throwing an error when the parameters arg is null
+* Make `Router#applyDirective()` also set the route method if possible
 
 ## 1.4.0-alpha.2 (2024-02-19)
 
