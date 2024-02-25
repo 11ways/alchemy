@@ -1,4 +1,4 @@
-## 1.4.0-alpha.3 (WIP)
+## 1.4.0-alpha.3 (2024-02-25)
 
 * Also define the shared constants as globals in Hawkejs templates
 * Add `Alchemy#extractCSSExport(css_path)`
