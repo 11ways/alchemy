@@ -1,3 +1,7 @@
+## 1.4.0-alpha.4 (WIP)
+
+* Make `AQL` trail placeholders default to explicit `null` values
+
 ## 1.4.0-alpha.3 (2024-02-25)
 
 * Also define the shared constants as globals in Hawkejs templates
