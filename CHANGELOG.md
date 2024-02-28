@@ -1,6 +1,7 @@
 ## 1.4.0-alpha.4 (WIP)
 
 * Make `AQL` trail placeholders default to explicit `null` values
+* Add the abstract `Meta` field class: these should be used for fields that are not directly stored in the database
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
