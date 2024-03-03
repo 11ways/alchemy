@@ -4,6 +4,7 @@
 * Add the abstract `Meta` field class: these should be used for fields that are not directly stored in the database
 * Add association aliases as a meta field to model schemas
 * Add `should_add_exports()` SCSS function
+* Add `postcss-prune-var` dependency to remove unused variables from CSS files
 
 ## 1.4.0-alpha.3 (2024-02-25)
 

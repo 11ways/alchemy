@@ -31,6 +31,7 @@
 		"mongodb"          : "~6.1.0",
 		"ncp"              : "~2.0.0",
 		"postcss"          : "~8.4.31",
+		"postcss-prune-var": "~1.1.2",
 		"protoblast"       : "~0.9.1",
 		"semver"           : "~7.5.4",
 		"socket.io"        : "~4.7.2",
