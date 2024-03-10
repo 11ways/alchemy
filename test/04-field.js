@@ -861,12 +861,13 @@ describe('Field.FixedDecimal', function() {
 	});
 });
 
+let flobotonum_to_app_counter = 0;
+let flobotonum_to_ds_counter = 0;
+
 describe('Field.Schema', function() {
 
 	before(function(next) {
 		next = Function.regulate(next);
-
-		let to_app_counter = 0;
 
 		const FlobotonumField = Function.inherits('Alchemy.Field', 'Flobotonum');
 		FlobotonumField.setDatatype('object');
@@ -875,16 +876,24 @@ describe('Field.Schema', function() {
 
 			let result = {
 				type     : 'flobotonum',
-				value    : value,
+				value    : value?.main_value,
 				to_apped : true,
-				to_app_counter : ++to_app_counter,
+				to_app_counter : ++flobotonum_to_app_counter,
 			};
 
 			callback(null, result);
 		});
 
 		FlobotonumField.setMethod(function _toDatasource(value, data, datasource, callback) {
-			callback(null, value.value);
+
+			let main_value = value.value;
+
+			let value_wrapper = {
+				main_value,
+				to_ds_counter: ++flobotonum_to_ds_counter,
+			};
+
+			callback(null, value_wrapper);
 		});
 
 		let QuestComponents = alchemy.getClassGroup('all_quest_component');
@@ -1036,6 +1045,102 @@ describe('Field.Schema', function() {
 		assert.strictEqual(second.settings?.flobotonum?.type, 'flobotonum', 'The value should have been passed through `toApp`');
 		assert.strictEqual(second.settings?.flobotonum?.value?.morestuff, true, 'The inner flobotonum value should have been saved');
 		assert.strictEqual(second.settings?.flobotonum?.to_app_counter, 6, 'This should have been the sixth `toApp` call for this field');
+	});
 
+	it('should handle nested schemas with custom property names', async () => {
+
+		flobotonum_to_app_counter = 0;
+
+		const PropertyType = Function.inherits('Alchemy.Base', 'PropertyType', 'PropertyType');
+		
+		PropertyType.constitute(function setConfigSchema() {
+			// Create a new schema
+			let configuration_schema = alchemy.createSchema();
+			this.configuration_schema = configuration_schema;
+		});
+
+		PropertyType.constitute(function setValueSchema() {
+			// Create a new schema
+			let value_schema = alchemy.createSchema();
+			this.value_schema = value_schema;
+		});
+
+		const StringType = Function.inherits('PropertyType', 'String');
+
+		StringType.constitute(function setSchema() {
+
+			this.value_schema.addField('value', 'String', {
+				description : 'The actual value of this string property',
+			});
+
+			this.configuration_schema.addField('max_length', 'Number', {
+				description : 'The maximum length of the string',
+			});
+
+			this.configuration_schema.addField('flobotonum', 'Flobotonum');
+		});
+
+		const UnitType = Function.inherits('Alchemy.Base', 'UnitType', 'UnitType');
+		const TypeDefinitionType = Function.inherits('UnitType', 'TypeDefinition');
+
+		TypeDefinitionType.constitute(function setSchema() {
+
+			this.schema = alchemy.createSchema();
+
+			this.schema.addField('defined_type', 'Enum', {
+				description : 'The defined type of this property',
+				values      : PropertyType.getDescendantsDict(),
+			});
+		
+			this.schema.addField('defined_type_configuration', 'Schema', {
+				description : 'The configuration of the defined type',
+				schema      : 'defined_type.configuration_schema',
+			});
+		});
+
+		let pledge = new Classes.Pledge.Swift();
+
+		const Unit = Function.inherits('Alchemy.Model', 'SwUnit');
+		Unit.constitute(function addFields() {
+
+			this.addField('unit_type', 'Enum', {
+				description : 'The type of this unit',
+				values      : UnitType.getDescendantsDict(),
+			});
+		
+			this.addField('unit_type_settings', 'Schema', {
+				schema : 'unit_type',
+			});
+
+			pledge.resolve();
+		});
+
+		await pledge;
+
+		let UnitModel = Model.get('SwUnit');
+		let unit = UnitModel.createDocument();
+		unit.unit_type = 'type_definition';
+		unit.unit_type_settings = {
+			defined_type : 'string',
+			defined_type_configuration : {
+				max_length : '10',
+				flobotonum: {
+					value : {
+						xstuff : true
+					}
+				}
+			},
+		};
+
+		await unit.save();
+
+		unit = await UnitModel.findByPk(unit._id);
+		const type_settings = unit.unit_type_settings || {};
+
+		assert.strictEqual(unit.unit_type, 'type_definition');
+		assert.strictEqual(type_settings.defined_type, 'string');
+		assert.strictEqual(type_settings.defined_type_configuration?.max_length, 10);
+		assert.strictEqual(type_settings.defined_type_configuration?.flobotonum?.value?.xstuff, true);
+		assert.strictEqual(type_settings.defined_type_configuration?.flobotonum?.to_app_counter, 2);
 	});
 });
