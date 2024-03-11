@@ -8,6 +8,7 @@
 * Don't make `Alchemy#getResource()` helper method overwrite params data
 * Fix unnamed sub-schemas not being able to be normalized properly
 * Add `ForeignKey` field
+* Fix `Alchemy.Client.Schema.isSchema(value)` never returning true
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
