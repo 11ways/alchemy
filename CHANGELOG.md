@@ -9,6 +9,7 @@
 * Fix unnamed sub-schemas not being able to be normalized properly
 * Add `ForeignKey` field
 * Fix `Alchemy.Client.Schema.isSchema(value)` never returning true
+* Add support for asynchronous custom schema values in the `Schema` field class
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
