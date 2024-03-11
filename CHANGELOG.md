@@ -7,6 +7,7 @@
 * Add `postcss-prune-var` dependency to remove unused variables from CSS files
 * Don't make `Alchemy#getResource()` helper method overwrite params data
 * Fix unnamed sub-schemas not being able to be normalized properly
+* Add `ForeignKey` field
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
