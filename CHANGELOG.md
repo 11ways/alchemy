@@ -10,6 +10,7 @@
 * Add `ForeignKey` field
 * Fix `Alchemy.Client.Schema.isSchema(value)` never returning true
 * Add support for asynchronous custom schema values in the `Schema` field class
+* Make the `Controller#model` getter try to get the model from the same namespace
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
