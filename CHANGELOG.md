@@ -13,6 +13,8 @@
 * Make the `Controller#model` getter try to get the model from the same namespace
 * Use the correct model name (instead of constructor name) for schemas of a Route
 * Allow `Field.Enum` values that are used by a `Field.Schema` field to refer to a document in a model, as if they were an association
+* Remove support for adding `$_extra_fields` during saving
+* Make `Datasource#toDatasource()` work without a callback
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
