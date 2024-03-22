@@ -1144,4 +1144,146 @@ describe('Field.Schema', function() {
 		assert.strictEqual(type_settings.defined_type_configuration?.flobotonum?.value?.xstuff, true);
 		assert.strictEqual(type_settings.defined_type_configuration?.flobotonum?.to_app_counter, 2);
 	});
+
+	it('should support dynamic schemas', async () => {
+
+		let constitute_pledge = new Pledge();
+
+		const BookType = Function.inherits('Informer', 'BookType');
+
+		BookType.postInherit(function afterInherit() {
+			// A type_name or type_path is required,
+			// and this is actually not (yet) automatically set by Protoblast
+			this.type_name = this.name.underscore();
+		});
+
+		BookType.constitute(function addSchema() {
+			this.schema = alchemy.createSchema();
+			this.schema.addField('pagecount', 'Integer');
+		});
+
+		const Comic = Function.inherits('BookType', 'ComicBook');
+		Comic.constitute(function setSchema() {
+			this.schema.addField('in_color', 'Boolean');
+		});
+
+		const Hardback = Function.inherits('BookType', 'HardbackBook');
+		Hardback.constitute(function setSchema() {
+			this.schema.addField('has_dust_jacket', 'Boolean');
+		});
+
+		const Paperback = Function.inherits('BookType', 'PaperbackBook');
+		Paperback.constitute(function setSchema() {});
+
+		const BookWithEnumSchema = Function.inherits('Alchemy.Model', 'BookWithEnumSchema');
+		BookWithEnumSchema.constitute(function setSchema() {
+			this.addField('title', 'String');
+			this.addField('type', 'Enum', {
+				values: Classes.BookType.getLiveDescendantsMap(),
+			});
+			this.addField('settings', 'Schema', {
+				schema: 'type.schema'
+			});
+
+			this.addField('custom_property', 'String');
+			this.addField('custom_property_type', 'String');
+		});
+
+		/**
+		 * Resolve the remote schema request.
+		 * This allows us to create dynamic schemas based on database contents!
+		 *
+		 * @param    {Alchemy.Field.Schema}   external_field
+		 * @param    {string}                 our_field_name
+		 * @param    {*}                      our_field_value
+		 * @param    {string}                 schema_path
+		 *
+		 * @return   {Alchemy.Document|Object|Schema}
+		 */
+		BookWithEnumSchema.setMethod(async function resolveRemoteSchemaRequest(external_field, our_field_name, our_field_value, schema_path) {
+
+			console.log('Getting', external_field, our_field_name, our_field_value, schema_path);
+
+			let doc = await this.findByPk(our_field_value);
+
+			if (!doc) {
+				throw new Error('Failed to find document!');
+			}
+
+			if (!doc.custom_property) {
+				return false;
+			}
+
+			let schema = alchemy.createSchema();
+			schema.addField(doc.custom_property, doc.custom_property_type || 'String');
+
+			return schema;
+		});
+
+		const MetaWithRemoteSchema = Function.inherits('Alchemy.Model', 'MetaWithRemoteSchema');
+		MetaWithRemoteSchema.constitute(function setSchema() {
+
+			this.belongsTo('BookWithEnumSchema');
+			this.addField('book_settings', 'Schema', {
+				schema: 'book_with_enum_schema_id'
+			});
+
+			constitute_pledge.resolve();
+		});
+
+		await constitute_pledge;
+
+		const BookModel = Model.get('BookWithEnumSchema');
+		const MetaModel = Model.get('MetaWithRemoteSchema');
+
+		let miles_one = BookModel.createDocument();
+		miles_one.title = 'Warrior\'s Apprentice';
+		miles_one.type = 'paperback_book';
+		miles_one.settings = {
+
+			// Should be saved
+			pagecount: 372,
+
+			// Won't be saved
+			in_color: false,
+		};
+
+		miles_one.custom_property = 'goodreads_rating';
+		miles_one.custom_property_type = 'Decimal';
+
+		await miles_one.save();
+
+		assert.deepStrictEqual(miles_one.settings, {pagecount: 372});
+
+		let meta_doc = MetaModel.createDocument();
+		meta_doc.book_with_enum_schema_id = miles_one._id;
+		meta_doc.book_settings = {
+			// Should be saved
+			goodreads_rating: 4.7,
+
+			// Should not be saved
+			year: 1986,
+		};
+
+		await meta_doc.save();
+
+		assert.strictEqual(
+			meta_doc.book_settings.goodreads_rating + '',
+			'4.7',
+			'The goodreads_rating field should have been saved!'
+		);
+
+		assert.strictEqual(
+			meta_doc.book_settings.goodreads_rating.constructor.name,
+			'Decimal',
+			'The goodreads_rating field should have been saved as a Decimal'
+		);
+
+		assert.strictEqual(
+			meta_doc.book_settings.year,
+			undefined,
+			'The `year` field should not have been saved, it was not part of the schema'
+		);
+
+	});
 });
