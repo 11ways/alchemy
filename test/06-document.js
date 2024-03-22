@@ -124,7 +124,7 @@ describe('Document', function() {
 			assert.strictEqual(child.firstname, 'Jelle');
 			assert.strictEqual(child.lastname, 'De Loecker');
 			assert.strictEqual(child.male, null);
-			assert.deepStrictEqual(child.nicknames, []);
+			assert.deepStrictEqual(child.nicknames, null);
 
 			let jelle = await Model.get('Person').findByValues({firstname: 'Jelle'});
 

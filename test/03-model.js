@@ -221,6 +221,72 @@ describe('Model', function() {
 				done();
 			});
 		});
+	});
+
+	/**
+	 * Saving data
+	 */
+	describe('#save(data, callback)', function() {
+
+		it('should save the data and call back with a DocumentList', function(done) {
+
+			Function.series(function doGriet(next) {
+
+				var griet_data = {
+					firstname : 'Griet',
+					lastname  : 'De Leener',
+					birthdate : new Date('1967-04-14'),
+					male      : false
+				};
+
+				Model.get('Person').save(griet_data, function saved(err, list) {
+
+					if (err) {
+						return next(err);
+					}
+
+					assert.strictEqual(list.length, 1);
+
+					let document = list[0];
+					next(null, document);
+				});
+
+			}, function doJelle(next, griet) {
+
+				data.parent_id = griet._id;
+
+				Model.get('Person').save(data, function saved(err, list) {
+
+					if (err) {
+						return next(err);
+					}
+
+					assert.strictEqual(list.length, 1);
+
+					let document = list[0];
+
+					testDocument(document, data);
+
+					// Save the _id for next tests
+					_id = document._id;
+
+					// Save this for later tests
+					global.person_doc = document;
+
+					if (document.slug != 'jelle') {
+						return done(new Error('Expected the document to get the slug "jelle", but got: "' + document.slug + '"'));
+					}
+
+					next(null, document);
+				});
+			}, done);
+		});
+	});
+
+	/**
+	 * Adding more fields to the new Model
+	 */
+	describe('.addField(name, type, options) - With subschemes', function() {
 
 		it('should be able to add schema as fields', function(next) {
 			next = Function.regulate(next);
@@ -340,7 +406,7 @@ describe('Model', function() {
 				let comp = refetched.components?.[0];
 
 				if (!comp) {
-					throw new Error('The `components` field was not saved properly');
+					throw new Error('The `components` field was not saved at all');
 				}
 
 				let connections = comp.connections;
@@ -1110,66 +1176,6 @@ describe('Model', function() {
 		});
 	});
 
-	/**
-	 * Saving data
-	 */
-	describe('#save(data, callback)', function() {
-
-		it('should save the data and call back with a DocumentList', function(done) {
-
-			Function.series(function doGriet(next) {
-
-				var griet_data = {
-					firstname : 'Griet',
-					lastname  : 'De Leener',
-					birthdate : new Date('1967-04-14'),
-					male      : false
-				};
-
-				Model.get('Person').save(griet_data, function saved(err, list) {
-
-					if (err) {
-						return next(err);
-					}
-
-					assert.strictEqual(list.length, 1);
-
-					let document = list[0];
-					next(null, document);
-				});
-
-			}, function doJelle(next, griet) {
-
-				data.parent_id = griet._id;
-
-				Model.get('Person').save(data, function saved(err, list) {
-
-					if (err) {
-						return next(err);
-					}
-
-					assert.strictEqual(list.length, 1);
-
-					let document = list[0];
-
-					testDocument(document, data);
-
-					// Save the _id for next tests
-					_id = document._id;
-
-					// Save this for later tests
-					global.person_doc = document;
-
-					if (document.slug != 'jelle') {
-						return done(new Error('Expected the document to get the slug "jelle", but got: "' + document.slug + '"'));
-					}
-
-					next(null, document);
-				});
-			}, done);
-		});
-	});
-
 	describe('#sort', function() {
 		it('should be used when no sort parameter is given', async function() {
 
@@ -1319,45 +1325,56 @@ describe('Model', function() {
 
 			product = Model.get('Product');
 
-			await product.ensureIds(list, async function done(err) {
+			let pledge = new Pledge();
+
+			product.ensureIds(list, async function done(err) {
 
 				if (err) {
-					return done(err);
+					return pledge.reject(err);
 				}
 
-				let prod;
+				try {
 
-				prod = await product.findById('52efff000073570002000000');
-				assert.strictEqual(prod.name, 'screen');
+					let prod;
 
-				prod = await product.findById('52efff000073570002000001');
-				assert.strictEqual(prod.name, 'mouse');
+					prod = await product.findById('52efff000073570002000000');
+					assert.strictEqual(prod.name, 'screen');
 
-				prod = await product.findById('52efff000073570002000002');
-				assert.strictEqual(prod.name, 'keyboard');
+					prod = await product.findById('52efff000073570002000001');
+					assert.strictEqual(prod.name, 'mouse');
 
-				let prods = await product.find('all');
-				assert.strictEqual(prods.length, 3);
+					prod = await product.findById('52efff000073570002000002');
+					assert.strictEqual(prod.name, 'keyboard');
 
-				let removed = await prod.remove();
+					let prods = await product.find('all');
+					assert.strictEqual(prods.length, 3);
 
-				assert.strictEqual(removed, true);
+					let removed = await prod.remove();
 
-				prod = await product.findById('52efff000073570002000002');
-				assert.strictEqual(prod, null);
+					assert.strictEqual(removed, true);
 
-				prods = await product.find('all');
-				assert.strictEqual(prods.length, 2, 'There should only be 3 products after one was removed');
+					prod = await product.findById('52efff000073570002000002');
+					assert.strictEqual(prod, null);
 
-				// Ensure them again
-				await product.ensureIds(list);
+					prods = await product.find('all');
+					assert.strictEqual(prods.length, 2, 'There should only be 3 products after one was removed');
 
-				prods = await product.find('all');
-				assert.strictEqual(prods.length, 3, 'There should only be 3 products: only the missing one should have been added');
+					// Ensure them again
+					await product.ensureIds(list);
 
-				prod = await product.findById('52efff000073570002000002');
-				assert.strictEqual(prod.name, 'keyboard');
+					prods = await product.find('all');
+					assert.strictEqual(prods.length, 3, 'There should only be 3 products: only the missing one should have been added');
+
+					prod = await product.findById('52efff000073570002000002');
+					assert.strictEqual(prod.name, 'keyboard');
+				} catch (err) {
+					return pledge.reject(err);
+				}
+
+				pledge.resolve();
 			});
+
+			return pledge;
 		});
 	});
 
