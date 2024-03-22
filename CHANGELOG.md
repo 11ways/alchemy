@@ -16,6 +16,7 @@
 * Remove support for adding `$_extra_fields` during saving
 * Make `Datasource#toDatasource()` work without a callback
 * Make `Datasource#toApp()` work without a callback
+* Print a warning when a stage takes over 10 seconds to finish
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
