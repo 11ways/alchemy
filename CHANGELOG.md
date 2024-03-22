@@ -17,6 +17,7 @@
 * Make `Datasource#toDatasource()` work without a callback
 * Make `Datasource#toApp()` work without a callback
 * Print a warning when a stage takes over 10 seconds to finish
+* Add `OperationalContext` class for keeping track of complex operations
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
