@@ -1193,14 +1193,13 @@ describe('Field.Schema', function() {
 		 * Resolve the remote schema request.
 		 * This allows us to create dynamic schemas based on database contents!
 		 *
-		 * @param    {Alchemy.Field.Schema}   external_field
-		 * @param    {string}                 our_field_name
-		 * @param    {*}                      our_field_value
-		 * @param    {string}                 schema_path
+		 * @param    {Alchemy.OperationalContext.Schema}   context
 		 *
 		 * @return   {Alchemy.Document|Object|Schema}
 		 */
-		BookWithEnumSchema.setMethod(async function resolveRemoteSchemaRequest(external_field, our_field_name, our_field_value, schema_path) {
+		BookWithEnumSchema.setMethod(async function resolveRemoteSchemaRequest(context) {
+
+			let schema_path = context.getSubSchemaPath();
 
 			// The schema by default is `schema`, unless it is otherwise
 			// specified in the external field.
@@ -1214,6 +1213,8 @@ describe('Field.Schema', function() {
 			if (schema_path != 'schema') {
 				return;
 			}
+
+			let our_field_value = context.getOurFieldValue();
 
 			let doc = await this.findByPk(our_field_value);
 
@@ -1317,5 +1318,298 @@ describe('Field.Schema', function() {
 			undefined,
 			'The `year` field in the `other_settings` field should not have been saved, it was not part of the schema'
 		);
+	});
+
+	it('should allow you to create dynamic properties', async () => {
+
+		let constitute_pledge = new Pledge();
+
+		const DynamicType = Function.inherits('Informer', function DynamicType(doc) {
+			this.document = doc;
+		});
+
+		DynamicType.setMethod(function getValueSchema() {
+			return this.constructor.value_schema;
+		});
+
+		DynamicType.postInherit(function afterInherit() {
+			// A type_name or type_path is required,
+			// and this is actually not (yet) automatically set by Protoblast
+			this.type_name = this.name.underscore();
+		});
+
+		DynamicType.constitute(function setSchema() {
+			this.value_schema = alchemy.createSchema();
+			this.settings_schema = alchemy.createSchema();
+		});
+
+		const StringDynamicType = Function.inherits('DynamicType', 'StringDynamicType');
+		StringDynamicType.constitute(function setSchema() {
+			this.value_schema.addField('value', 'String');
+			this.settings_schema.addField('max_length', 'Integer');
+		});
+
+		const BooleanDynamicType = Function.inherits('DynamicType', 'BooleanDynamicType');
+		BooleanDynamicType.constitute(function setSchema() {
+			this.value_schema.addField('value', 'Boolean');
+		});
+
+		const NumberDynamicType = Function.inherits('DynamicType', 'NumberDynamicType');
+		NumberDynamicType.constitute(function setSchema() {
+			this.value_schema.addField('value', 'Number');
+		});
+
+		const CompoundDynamicType = Function.inherits('DynamicType', 'CompoundDynamicType');
+		CompoundDynamicType.constitute(function setSchema() {
+			let schema = alchemy.createSchema();
+			schema.belongsTo('DynamicProperty');
+		});
+
+		// The model that will define the dynamic property types
+		const DynamicPropertyModel = Function.inherits('Alchemy.Model', 'DynamicProperty');
+		DynamicPropertyModel.constitute(function addSchema() {
+
+			this.addField('title', 'String');
+
+			this.addField('type', 'Enum', {
+				values: Classes.DynamicType.getLiveDescendantsMap(),
+			});
+
+			this.addField('settings', 'Schema', {
+				schema : 'type.settings_schema'
+			});
+		});
+
+		DynamicPropertyModel.setMethod(async function resolveRemoteSchemaRequest(context) {
+
+			let our_field_value = context.getOurFieldValue(),
+				our_field_name = context.getOurFieldName();
+
+			let doc = await this.findByValues({
+				[our_field_name]: our_field_value,
+			});
+
+			if (!doc) {
+				return null;
+			}
+
+			const external_field = context.getExternalField();
+
+			context = context.createChild();
+			context.setHolder(doc);
+			context.setSchema(this.schema);
+
+			return doc.resolveSchemaPath(context);
+		});
+
+		DynamicPropertyModel.setDocumentMethod(function resolveSchemaPath(context) {
+
+			let sub_schema_path = context.getSubSchemaPath();
+			let doc = context.getHolder();
+
+			let TypeConstructor = DynamicType.getDescendant(doc.type);
+
+			let instance = new TypeConstructor(doc);
+
+			if (sub_schema_path == 'value_schema') {
+				return instance.getValueSchema();
+			}
+		});
+
+		// The model that will exist out of dynamic properties
+		const DynamicMetaModel = Function.inherits('Alchemy.Model', 'DynamicMeta');
+		DynamicMetaModel.constitute(function setSchema() {
+
+			let schema = alchemy.createSchema();
+
+			schema.belongsTo('DynamicProperty');
+			schema.addField('value_config', 'Schema', {
+				schema : 'dynamic_property_id.value_schema',
+			});
+
+			this.addField('properties', schema, {array: true});
+
+			constitute_pledge.resolve();
+		});
+
+		await constitute_pledge;
+
+		const DP = Model.get('DynamicProperty');
+
+		let firstname_property = DP.createDocument();
+		firstname_property.title = 'Firstname';
+		firstname_property.type = 'string_dynamic_type';
+		firstname_property.settings = {
+			max_length: 10,
+			wont_be_saved: 99,
+		};
+		await firstname_property.save();
+
+		assert.strictEqual(firstname_property.title, 'Firstname');
+		assert.strictEqual(firstname_property.type, 'string_dynamic_type');
+		assert.strictEqual(firstname_property.settings.max_length, 10);
+		assert.strictEqual(firstname_property.settings.wont_be_saved, undefined);
+
+		let age_property = DP.createDocument();
+		age_property.title = 'Age';
+		age_property.type = 'number_dynamic_type';
+		await age_property.save();
+
+		let location_property = DP.createDocument();
+		location_property.title = 'Location';
+		location_property.type = 'string_dynamic_type';
+		await location_property.save();
+
+		let is_admin_property = DP.createDocument();
+		is_admin_property.title = 'Is admin';
+		is_admin_property.type = 'boolean_dynamic_type';
+		await is_admin_property.save();
+
+		let DynamicMeta = Model.get('DynamicMeta');
+
+		let meta = DynamicMeta.createDocument();
+		meta.properties = [
+			{
+				dynamic_property_id: firstname_property._id,
+				value_config: {
+					value: 1,
+					extra: 'will_be_ignored',
+				}
+			}
+		];
+
+		await meta.save();
+
+		assert.strictEqual(meta.properties[0].value_config.value, '1');
+		assert.strictEqual(meta.properties[0].value_config.extra, undefined);
+
+		let more_meta = DynamicMeta.createDocument();
+		more_meta.properties = [
+			{
+				dynamic_property_id: firstname_property._id,
+				value_config: {
+					value: 'Jelle',
+					extra: 'will_be_ignored',
+				}
+			},
+			{
+				dynamic_property_id: age_property._id,
+				value_config: {
+					value: 33,
+					extra: 'will_be_ignored',
+				}
+			},
+			{
+				dynamic_property_id: location_property._id,
+				value_config: {
+					value: 'Belgium',
+					extra: 'will_be_ignored',
+				}
+			},
+			{
+				dynamic_property_id: is_admin_property._id,
+				value_config: {
+					value: true,
+					extra: 'will_be_ignored',
+				}
+			}
+		];
+
+		await more_meta.save();
+
+		let firstname = more_meta.properties[0],
+			age = more_meta.properties[1],
+			location = more_meta.properties[2],
+			is_admin = more_meta.properties[3];
+
+		assert.strictEqual(firstname.value_config.value, 'Jelle');
+		assert.strictEqual(age.value_config.value, 33);
+		assert.strictEqual(location.value_config.value, 'Belgium');
+		assert.strictEqual(is_admin.value_config.value, true);
+
+		assert.strictEqual(firstname.value_config.extra, undefined);
+		assert.strictEqual(age.value_config.extra, undefined);
+		assert.strictEqual(location.value_config.extra, undefined);
+		assert.strictEqual(is_admin.value_config.extra, undefined);
+	});
+
+	it('should also support dynamic properties with the builtin resolves', async () => {
+
+		let constitute_pledge = new Pledge();
+
+		// Another dynamic property model, but without custom resolve logic
+		const OtherDynamicPropertyModel = Function.inherits('Alchemy.Model', 'OtherDynamicProperty');
+		OtherDynamicPropertyModel.constitute(function addSchema() {
+
+			this.addField('title', 'String');
+
+			this.addField('type', 'Enum', {
+				values: Classes.DynamicType.getLiveDescendantsMap(),
+			});
+
+			this.addField('settings', 'Schema', {
+				schema : 'type.settings_schema'
+			});
+		});
+
+		const OtherDynamicMetaModel = Function.inherits('Alchemy.Model', 'OtherDynamicMeta');
+		OtherDynamicMetaModel.constitute(function setSchema() {
+
+			let schema = alchemy.createSchema();
+
+			schema.belongsTo('OtherDynamicProperty');
+			schema.addField('value_config', 'Schema', {
+				schema : 'other_dynamic_property_id.type.value_schema',
+			});
+
+			this.addField('properties', schema, {array: true});
+
+			constitute_pledge.resolve();
+		});
+
+		await constitute_pledge;
+
+		let ODP = Model.get('OtherDynamicProperty');
+
+		let age_property = ODP.createDocument();
+		age_property.title = 'Age';
+		age_property.type = 'number_dynamic_type';
+		await age_property.save();
+
+		assert.strictEqual(age_property.title, 'Age');
+		assert.strictEqual(age_property.type, 'number_dynamic_type');
+
+		age_property = await ODP.findByPk(age_property._id);
+		assert.strictEqual(age_property.title, 'Age');
+		assert.strictEqual(age_property.type, 'number_dynamic_type');
+
+		let location_property = ODP.createDocument();
+		location_property.title = 'Location';
+		location_property.type = 'string_dynamic_type';
+		await location_property.save();
+
+		let is_admin_property = ODP.createDocument();
+		is_admin_property.title = 'Is admin';
+		is_admin_property.type = 'boolean_dynamic_type';
+		await is_admin_property.save();
+
+		let OtherDynamicMeta = Model.get('OtherDynamicMeta');
+
+		let other_meta = OtherDynamicMeta.createDocument();
+		other_meta.properties = [
+			{
+				other_dynamic_property_id: age_property._id,
+				value_config: {
+					value: 33,
+					extra: 'will_be_ignored',
+				}
+			}
+		];
+
+		await other_meta.save();
+
+		assert.strictEqual(other_meta.properties[0].value_config.value, 33);
+		assert.strictEqual(other_meta.properties[0].value_config.extra, undefined);
+
 	});
 });
