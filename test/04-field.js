@@ -1202,7 +1202,18 @@ describe('Field.Schema', function() {
 		 */
 		BookWithEnumSchema.setMethod(async function resolveRemoteSchemaRequest(external_field, our_field_name, our_field_value, schema_path) {
 
-			console.log('Getting', external_field, our_field_name, our_field_value, schema_path);
+			// The schema by default is `schema`, unless it is otherwise
+			// specified in the external field.
+			// This way, we can have multiple fields that request different schemas
+			if (schema_path == 'other_schema') {
+				let schema = alchemy.createSchema();
+				schema.addField('other_property', 'String');
+				return schema;
+			}
+
+			if (schema_path != 'schema') {
+				return;
+			}
 
 			let doc = await this.findByPk(our_field_value);
 
@@ -1226,6 +1237,10 @@ describe('Field.Schema', function() {
 			this.belongsTo('BookWithEnumSchema');
 			this.addField('book_settings', 'Schema', {
 				schema: 'book_with_enum_schema_id'
+			});
+
+			this.addField('other_settings', 'Schema', {
+				schema: 'book_with_enum_schema_id.other_schema',
 			});
 
 			constitute_pledge.resolve();
@@ -1265,6 +1280,12 @@ describe('Field.Schema', function() {
 			year: 1986,
 		};
 
+		meta_doc.other_settings = {
+			other_property: 'other_value',
+			year: 1986,
+			goodreads_rating: 4.7,
+		};
+
 		await meta_doc.save();
 
 		assert.strictEqual(
@@ -1285,5 +1306,16 @@ describe('Field.Schema', function() {
 			'The `year` field should not have been saved, it was not part of the schema'
 		);
 
+		assert.strictEqual(
+			meta_doc.other_settings.other_property,
+			'other_value',
+			'The `other_settings` field should have also been saved'
+		);
+
+		assert.strictEqual(
+			meta_doc.other_settings.year,
+			undefined,
+			'The `year` field in the `other_settings` field should not have been saved, it was not part of the schema'
+		);
 	});
 });

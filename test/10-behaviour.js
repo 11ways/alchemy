@@ -149,6 +149,10 @@ describe('RevisionBehaviour', function() {
 			assert.strictEqual(to_revert.age, 5);
 			assert.strictEqual(to_revert.__r, 2);
 
+			// @TODO: Saving revisions happens in the background,
+			// so sometimes this revert might come too soon!
+			await Pledge.after(5);
+
 			// Revert 2 versions
 			await to_revert.revert(2);
 
