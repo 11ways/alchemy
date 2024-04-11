@@ -1,3 +1,7 @@
+## 1.3.23 (WIP)
+
+* Take the system-load into account when deciding to resume postponed/queued requests
+
 ## 1.3.22 (2023-12-21)
 
 * Allow ending a non-file-serve `Conduit` response with a stream
