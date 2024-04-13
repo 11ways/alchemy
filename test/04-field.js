@@ -682,7 +682,10 @@ describe('Field.Decimal', function() {
 		DecimalTester = Function.inherits('Alchemy.Model', 'DecimalTester');
 		DecimalInSubSchema = Function.inherits('Alchemy.Model', 'DecimalInSubSchema');
 
-		Function.parallel(function firstModel(next) {
+		// This has to be started synchronously:
+		// There is a bug in Protoblast v0.8 where constitutors
+		// don't always get called after the class has already finished loading
+		Function.parallel(false, function firstModel(next) {
 
 			DecimalTester.constitute(function addFields() {
 				this.addField('name', 'String');

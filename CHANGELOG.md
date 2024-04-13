@@ -1,4 +1,4 @@
-## 1.3.23 (WIP)
+## 1.3.23 (2024-04-13)
 
 * Take the system-load into account when deciding to resume postponed/queued requests
 * Prevent ending the same `Conduit` instance twice
