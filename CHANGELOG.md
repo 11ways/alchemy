@@ -20,6 +20,7 @@
 * Add `OperationalContext` class for keeping track of complex operations
 * Use new `OperationalContext`-based classes for handling `Datasource` operations, getting rid of callbacks
 * Use `OperationalContext.Schema` for resolving subschemas
+* Add support for the Protoblast environment properties
 
 ## 1.4.0-alpha.3 (2024-02-25)
 
