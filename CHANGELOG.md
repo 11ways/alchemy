@@ -1,3 +1,11 @@
+## 1.4.0-alpha.6 (WIP)
+
+* Don't flatten objects when updating records, it causes too many issues
+
+## 1.4.0-alpha.5 (2024-08-16)
+
+* Pre-release with updated dependencies
+
 ## 1.4.0-alpha.4 (2024-08-04)
 
 * Make `AQL` trail placeholders default to explicit `null` values
