@@ -1,4 +1,4 @@
-## 1.4.0-alpha.6 (WIP)
+## 1.4.0-alpha.6 (2024-09-11)
 
 * Don't flatten objects when updating records, it causes too many issues
 * Don't send null or undefined values to MongoDB when creating a record
