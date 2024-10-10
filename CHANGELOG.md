@@ -1,6 +1,7 @@
 ## 1.4.0-alpha.7 (WIP)
 
 * End requests with an error when parsing posted body contents fail
+* Make the max body & file size of a request configurable (per route)
 
 ## 1.4.0-alpha.6 (2024-09-11)
 
