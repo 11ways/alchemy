@@ -1,3 +1,7 @@
+## 1.4.0-alpha.7 (WIP)
+
+* End requests with an error when parsing posted body contents fail
+
 ## 1.4.0-alpha.6 (2024-09-11)
 
 * Don't flatten objects when updating records, it causes too many issues
