@@ -1,3 +1,7 @@
+## 1.4.0-alpha.8 (WIP)
+
+* Fix `_modelInstance` cache when keys are not strings
+
 ## 1.4.0-alpha.7 (2024-10-10)
 
 * End requests with an error when parsing posted body contents fail
