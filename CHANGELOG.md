@@ -1,4 +1,4 @@
-## 1.4.0-alpha.8 (WIP)
+## 1.4.0-alpha.8 (2024-11-28)
 
 * Fix `_modelInstance` cache when keys are not strings
 * Fix certain settings not being applied if they're created after generating the main system setting object
