@@ -1,3 +1,7 @@
+## 1.4.0-alpha.9 (WIP)
+
+* Fix `Conduit#parseRequest()` forgetting GET query parameters when overriding respone url
+
 ## 1.4.0-alpha.8 (2024-11-28)
 
 * Fix `_modelInstance` cache when keys are not strings
