@@ -2,6 +2,7 @@
 
 * Fix `Conduit#parseRequest()` forgetting GET query parameters when overriding respone url
 * Make `Model#aggregate(pipeline)` work again
+* Fix `Alchemy#download(path)` breaking when no name is found to store file as
 
 ## 1.4.0-alpha.8 (2024-11-28)
 
