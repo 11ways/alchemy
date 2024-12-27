@@ -1,4 +1,4 @@
-## 1.4.0-alpha.9 (WIP)
+## 1.4.0-alpha.9 (2024-12-27)
 
 * Fix `Conduit#parseRequest()` forgetting GET query parameters when overriding respone url
 * Make `Model#aggregate(pipeline)` work again
