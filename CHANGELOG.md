@@ -1,3 +1,7 @@
+## 1.4.0-alpha.10 (WIP)
+
+* Clone the `criteria` instance passed to Model find methods
+
 ## 1.4.0-alpha.9 (2024-12-27)
 
 * Fix `Conduit#parseRequest()` forgetting GET query parameters when overriding respone url
