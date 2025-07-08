@@ -4,6 +4,7 @@
 * Don't override existing form method when applying route directive
 * Update client-side IndexedDB datasource to work with new OperationalContext system
 * Add short_title and icon_style to enum values
+* Use `socket` value from the settings instead of environment variable
 
 ## 1.4.0-alpha.9 (2024-12-27)
 
