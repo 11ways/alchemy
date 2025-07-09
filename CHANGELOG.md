@@ -7,6 +7,7 @@
 * Use `socket` value from the settings instead of environment variable
 * Fix `query_fields` not getting cloned in a `Criteria` instance
 * Add `Alchemy#getUrl()` as an alias for `alchemy.settings.network.main_url`
+* Add `Criteria#matchesFilter(aql_or_value)` to make filtering easier
 
 ## 1.4.0-alpha.9 (2024-12-27)
 
