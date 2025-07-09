@@ -6,6 +6,7 @@
 * Add short_title and icon_style to enum values
 * Use `socket` value from the settings instead of environment variable
 * Fix `query_fields` not getting cloned in a `Criteria` instance
+* Add `Alchemy#getUrl()` as an alias for `alchemy.settings.network.main_url`
 
 ## 1.4.0-alpha.9 (2024-12-27)
 
