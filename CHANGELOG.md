@@ -11,6 +11,7 @@
 * Fix wrong field name in task service
 * Fix `Expression.Field`'s `field` getter so it also finds fields of related models
 * Let `matchesFilter` automatically add wildcards when none are present
+* Allow quoted strings in `matchesFilter` for strict equal checks
 
 ## 1.4.0-alpha.9 (2024-12-27)
 
