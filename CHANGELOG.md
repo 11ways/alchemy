@@ -9,6 +9,7 @@
 * Add `Alchemy#getUrl()` as an alias for `alchemy.settings.network.main_url`
 * Add `Criteria#matchesFilter(aql_or_value)` to make filtering easier
 * Fix wrong field name in task service
+* Fix `Expression.Field`'s `field` getter so it also finds fields of related models
 
 ## 1.4.0-alpha.9 (2024-12-27)
 
