@@ -25,6 +25,7 @@ plato/
 
 # Dependencies
 node_modules/
+node_modules*
 
 # Coverage directory used by istanbul
 .nyc_output/
