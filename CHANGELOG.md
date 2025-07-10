@@ -1,4 +1,4 @@
-## 1.4.0-alpha.10 (WIP)
+## 1.4.0-alpha.10 (2025-07-10)
 
 * Clone the `criteria` instance passed to Model find methods
 * Don't override existing form method when applying route directive
