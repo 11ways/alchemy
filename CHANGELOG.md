@@ -2,6 +2,7 @@
 
 * Add `Conduit#isCrawler()` method
 * Never persist `ClientSession` instances for crawlers
+* Add `Alchemy#pruneCaches()` and `performance.prune_cache` setting to actually automatically prune the caches
 
 ## 1.4.0-alpha.11 (2025-07-10)
 
