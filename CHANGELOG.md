@@ -1,4 +1,8 @@
-## 1.4.0-alpha.10 (2025-07-10)
+## 1.4.0-alpha.12 (WIP)
+
+* Add `Conduit#isCrawler()` method
+
+## 1.4.0-alpha.11 (2025-07-10)
 
 * Add `al-time` element, for properly rendering datetime values
 
