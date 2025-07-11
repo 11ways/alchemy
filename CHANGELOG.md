@@ -1,4 +1,4 @@
-## 1.4.0-alpha.12 (WIP)
+## 1.4.0-alpha.12 (2025-07-11)
 
 * Add `Conduit#isCrawler()` method
 * Never persist `ClientSession` instances for crawlers
