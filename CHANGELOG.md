@@ -4,6 +4,9 @@
 * Improve Task service
 * Add monitor action for viewing live task progress to SystemTaskHistory model
 * Add entity deduplication cache for `toApp` processing to avoid duplicate work
+* Fix `$elemMatch` comparison function (uninitialized loop, undefined return)
+* Fix undefined `callback` reference in MongoDB read error handler
+* Use `Set` for `allowed_find_options` for O(1) lookups
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
