@@ -7,6 +7,7 @@
 * Fix `$elemMatch` comparison function (uninitialized loop, undefined return)
 * Fix undefined `callback` reference in MongoDB read error handler
 * Use `Set` for `allowed_find_options` for O(1) lookups
+* Add `$lookup` optimization for `criteria.populate()` to avoid N+1 queries
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
