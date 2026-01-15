@@ -9,6 +9,8 @@
 * Use `Set` for `allowed_find_options` for O(1) lookups
 * Add `$lookup` optimization for `criteria.populate()` to avoid N+1 queries
 * Add `$facet` optimization to combine count and data queries into single aggregation
+* Add unit tests for `$lookup` and `$facet` optimizations
+* Fix ProjectVersion test (invalid self-referential condition)
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
