@@ -11,6 +11,7 @@
 * Add `$facet` optimization to combine count and data queries into single aggregation
 * Add unit tests for `$lookup` and `$facet` optimizations
 * Fix ProjectVersion test (invalid self-referential condition)
+* Add `global_variable` option to settings
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
