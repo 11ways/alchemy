@@ -13,6 +13,7 @@
 * Fix ProjectVersion test (invalid self-referential condition)
 * Add `global_variable` option to settings
 * Array values in settings should be treated as leaf values, not groups
+* Add `is_array` option to settings
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

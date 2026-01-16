@@ -1,5 +1,9 @@
 # AlchemyMVC Development Guide
 
+## Dependencies
+
+@node_modules/hawkejs/CLAUDE.md
+
 ## Commands
 - Run tests: `npm test`
 - Run with coverage: `npm run coverage`
@@ -287,6 +291,44 @@ MyModel.constitute(function addFields() {
 });
 ```
 
+## Class Group Pattern
+
+For polymorphic types where child classes define their own schemas:
+
+```javascript
+// Abstract base class (app/lib/time_off/00-time_off.js)
+const TimeOff = Function.inherits('Alchemy.Base', 'MyNamespace.TimeOff', function TimeOff() {});
+TimeOff.makeAbstractClass();
+TimeOff.constitute(function setSchema() {
+	this.schema = alchemy.createSchema();
+	this.schema.addField('hours', 'Number');
+});
+
+// Child class - automatically gets type_name: 'official_vacation'
+const OfficialVacation = Function.inherits('MyNamespace.TimeOff.TimeOff', function OfficialVacation() {});
+OfficialVacation.constitute(function setSchema() {
+	this.schema.addField('days_per_year', 'Integer');
+});
+
+// In model - enum from descendants, dynamic schema based on selection
+this.addField('type', 'Enum', {values: Classes.MyNamespace.TimeOff.TimeOff.getDescendantsDict()});
+this.addField('settings', 'Schema', {schema: 'type'});
+```
+
+**Key methods:**
+- `ParentClass.getDescendantsDict()` - Enum map of all child classes
+- `ParentClass.getDescendant(type_name)` - Get child class by type_name
+
+**Legacy pattern (don't use for new code, but leave it for old code):**
+```javascript
+Site.makeAbstractClass();
+Site.startNewGroup('site_type');  // Creates named group
+
+// In model:
+let site_types = alchemy.getClassGroup('site_type');
+this.addField('site_type', 'Enum', {values: site_types});
+```
+
 ## Schema
 
 Standalone schemas for nested fields:
@@ -384,6 +426,10 @@ Key methods:
 ```javascript
 // Log warnings only once (avoid log spam)
 alchemy.distinctProblem('unique-id', 'Warning message', {repeat_after: 60000});
+
+// Register errors for logging and error tracking services (Glitchtip, Sentry, etc.)
+// Use this in catch blocks instead of log.error() for proper error handling
+alchemy.registerError(err, {context: 'Description of what failed'});
 
 // Get association config
 let assoc = Model.getAssociation('Project');  // Returns {type, modelName, options}
