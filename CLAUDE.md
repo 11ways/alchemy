@@ -37,8 +37,8 @@ These are available everywhere without require/import - injected by Protoblast a
 Classes use `Function.inherits()` from Protoblast, not ES6 classes:
 
 ```javascript
-// Create a class: Function.inherits(parent, namespace, name)
-const MyClass = Function.inherits('Alchemy.Base', 'Alchemy', function MyClass() {});
+// Create a class: Function.inherits(parent, name)
+const MyClass = Function.inherits('Alchemy.Base', function MyClass() {});
 
 // Add instance method - function name becomes method name
 MyClass.setMethod(function doSomething(arg) {
@@ -67,6 +67,35 @@ MyClass.constitute(function setup() {
 	// Add schema fields, configure behaviours, etc.
 });
 ```
+
+## Namespaces
+
+**IMPORTANT:** To create classes in a namespace, you must FIRST create the namespace base class.
+
+```javascript
+// WRONG - This creates a class literally named "MyNamespace.MyClass"
+const MyClass = Function.inherits('Alchemy.Base', 'MyNamespace.MyClass');
+
+// CORRECT - First create the namespace base class
+// This creates Classes.Alchemy.MyNamespace.MyNamespace
+const MyNamespace = Function.inherits('Alchemy.Base', 'Alchemy.MyNamespace', 'MyNamespace');
+
+// Then inherit from it - creates Classes.Alchemy.MyNamespace.MyClass
+const MyClass = Function.inherits('Alchemy.MyNamespace', function MyClass() {});
+```
+
+For Models specifically:
+```javascript
+// First create the namespace base model (in 00_my_namespace_model.js)
+const MyNamespace = Function.inherits('Alchemy.Model.App', 'Alchemy.Model.MyNamespace', 'MyNamespace');
+
+// Then create models in that namespace
+const MyModel = Function.inherits('Alchemy.Model.MyNamespace', 'MyModel');
+// Results in: Classes.Alchemy.Model.MyNamespace.MyModel
+// Model name: MyNamespace_MyModel
+```
+
+The three-argument form `Function.inherits(parent, namespace, name)` is used to CREATE a namespace. The two-argument form inherits INTO an existing namespace.
 
 ## Project Structure
 
@@ -356,6 +385,58 @@ Model records are `Document` instances with methods like:
 
 `DocumentList` is an array-like collection of documents returned by `find('all')`.
 
+## Server → Client Data Flow (toHawkejs)
+
+When Documents and other Alchemy objects are passed to Hawkejs templates, they go through a two-phase transformation:
+
+### Phase 1: toHawkejs (Preparation)
+
+Hawkejs calls `JSON.clone(obj, 'toHawkejs')` on all template variables BEFORE rendering. This transforms server-only classes into client-safe versions.
+
+**Classes with toHawkejs implementations:**
+
+| Class | What it does |
+|-------|--------------|
+| `Document` | Creates Client Document, clones `$record` and `$options` |
+| `DocumentList` | Clones all records, preserves list metadata |
+| `Schema` | Clones fields and associations for client use |
+| `Field` | Clones field configuration and schema |
+| `EnumMap` | Clones enum values with their schemas |
+
+### Phase 2: toDry (Serialization)
+
+After rendering, `JSON.dry()` serializes the prepared objects to JSON for transport. On the client, `JSON.undry()` reconstructs them.
+
+**Classes with toDry/unDry implementations:**
+
+| Class | Where unDry is |
+|-------|---------------|
+| `Client.Document` | `lib/app/helper_model/document.js` |
+| `Client.Schema` | `lib/class/schema_client.js` |
+
+### Document Flow Example
+
+```
+Server Document (lib/class/document.js)
+    ↓ toHawkejs()
+Client Document (lib/app/helper_model/document.js) [server-side instance]
+    ↓ toDry()
+JSON string
+    ↓ [sent to browser]
+    ↓ unDry()
+Client Document (browser instance)
+```
+
+### Why Two Phases?
+
+1. **toHawkejs** handles class transformation (Server → Client class)
+2. **toDry** handles serialization (Object → String)
+
+This separation allows:
+- Server-only code to be stripped before serialization
+- Different class hierarchies on server vs client
+- Reference preservation across complex object graphs
+
 ## Linkups (WebSockets)
 
 Real-time bidirectional connections:
@@ -376,7 +457,33 @@ Chat.setAction(function linkup(conduit, linkup) {
 Code in these folders is available on both server AND client (browser):
 - `app/helper/` - General helper classes
 - `app/helper_model/` - Document methods added to models
+- `app/helper_field/` - Custom field types
+- `app/helper_datasource/` - Datasource helpers
 - `app/element/` - Custom elements
+
+**CRITICAL: `app/lib/` is server-only!**
+
+Despite intuitive naming, `app/lib/client/` is NOT sent to the browser:
+```
+app/lib/           → Server-only (loaded via Blast.require)
+app/lib/client/    → Server-only! NOT sent to browser!
+app/helper/        → Both server AND client (loaded via hawkejs.load)
+app/element/       → Both server AND client
+```
+
+For client-side classes, put them in `app/helper/` with a server guard:
+```javascript
+// app/helper/my_client_class.js
+
+// Skip execution on server - this class is client-only
+if (Blast.isNode) {
+    return;
+}
+
+const MyClientClass = Function.inherits('Informer', 'MyNamespace', function MyClientClass() {
+    MyClientClass.super.call(this);
+});
+```
 
 **Model schemas vs document methods:**
 
@@ -495,3 +602,59 @@ STAGES.getStage('datasource').addPostTask(() => {
    ```
 
 4. **Criteria is mutable:** Methods like `where()`, `sort()` modify the criteria in place and return `this` for chaining
+
+5. **toHawkejs vs toDry:** `toHawkejs` transforms classes (Server→Client Document) during cloning; `toDry` serializes to JSON string. They serve different purposes and both are needed
+
+6. **Client Document location:** Client Document class is in `lib/app/helper_model/document.js` (shared server+client), not `lib/class/document.js` (server-only)
+
+## AI Development Mode
+
+AI devmode provides debug endpoints for development. **Never use in production.**
+
+### Starting
+
+```bash
+# Using alchemy-dev (recommended)
+alchemy-dev start    # Starts with --ai-devmode flag automatically
+
+# Manual
+node server.js --ai-devmode
+```
+
+### Endpoints
+
+All endpoints are under `/_dev/`:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/_dev/health` | GET | Health check - returns status, uptime, memory |
+| `/_dev/login` | GET | Auto-login as first user (sets session cookie) |
+| `/_dev/inspect` | POST | Server-side REPL - evaluate expressions |
+| `/_dev/document/:model/:id` | GET | Introspect a document |
+| `/_dev/logs` | GET | Recent log entries |
+
+### Usage Examples
+
+```bash
+# Check if server is ready
+curl https://myapp.dev.example.com/_dev/health
+
+# Auto-login (save cookies for subsequent requests)
+curl -c cookies.txt https://myapp.dev.example.com/_dev/login
+
+# Evaluate an expression
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"expr": "alchemy.settings.name"}' \
+  https://myapp.dev.example.com/_dev/inspect
+
+# Inspect a document
+curl https://myapp.dev.example.com/_dev/document/User/52efff0000a1c00000000000
+```
+
+### Security
+
+- Only enabled via `--ai-devmode` CLI flag (cannot be enabled via config/database)
+- Flag is stored on `alchemy.ai_devmode_enabled` (not in settings)
+- Endpoints have NO authentication - anyone can access them
+- **Never expose to public networks**
+- Requests require tokens, this is handled in the `alchemy-dev` tool automatically

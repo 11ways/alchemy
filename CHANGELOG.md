@@ -14,6 +14,7 @@
 * Add `global_variable` option to settings
 * Array values in settings should be treated as leaf values, not groups
 * Add `is_array` option to settings
+* Add `--ai-devmode` flag to allow AIs to work on Alchemy projects more easily
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
