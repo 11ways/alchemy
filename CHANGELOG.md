@@ -15,6 +15,7 @@
 * Array values in settings should be treated as leaf values, not groups
 * Add `is_array` option to settings
 * Add `--ai-devmode` flag to allow AIs to work on Alchemy projects more easily
+* Add proper error handling and logging for empty catch blocks in NoSQL datasource and FieldConfig
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
