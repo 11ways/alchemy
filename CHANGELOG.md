@@ -16,6 +16,7 @@
 * Add `is_array` option to settings
 * Add `--ai-devmode` flag to allow AIs to work on Alchemy projects more easily
 * Add proper error handling and logging for empty catch blocks in NoSQL datasource and FieldConfig
+* Enable previously skipped tests for model name prefixes in sort and default values in compose
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

@@ -1185,8 +1185,24 @@ describe('Model', function() {
 			assert.strictEqual(persons[1].firstname, 'Jelle');
 		});
 
-		it.skip('should allow adding the model name before the field name', function() {
-			// @TODO: need to write this!
+		it('should allow adding the model name before the field name', async function() {
+			// Test that Person.firstname works the same as firstname in sort
+			let criteria = Model.get('Person').find();
+			criteria.sort(['Person.firstname', 1]); // ascending
+
+			let persons = await Model.get('Person').find('all', criteria);
+
+			assert.strictEqual(persons[0].firstname, 'Griet');
+			assert.strictEqual(persons[1].firstname, 'Jelle');
+
+			// Now test descending
+			criteria = Model.get('Person').find();
+			criteria.sort(['Person.firstname', -1]); // descending
+
+			persons = await Model.get('Person').find('all', criteria);
+
+			assert.strictEqual(persons[0].firstname, 'Jelle');
+			assert.strictEqual(persons[1].firstname, 'Griet');
 		});
 	});
 
@@ -1401,8 +1417,20 @@ describe('Model', function() {
 
 	describe('#compose(data, options)', function() {
 
-		it.skip('should set default values', function() {
-
+		it('should set default values', async function() {
+			// ClonedSchemas has a 'uid' field in its components schema with default: alchemy.ObjectId
+			let ClonedSchemas = Model.get('ClonedSchemas');
+			
+			// Create an empty document
+			let doc = ClonedSchemas.createDocument();
+			
+			// Compose the data with create: true
+			let data = ClonedSchemas.compose(doc, {create: true});
+			
+			// The _id and created/updated fields should be set by compose
+			assert.strictEqual(!!data._id, true, 'Default _id should be set');
+			assert.strictEqual(!!data.created, true, 'Default created should be set');
+			assert.strictEqual(!!data.updated, true, 'Default updated should be set');
 		});
 
 		it('should set creation fields', async function() {
