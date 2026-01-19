@@ -24,6 +24,20 @@
 * Add duplicate slug detection in Sluggable behaviour - manually provided duplicate slugs are now regenerated from the source field
 * Support self-referencing associations (like Person→Parent→Grandparent) with `recursive(n)` option - previously blocked at depth > 1
 * Fix nested OR/AND groups with association conditions in criteria - pipeline stages were incorrectly placed inside `$or`/`$and` expressions instead of being hoisted and matched separately
+* Fix Syncable broken instance after WebSocket disconnect - instances are now properly invalidated and reconnection is attempted automatically
+* Add `destroyed` property and `close` event to ClientLinkup for proper disconnect detection
+* Fix `Syncable#emitPropertyChange()` and `#watchProperty()` to use `this.state[property]` instead of `this[property]` for consistency with non-getter properties
+* Add comprehensive unit tests for Syncable class
+* Fix `Conduit#error()` crashing on WebSocket connections (can't set headers on websocket)
+* Fix "Error found on undefined" log message for WebSocket conduits
+* Add `restoring_websocket_session` event to allow plugins to restore session state (e.g., persistent login) when a WebSocket connects after server restart
+* Add error codes (`SYNCABLE_NOT_FOUND`, `PERMISSION_DENIED`) to linkup error responses for reliable error handling
+* Add exponential backoff with jitter to Syncable reconnection (prevents thundering herd on server restart)
+* Add race condition guard to prevent concurrent `startSyncLink()` calls
+* Properly invalidate old Syncable instances in `unDry()` - uses `JSON.alike()` to detect state mismatch after server restart (same version but different state), emits `replaced` event and calls `release()`
+* Log unknown Syncable errors instead of silently ignoring them
+* Add `Syncable.tryRecreate()` and `Syncable.recreate()` to allow Syncable subclasses to support recreation after server restart
+* Move Syncable into its own namespace (`Alchemy.Syncable.Syncable`) and add `Alchemy.Syncable.Specialized` abstract class for syncables that support recreation after server restart
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
