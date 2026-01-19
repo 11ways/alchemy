@@ -21,6 +21,7 @@
 * Add `distinctProblem` warnings to deprecated methods: `getMimetype`, `downloadFile`, `List`, `overrideResponseUrl`, `getSubschema`, `getFindOptions`
 * Fix internal code to use non-deprecated methods (use `setResponseUrl` internally instead of `overrideResponseUrl`)
 * Support `index: true` and `index: {options}` in field options for non-unique indexes
+* Add duplicate slug detection in Sluggable behaviour - manually provided duplicate slugs are now regenerated from the source field
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

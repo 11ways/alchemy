@@ -465,15 +465,16 @@ describe('SluggableBehaviour', function() {
 			assert.strictEqual(doc.slug, slug);
 		});
 
-		it.skip('should generate another slug for duplicates', async function() {
+		it('should generate another slug for duplicates', async function() {
 
 			var doc = sp_model.createDocument();
 
 			doc.name = 'This is a different document';
-			doc.slug = 'this-is-a-document';
+			doc.slug = 'this-is-a-document';  // This slug already exists
 
 			await doc.save();
 
+			// When manually setting a duplicate slug, it should regenerate from the name
 			assert.strictEqual(doc.slug, 'this-is-a-different-document');
 		});
 	});
