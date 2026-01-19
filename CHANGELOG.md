@@ -17,6 +17,7 @@
 * Add `--ai-devmode` flag to allow AIs to work on Alchemy projects more easily
 * Add proper error handling and logging for empty catch blocks in NoSQL datasource and FieldConfig
 * Enable previously skipped tests for model name prefixes in sort and default values in compose
+* Replace console.log/error/warn with proper log.* calls in server-only files
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
