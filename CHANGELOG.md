@@ -23,6 +23,7 @@
 * Support `index: true` and `index: {options}` in field options for non-unique indexes
 * Add duplicate slug detection in Sluggable behaviour - manually provided duplicate slugs are now regenerated from the source field
 * Support self-referencing associations (like Person→Parent→Grandparent) with `recursive(n)` option - previously blocked at depth > 1
+* Fix nested OR/AND groups with association conditions in criteria - pipeline stages were incorrectly placed inside `$or`/`$and` expressions instead of being hoisted and matched separately
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

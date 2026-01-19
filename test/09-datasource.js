@@ -437,4 +437,162 @@ describe('FieldConfig', function() {
 			// If no pipeline at all, that's also acceptable (means no $lookup)
 		});
 	});
+
+	describe('Nested OR/AND groups with associations', function() {
+
+		it('should handle OR groups without associations', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// Simple OR: firstname = 'Jelle' OR firstname = 'Griet'
+			criteria.where('firstname').equals('Jelle').or().where('firstname').equals('Griet');
+
+			let results = await Person.find('all', criteria);
+
+			// Should find both Jelle and Griet
+			assert.strictEqual(results.length, 2);
+			let names = results.map(r => r.firstname).sort();
+			assert.deepStrictEqual(names, ['Griet', 'Jelle']);
+		});
+
+		it('should handle OR groups with association conditions', async function() {
+			// This is the problematic case: when an OR group contains an association query
+			// e.g., firstname = 'Jelle' OR Parent.firstname = 'Griet'
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// Query: firstname = 'Griet' OR Parent.firstname = 'Griet'
+			// This should find:
+			// - Griet herself (firstname = 'Griet')
+			// - Jelle (whose Parent.firstname = 'Griet')
+			criteria.where('firstname').equals('Griet').or().where('Parent.firstname').equals('Griet');
+
+			let results = await Person.find('all', criteria);
+
+			// Should find both Griet (direct match) and Jelle (parent match)
+			assert.strictEqual(results.length, 2, 'Should find 2 records (Griet and Jelle)');
+			let names = results.map(r => r.firstname).sort();
+			assert.deepStrictEqual(names, ['Griet', 'Jelle']);
+		});
+
+		it('should handle nested AND within OR with associations', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// More complex: (firstname = 'Jelle' AND male = true) OR Parent.firstname = 'Griet'
+			criteria
+				.where('firstname').equals('Jelle')
+				.where('male').equals(true)
+				.or()
+				.where('Parent.firstname').equals('Griet');
+
+			let results = await Person.find('all', criteria);
+
+			// Should find Jelle (matches first condition AND has Parent.firstname = 'Griet')
+			assert.strictEqual(results.length >= 1, true, 'Should find at least 1 record');
+			let jelle = results.find(r => r.firstname === 'Jelle');
+			assert.ok(jelle, 'Should find Jelle');
+		});
+
+		it('should handle AND groups with association conditions (implicit)', async function() {
+			// By default, multiple where() calls are ANDed together
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// Query: firstname = 'Jelle' AND Parent.firstname = 'Griet'
+			criteria.where('firstname').equals('Jelle');
+			criteria.where('Parent.firstname').equals('Griet');
+
+			let results = await Person.find('all', criteria);
+
+			// Should find only Jelle (must match both conditions)
+			assert.strictEqual(results.length, 1, 'Should find exactly 1 record');
+			assert.strictEqual(results[0].firstname, 'Jelle');
+		});
+
+		it('should not find records when AND condition is not met', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// Query: firstname = 'Griet' AND Parent.firstname = 'Griet'
+			// Griet doesn't have a parent, so this should return no results
+			criteria.where('firstname').equals('Griet');
+			criteria.where('Parent.firstname').equals('Griet');
+
+			let results = await Person.find('all', criteria);
+
+			// Should find no records
+			assert.strictEqual(results.length, 0, 'Should find no records');
+		});
+
+		it('should handle deeply nested OR within AND with associations', async function() {
+			// Test: (firstname = 'Jelle' OR Parent.firstname = 'Griet') AND male = true
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// Start with an OR group
+			criteria.where('firstname').equals('Jelle').or().where('Parent.firstname').equals('Griet');
+			// Add an AND condition
+			criteria.where('male').equals(true);
+
+			let results = await Person.find('all', criteria);
+
+			// Should find Jelle:
+			// - He matches the OR (firstname = 'Jelle')
+			// - He matches the AND (male = true)
+			assert.strictEqual(results.length, 1, 'Should find exactly 1 record');
+			assert.strictEqual(results[0].firstname, 'Jelle');
+		});
+
+		it('should handle the same association used in multiple OR branches', async function() {
+			// Test: Parent.firstname = 'Griet' OR Parent.lastname = 'De Leener'
+			// Both branches use the same Parent association
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			criteria.where('Parent.firstname').equals('Griet')
+				.or()
+				.where('Parent.lastname').equals('De Leener');
+
+			let results = await Person.find('all', criteria);
+
+			// Should find Jelle (whose Parent is Griet De Leener)
+			// The lookup should only be added once
+			assert.strictEqual(results.length >= 1, true, 'Should find at least 1 record');
+			let jelle = results.find(r => r.firstname === 'Jelle');
+			assert.ok(jelle, 'Should find Jelle');
+		});
+
+		it('should generate valid pipeline for complex nested queries', async function() {
+			// Test the compiled query structure for a complex nested case
+			// This verifies that stage ordering is correct when hoisting from nested groups
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+
+			// Build: (firstname = 'Jelle' OR Parent.firstname = 'Griet') AND male = true
+			criteria.where('firstname').equals('Jelle').or().where('Parent.firstname').equals('Griet');
+			criteria.where('male').equals(true);
+
+			// Compile and verify the structure
+			let ds = Person.datasource;
+			let compiled = await ds.compileCriteria(criteria);
+
+			// Should have a pipeline (due to association)
+			assert.ok(compiled.pipeline, 'Should generate a pipeline');
+
+			// Verify stage ordering: $lookup should come before $match
+			let lookupIndex = compiled.pipeline.findIndex(s => s.$lookup);
+			let matchIndex = compiled.pipeline.findIndex(s => s.$match);
+
+			if (lookupIndex !== -1 && matchIndex !== -1) {
+				assert.ok(lookupIndex < matchIndex, 
+					'$lookup should come before $match (got lookup at ' + lookupIndex + ', match at ' + matchIndex + ')');
+			}
+
+			// The query should still return correct results
+			let results = await Person.find('all', criteria);
+			assert.strictEqual(results.length, 1, 'Should find exactly 1 record');
+			assert.strictEqual(results[0].firstname, 'Jelle');
+		});
+	});
 });
