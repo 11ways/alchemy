@@ -22,6 +22,7 @@
 * Fix internal code to use non-deprecated methods (use `setResponseUrl` internally instead of `overrideResponseUrl`)
 * Support `index: true` and `index: {options}` in field options for non-unique indexes
 * Add duplicate slug detection in Sluggable behaviour - manually provided duplicate slugs are now regenerated from the source field
+* Support self-referencing associations (like Person→Parent→Grandparent) with `recursive(n)` option - previously blocked at depth > 1
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

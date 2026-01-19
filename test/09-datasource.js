@@ -325,4 +325,116 @@ describe('FieldConfig', function() {
 			alchemy.distinct_problems.delete(expectedProblemKey);
 		});
 	});
+
+	describe('Self-referencing associations', function() {
+
+		let grandparent_id, parent_id, child_id;
+
+		before(async function() {
+			// Create a 3-level hierarchy: Grandparent → Parent → Child
+			let Person = Model.get('Person');
+
+			// Create grandparent (no parent)
+			let grandparent = Person.createDocument();
+			grandparent.firstname = 'Grandparent';
+			grandparent.lastname = 'Test';
+			await grandparent.save();
+			grandparent_id = grandparent._id;
+
+			// Create parent (parent: grandparent)
+			let parent = Person.createDocument();
+			parent.firstname = 'ParentPerson';
+			parent.lastname = 'Test';
+			parent.parent_id = grandparent_id;
+			await parent.save();
+			parent_id = parent._id;
+
+			// Create child (parent: parent)
+			let child = Person.createDocument();
+			child.firstname = 'ChildPerson';
+			child.lastname = 'Test';
+			child.parent_id = parent_id;
+			await child.save();
+			child_id = child._id;
+		});
+
+		after(async function() {
+			// Clean up test data
+			let Person = Model.get('Person');
+			if (child_id) await Person.remove({_id: child_id});
+			if (parent_id) await Person.remove({_id: parent_id});
+			if (grandparent_id) await Person.remove({_id: grandparent_id});
+		});
+
+		it('should populate self-referencing associations at depth 1', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+			criteria.where('firstname').equals('ChildPerson');
+			criteria.populate('Parent');
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should find ChildPerson');
+			assert.strictEqual(!!records[0].Parent, true, 'Parent should be populated');
+			assert.strictEqual(records[0].Parent.firstname, 'ParentPerson', 'Parent should be ParentPerson');
+		});
+
+		it('should populate self-referencing associations at depth 2 with recursive option', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+			criteria.where('firstname').equals('ChildPerson');
+			criteria.populate('Parent');
+			criteria.recursive(2);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should find ChildPerson');
+			assert.strictEqual(!!records[0].Parent, true, 'Parent should be populated');
+			assert.strictEqual(records[0].Parent.firstname, 'ParentPerson', 'Parent should be ParentPerson');
+			
+			// This is the key test - Parent.Parent should also be populated
+			assert.strictEqual(!!records[0].Parent.Parent, true, 'Parent.Parent (grandparent) should be populated');
+			assert.strictEqual(records[0].Parent.Parent.firstname, 'Grandparent', 'Grandparent should be correct');
+		});
+
+		it('should use $lookup for self-referencing at depth 1 (performance)', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+			criteria.where('firstname').equals('ChildPerson');
+			criteria.populate('Parent');
+			// No recursive() call - defaults to depth 1
+
+			// Compile the criteria to check if it uses $lookup
+			let ds = Person.datasource;
+			let compiled = await ds.compileCriteria(criteria);
+
+			// At depth 1, should use $lookup optimization
+			assert.strictEqual(!!compiled.pipeline, true, 'Should use pipeline for depth 1');
+			let has_lookup = compiled.pipeline.some(stage => stage.$lookup);
+			assert.strictEqual(has_lookup, true, 'Should use $lookup at depth 1');
+		});
+
+		it('should skip $lookup for self-referencing at depth > 1 (falls back to N+1)', async function() {
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+			criteria.where('firstname').equals('ChildPerson');
+			criteria.populate('Parent');
+			criteria.recursive(2);
+
+			// Compile the criteria to check query strategy
+			let ds = Person.datasource;
+			let compiled = await ds.compileCriteria(criteria);
+
+			// At depth > 1 for self-referencing, should NOT use $lookup
+			// (because $lookup can't handle recursive association loading)
+			if (compiled.pipeline) {
+				let has_parent_lookup = compiled.pipeline.some(stage => 
+					stage.$lookup && stage.$lookup.as === 'Parent'
+				);
+				assert.strictEqual(has_parent_lookup, false, 
+					'Should NOT use $lookup for self-referencing Parent at depth > 1');
+			}
+			// If no pipeline at all, that's also acceptable (means no $lookup)
+		});
+	});
 });
