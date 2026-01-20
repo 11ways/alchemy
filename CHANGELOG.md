@@ -42,6 +42,7 @@
 * Add support for sorting by associated model fields (e.g., `criteria.sort(['Project.name', 1])`) - previously the association prefix was silently stripped
 * Fix nested schema associations with alias names - `getCriteriaForAssociation()` now correctly uses `options.associations` instead of only checking the model's schema
 * Fix route section middleware order - parent section middleware now correctly executes before child section middleware
+* Add `register_error` option to `distinctProblem()` - when true, also calls `registerError()` to report to error tracking services (Sentry, Glitchtip)
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

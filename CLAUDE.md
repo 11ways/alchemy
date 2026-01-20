@@ -532,10 +532,19 @@ Key methods:
 
 ```javascript
 // Log warnings only once (avoid log spam)
+// Options: repeat_after (ms), error (Error object), register_error (bool)
 alchemy.distinctProblem('unique-id', 'Warning message', {repeat_after: 60000});
 
-// Register errors for logging and error tracking services (Glitchtip, Sentry, etc.)
-// Use this in catch blocks instead of log.error() for proper error handling
+// Log AND report to error tracking services (Sentry, Glitchtip)
+// Use register_error: true to also call registerError()
+alchemy.distinctProblem('error-id', 'Error message', {
+    error: err,
+    repeat_after: 60000,
+    register_error: true  // Also sends to Sentry/Glitchtip
+});
+
+// Register errors directly with error tracking services (Sentry, Glitchtip)
+// Use this in catch blocks for errors that should always be reported
 alchemy.registerError(err, {context: 'Description of what failed'});
 
 // Get association config
