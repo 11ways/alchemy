@@ -52,6 +52,7 @@
 * Add `toEnumEntry()` method to settings Group class
 * Add `Field#toJsonSchema()` and `Schema#toJsonSchema()` methods for converting Alchemy schemas to JSON Schema format (useful for MCP tool definitions, API documentation)
 * Add `option_prefix` option to `toJsonSchema()` for context-specific titles/descriptions (e.g., `mcp_description` for AI tooling vs `description` for UI)
+* Add `conduit_class` option to routes - allows routes to specify a custom Conduit class that will be instantiated and used instead of the default HTTP conduit
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
