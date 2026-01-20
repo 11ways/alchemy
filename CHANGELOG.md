@@ -44,6 +44,7 @@
 * Fix route section middleware order - parent section middleware now correctly executes before child section middleware
 * Add `register_error` option to `distinctProblem()` - when true, also calls `registerError()` to report to error tracking services (Sentry, Glitchtip)
 * Add error logging for unexpected `fs.stat` errors in `findAssetPath()` (permission denied, disk errors, etc.) - errors are reported to Sentry/Glitchtip via `registerError`, file-not-found errors are correctly ignored
+* Fix silent error handling in socket helper - undry failures now call callbacks with errors instead of silently dropping responses (which caused hanging promises)
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
