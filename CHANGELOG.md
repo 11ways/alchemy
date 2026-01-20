@@ -45,6 +45,11 @@
 * Add `register_error` option to `distinctProblem()` - when true, also calls `registerError()` to report to error tracking services (Sentry, Glitchtip)
 * Add error logging for unexpected `fs.stat` errors in `findAssetPath()` (permission denied, disk errors, etc.) - errors are reported to Sentry/Glitchtip via `registerError`, file-not-found errors are correctly ignored
 * Fix silent error handling in socket helper - undry failures now call callbacks with errors instead of silently dropping responses (which caused hanging promises)
+* Fix silent error when saving associated records - errors were silently swallowed, making saves appear successful when they failed
+* Fix silent error when fetching associated records - errors were logged but never returned, causing code to hang
+* Fix silent errors in fallback datasource's `_update` method - database errors were silently swallowed
+* Implement `add_groups` functionality in settings `_addToMap` (was TODO) - now properly adds groups to the map
+* Add `toEnumEntry()` method to settings Group class
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
