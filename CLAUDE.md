@@ -585,7 +585,32 @@ STAGES.getStage('datasource').addPostTask(() => {
 
 ## Gotchas
 
-1. **`this.getModel()` vs `Model.get()`:**
+1. **Conduit header access uses lowercase keys:**
+   ```javascript
+   conduit.headers['x-custom-header']  // Always lowercase, regardless of HTTP request casing
+   ```
+
+2. **Setting HTTP status code - use property assignment:**
+   ```javascript
+   conduit.status = 401;  // Correct
+   // There is no setter method like conduit.setStatus()
+   ```
+
+3. **`alchemy.system_settings.getPath()` returns SettingValue, not raw value:**
+   ```javascript
+   let setting = alchemy.system_settings.getPath('some.path');
+   let value = setting.get();  // Must call .get() to extract actual value
+   ```
+
+4. **`globalThis.alchemy` vs bare `alchemy` in early-loading code:**
+   ```javascript
+   // In code that may run before alchemy is defined:
+   globalThis.alchemy?.doSomething();  // Safe
+   alchemy?.doSomething();             // ReferenceError if alchemy not defined yet
+   // Optional chaining doesn't protect against undeclared variables
+   ```
+
+5. **`this.getModel()` vs `Model.get()`:**
    ```javascript
    // In a controller/model - USE THIS:
    let Employee = this.getModel('Employee');
@@ -600,9 +625,9 @@ STAGES.getStage('datasource').addPostTask(() => {
    // - Only use in standalone scripts or when you explicitly don't want conduit
    ```
 
-2. **constitute() timing:** Schema fields must be added in `constitute()`, not constructor - this ensures proper class hierarchy setup
+6. **constitute() timing:** Schema fields must be added in `constitute()`, not constructor - this ensures proper class hierarchy setup
 
-3. **Class access patterns:**
+7. **Class access patterns:**
    ```javascript
    this.getModel('Employee')          // In controllers/models - preferred
    Model.get('Employee')              // Standalone instance (no conduit)
@@ -610,11 +635,11 @@ STAGES.getStage('datasource').addPostTask(() => {
    Classes.Alchemy.Model.Employee     // Direct class access
    ```
 
-4. **Criteria is mutable:** Methods like `where()`, `sort()` modify the criteria in place and return `this` for chaining
+8. **Criteria is mutable:** Methods like `where()`, `sort()` modify the criteria in place and return `this` for chaining
 
-5. **toHawkejs vs toDry:** `toHawkejs` transforms classes (Server→Client Document) during cloning; `toDry` serializes to JSON string. They serve different purposes and both are needed
+9. **toHawkejs vs toDry:** `toHawkejs` transforms classes (Server→Client Document) during cloning; `toDry` serializes to JSON string. They serve different purposes and both are needed
 
-6. **Client Document location:** Client Document class is in `lib/app/helper_model/document.js` (shared server+client), not `lib/class/document.js` (server-only)
+10. **Client Document location:** Client Document class is in `lib/app/helper_model/document.js` (shared server+client), not `lib/class/document.js` (server-only)
 
 ## AI Development Mode
 
