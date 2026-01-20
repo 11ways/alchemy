@@ -1613,3 +1613,793 @@ describe('Field.Schema', function() {
 
 	});
 });
+
+describe('Field#toJsonSchema()', function() {
+
+	describe('basic field types', function() {
+
+		it('should convert String field to JSON Schema', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {
+				description: 'The user name'
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.type[1], 'null');
+			assert.strictEqual(json_schema.title, 'Name');
+			assert.strictEqual(json_schema.description, 'The user name');
+		});
+
+		it('should convert Number field to JSON Schema', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Number(schema, 'age');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'number');
+		});
+
+		it('should convert Boolean field to JSON Schema', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Boolean(schema, 'active');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'boolean');
+		});
+
+		it('should convert Integer field to JSON Schema', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Integer(schema, 'count');
+
+			let json_schema = field.toJsonSchema();
+
+			// Integer should be type: integer per JSON Schema spec
+			assert.strictEqual(json_schema.type[0], 'integer');
+		});
+	});
+
+	describe('is_array handling', function() {
+
+		it('should wrap in array schema when is_array is true', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'tags', {
+				is_array: true
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'array');
+			assert.strictEqual(json_schema.items.type[0], 'string');
+		});
+	});
+
+	describe('is_nullable handling', function() {
+
+		it('should include null in type array by default', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.ok(Array.isArray(json_schema.type));
+			assert.strictEqual(json_schema.type[1], 'null');
+		});
+
+		it('should not include null when is_nullable is false', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {
+				is_nullable: false
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'string');
+		});
+	});
+
+	describe('title, description, default', function() {
+
+		it('should include title from field name', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'user_name');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.title, 'User name');
+		});
+
+		it('should use custom title when provided', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {
+				title: 'Full Name'
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.title, 'Full Name');
+		});
+
+		it('should include description when provided', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {
+				description: 'The full name of the person'
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.description, 'The full name of the person');
+		});
+
+		it('should include default value when provided (non-function)', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'status', {
+				default: 'pending'
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.default, 'pending');
+		});
+
+		it('should not include function defaults', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'code', {
+				default: () => Math.random().toString()
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.default, undefined);
+		});
+	});
+
+	describe('Enum field', function() {
+
+		it('should include enum values in JSON Schema', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Enum(schema, 'status', {
+				values: {
+					active: 'Active',
+					inactive: 'Inactive',
+					pending: 'Pending'
+				}
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.ok(Array.isArray(json_schema.enum), 'enum should be an array, got: ' + JSON.stringify(json_schema.enum));
+			assert.strictEqual(json_schema.enum.length, 3, 'should have 3 enum values, got: ' + JSON.stringify(json_schema.enum));
+			assert.ok(json_schema.enum.includes('active'), 'should include active, got: ' + JSON.stringify(json_schema.enum));
+			assert.ok(json_schema.enum.includes('inactive'));
+			assert.ok(json_schema.enum.includes('pending'));
+		});
+	});
+
+	describe('date/time fields', function() {
+
+		it('should add format: date for LocalDate field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.LocalDate(schema, 'birth_date');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'date');
+		});
+
+		it('should add format: date-time for LocalDateTime field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.LocalDateTime(schema, 'created_at');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'date-time');
+		});
+
+		it('should add format: time for LocalTime field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.LocalTime(schema, 'start_time');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'time');
+		});
+
+		it('should add format: date for Date field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Date(schema, 'event_date');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'date');
+		});
+
+		it('should add format: date-time for Datetime field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Datetime(schema, 'updated_at');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'date-time');
+		});
+	});
+
+	describe('special fields', function() {
+
+		it('should add format: objectid for ObjectId field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.ObjectId(schema, 'ref_id');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'objectid');
+			assert.ok(json_schema.pattern);
+		});
+
+		it('should add format: uri for Url field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Url(schema, 'website');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.format, 'uri');
+		});
+
+		it('should add contentMediaType for Html field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Html(schema, 'content');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.contentMediaType, 'text/html');
+		});
+
+		it('should add writeOnly for Password field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Password(schema, 'password');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.writeOnly, true);
+			assert.strictEqual(json_schema.format, 'password');
+		});
+
+		it('should create GeoJSON schema for Geopoint field', function() {
+			let schema = new Classes.Alchemy.Schema();
+			schema.setName('TestSchema');
+			let field = new Classes.Alchemy.Field.Geopoint(schema, 'location');
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'object');
+			assert.ok(json_schema.properties);
+			assert.ok(json_schema.properties.type);
+			assert.ok(json_schema.properties.coordinates);
+			assert.deepStrictEqual(json_schema.properties.type.enum, ['Point']);
+		});
+	});
+
+	describe('Schema field (nested schemas)', function() {
+
+		it('should delegate to nested schema toJsonSchema()', function() {
+			let parent_schema = new Classes.Alchemy.Schema();
+			parent_schema.setName('Parent');
+
+			let address_schema = alchemy.createSchema();
+			address_schema.addField('street', 'String');
+			address_schema.addField('city', 'String');
+			address_schema.addField('zip', 'String');
+
+			let field = new Classes.Alchemy.Field.Schema(parent_schema, 'address', {
+				schema: address_schema
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'object');
+			assert.ok(json_schema.properties);
+			assert.ok(json_schema.properties.street);
+			assert.ok(json_schema.properties.city);
+			assert.ok(json_schema.properties.zip);
+		});
+
+		it('should handle array schema fields', function() {
+			let parent_schema = new Classes.Alchemy.Schema();
+			parent_schema.setName('Parent');
+
+			let item_schema = alchemy.createSchema();
+			item_schema.addField('name', 'String');
+			item_schema.addField('quantity', 'Integer');
+
+			let field = new Classes.Alchemy.Field.Schema(parent_schema, 'items', {
+				schema: item_schema,
+				is_array: true
+			});
+
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'array');
+			assert.ok(json_schema.items);
+			assert.strictEqual(json_schema.items.type, 'object');
+			assert.ok(json_schema.items.properties.name);
+			assert.ok(json_schema.items.properties.quantity);
+		});
+	});
+});
+
+describe('Schema#toJsonSchema()', function() {
+
+	it('should convert a full schema to JSON Schema', function() {
+		let schema = alchemy.createSchema();
+		schema.setName('Person');
+		schema.addField('name', 'String', {description: 'Full name'});
+		schema.addField('age', 'Integer');
+		schema.addField('email', 'String');
+		schema.addField('status', 'Enum', {values: {active: 'Active', inactive: 'Inactive'}});
+
+		let json_schema = schema.toJsonSchema();
+
+		assert.strictEqual(json_schema.type, 'object');
+		assert.strictEqual(json_schema.title, 'Person');
+		assert.ok(json_schema.properties);
+		assert.ok(json_schema.properties.name);
+		assert.ok(json_schema.properties.age);
+		assert.ok(json_schema.properties.email);
+		assert.ok(json_schema.properties.status);
+		assert.ok(json_schema.properties.status.enum);
+	});
+
+	it('should detect required fields from required option', function() {
+		let schema = alchemy.createSchema();
+		schema.setName('User');
+		schema.addField('username', 'String', {required: true});
+		schema.addField('email', 'String', {required: true});
+		schema.addField('bio', 'String');
+
+		let json_schema = schema.toJsonSchema();
+
+		assert.ok(Array.isArray(json_schema.required));
+		assert.ok(json_schema.required.includes('username'));
+		assert.ok(json_schema.required.includes('email'));
+		assert.ok(!json_schema.required.includes('bio'));
+	});
+
+	it('should skip private fields by default', function() {
+		let schema = alchemy.createSchema();
+		schema.setName('Secure');
+		schema.addField('public_data', 'String');
+		schema.addField('private_data', 'String', {is_private: true});
+
+		let json_schema = schema.toJsonSchema();
+
+		assert.ok(json_schema.properties.public_data);
+		assert.strictEqual(json_schema.properties.private_data, undefined);
+	});
+
+	it('should include private fields when requested', function() {
+		let schema = alchemy.createSchema();
+		schema.setName('Secure');
+		schema.addField('public_data', 'String');
+		schema.addField('private_data', 'String', {is_private: true});
+
+		let json_schema = schema.toJsonSchema({include_private: true});
+
+		assert.ok(json_schema.properties.public_data);
+		assert.ok(json_schema.properties.private_data);
+	});
+
+	it('should handle nested schemas', function() {
+		let address_schema = alchemy.createSchema();
+		address_schema.addField('street', 'String');
+		address_schema.addField('city', 'String');
+
+		let person_schema = alchemy.createSchema();
+		person_schema.setName('Person');
+		person_schema.addField('name', 'String');
+		person_schema.addField('address', 'Schema', {schema: address_schema});
+
+		let json_schema = person_schema.toJsonSchema();
+
+		assert.strictEqual(json_schema.type, 'object');
+		assert.ok(json_schema.properties.name);
+		assert.ok(json_schema.properties.address);
+		assert.strictEqual(json_schema.properties.address.type, 'object');
+		assert.ok(json_schema.properties.address.properties.street);
+		assert.ok(json_schema.properties.address.properties.city);
+	});
+
+	it('should handle array of nested schemas', function() {
+		let item_schema = alchemy.createSchema();
+		item_schema.addField('name', 'String');
+		item_schema.addField('price', 'Number');
+
+		let order_schema = alchemy.createSchema();
+		order_schema.setName('Order');
+		order_schema.addField('order_number', 'String');
+		order_schema.addField('items', 'Schema', {schema: item_schema, is_array: true});
+
+		let json_schema = order_schema.toJsonSchema();
+
+		assert.ok(json_schema.properties.items);
+		assert.strictEqual(json_schema.properties.items.type, 'array');
+		assert.ok(json_schema.properties.items.items);
+		assert.strictEqual(json_schema.properties.items.items.type, 'object');
+	});
+});
+
+describe('JSON Schema specification conformance', function() {
+
+	// These tests verify that our toJsonSchema() output matches official
+	// JSON Schema examples from https://json-schema.org/learn/miscellaneous-examples
+	//
+	// LIMITATIONS (documented for future implementation):
+	// - minimum/maximum: Not yet supported on fields. Tests skip these constraints.
+	// - pattern: Not yet supported on fields. Tests skip regex pattern constraints.
+	// - Auto-generated titles: Our fields auto-generate titles from field names.
+	//   To match official examples exactly (which don't include titles), we strip
+	//   titles from our output when comparing.
+
+	describe('Basic Person Schema (Example 1)', function() {
+
+		// Target official JSON Schema:
+		// {
+		//   "type": "object",
+		//   "properties": {
+		//     "firstName": { "type": "string", "description": "The person's first name." },
+		//     "lastName": { "type": "string", "description": "The person's last name." },
+		//     "age": { "type": "integer", "description": "Age in years which must be equal to or greater than zero.", "minimum": 0 }
+		//   }
+		// }
+
+		it('should produce spec-compliant output for a basic person schema', function() {
+			let schema = alchemy.createSchema();
+			schema.addField('firstName', 'String', {
+				description: "The person's first name.",
+				is_nullable: false
+			});
+			schema.addField('lastName', 'String', {
+				description: "The person's last name.",
+				is_nullable: false
+			});
+			schema.addField('age', 'Integer', {
+				description: 'Age in years which must be equal to or greater than zero.',
+				is_nullable: false
+				// Note: minimum: 0 is not yet supported
+			});
+
+			let json_schema = schema.toJsonSchema();
+
+			// Verify the overall structure
+			assert.strictEqual(json_schema.type, 'object');
+			assert.ok(json_schema.properties);
+
+			// Verify firstName field
+			let firstName = json_schema.properties.firstName;
+			assert.strictEqual(firstName.type, 'string', 'firstName should be type string');
+			assert.strictEqual(firstName.description, "The person's first name.");
+
+			// Verify lastName field
+			let lastName = json_schema.properties.lastName;
+			assert.strictEqual(lastName.type, 'string', 'lastName should be type string');
+			assert.strictEqual(lastName.description, "The person's last name.");
+
+			// Verify age field - critical: should be "integer" not "number"
+			let age = json_schema.properties.age;
+			assert.strictEqual(age.type, 'integer', 'age should be type integer (not number)');
+			assert.strictEqual(age.description, 'Age in years which must be equal to or greater than zero.');
+			// Note: minimum constraint is not yet supported, so we don't test for it
+		});
+
+		it('should exactly match simplified official schema (without titles)', function() {
+			let schema = alchemy.createSchema();
+			schema.addField('firstName', 'String', {
+				description: "The person's first name.",
+				is_nullable: false
+			});
+			schema.addField('lastName', 'String', {
+				description: "The person's last name.",
+				is_nullable: false
+			});
+			schema.addField('age', 'Integer', {
+				description: 'Age in years which must be equal to or greater than zero.',
+				is_nullable: false
+			});
+
+			let json_schema = schema.toJsonSchema();
+
+			// Remove auto-generated titles for comparison with official examples
+			delete json_schema.title;
+			delete json_schema.properties.firstName.title;
+			delete json_schema.properties.lastName.title;
+			delete json_schema.properties.age.title;
+
+			// Target schema (without minimum which we don't support yet)
+			let expected = {
+				type: 'object',
+				properties: {
+					firstName: {
+						type: 'string',
+						description: "The person's first name."
+					},
+					lastName: {
+						type: 'string',
+						description: "The person's last name."
+					},
+					age: {
+						type: 'integer',
+						description: 'Age in years which must be equal to or greater than zero.'
+					}
+				}
+			};
+
+			assert.deepStrictEqual(json_schema, expected);
+		});
+	});
+
+	describe('Complex Object with Nested Properties (Example 2)', function() {
+
+		// Target official JSON Schema:
+		// {
+		//   "type": "object",
+		//   "properties": {
+		//     "name": { "type": "string" },
+		//     "age": { "type": "integer", "minimum": 0 },
+		//     "address": {
+		//       "type": "object",
+		//       "properties": {
+		//         "street": { "type": "string" },
+		//         "city": { "type": "string" },
+		//         "state": { "type": "string" },
+		//         "postalCode": { "type": "string", "pattern": "\\d{5}" }
+		//       },
+		//       "required": ["street", "city", "state", "postalCode"]
+		//     },
+		//     "hobbies": { "type": "array", "items": { "type": "string" } }
+		//   },
+		//   "required": ["name", "age"]
+		// }
+
+		it('should produce spec-compliant output for nested object schema', function() {
+			// Create address subschema
+			let address_schema = alchemy.createSchema();
+			address_schema.addField('street', 'String', {is_nullable: false, required: true});
+			address_schema.addField('city', 'String', {is_nullable: false, required: true});
+			address_schema.addField('state', 'String', {is_nullable: false, required: true});
+			address_schema.addField('postalCode', 'String', {
+				is_nullable: false,
+				required: true
+				// Note: pattern: "\\d{5}" is not yet supported
+			});
+
+			// Create main schema
+			let schema = alchemy.createSchema();
+			schema.addField('name', 'String', {is_nullable: false, required: true});
+			schema.addField('age', 'Integer', {
+				is_nullable: false,
+				required: true
+				// Note: minimum: 0 is not yet supported
+			});
+			schema.addField('address', 'Schema', {
+				schema: address_schema,
+				is_nullable: false
+			});
+			schema.addField('hobbies', 'String', {
+				is_array: true,
+				is_nullable: false
+			});
+
+			let json_schema = schema.toJsonSchema();
+
+			// Verify the overall structure
+			assert.strictEqual(json_schema.type, 'object');
+			assert.ok(json_schema.properties);
+
+			// Verify name field
+			assert.strictEqual(json_schema.properties.name.type, 'string');
+
+			// Verify age field - must be "integer"
+			assert.strictEqual(json_schema.properties.age.type, 'integer');
+
+			// Verify address is nested object
+			let address = json_schema.properties.address;
+			assert.strictEqual(address.type, 'object');
+			assert.ok(address.properties);
+			assert.strictEqual(address.properties.street.type, 'string');
+			assert.strictEqual(address.properties.city.type, 'string');
+			assert.strictEqual(address.properties.state.type, 'string');
+			assert.strictEqual(address.properties.postalCode.type, 'string');
+
+			// Verify address required fields
+			assert.ok(Array.isArray(address.required), 'address should have required array');
+			assert.ok(address.required.includes('street'));
+			assert.ok(address.required.includes('city'));
+			assert.ok(address.required.includes('state'));
+			assert.ok(address.required.includes('postalCode'));
+
+			// Verify hobbies is array of strings
+			let hobbies = json_schema.properties.hobbies;
+			assert.strictEqual(hobbies.type, 'array');
+			assert.ok(hobbies.items);
+			assert.strictEqual(hobbies.items.type, 'string');
+
+			// Verify top-level required fields
+			assert.ok(Array.isArray(json_schema.required));
+			assert.ok(json_schema.required.includes('name'));
+			assert.ok(json_schema.required.includes('age'));
+		});
+
+		it('should exactly match simplified official schema (without titles and unsupported constraints)', function() {
+			// Create address subschema
+			let address_schema = alchemy.createSchema();
+			address_schema.addField('street', 'String', {is_nullable: false, required: true});
+			address_schema.addField('city', 'String', {is_nullable: false, required: true});
+			address_schema.addField('state', 'String', {is_nullable: false, required: true});
+			address_schema.addField('postalCode', 'String', {is_nullable: false, required: true});
+
+			// Create main schema
+			let schema = alchemy.createSchema();
+			schema.addField('name', 'String', {is_nullable: false, required: true});
+			schema.addField('age', 'Integer', {is_nullable: false, required: true});
+			schema.addField('address', 'Schema', {schema: address_schema, is_nullable: false});
+			schema.addField('hobbies', 'String', {is_array: true, is_nullable: false});
+
+			let json_schema = schema.toJsonSchema();
+
+			// Helper to recursively remove titles
+			function removeTitles(obj) {
+				if (!obj || typeof obj !== 'object') return obj;
+				if (Array.isArray(obj)) return obj.map(removeTitles);
+
+				let result = {};
+				for (let key in obj) {
+					if (key === 'title') continue;
+					result[key] = removeTitles(obj[key]);
+				}
+				return result;
+			}
+
+			json_schema = removeTitles(json_schema);
+
+			// Target schema (without pattern/minimum which we don't support yet)
+			let expected = {
+				type: 'object',
+				properties: {
+					name: {type: 'string'},
+					age: {type: 'integer'},
+					address: {
+						type: 'object',
+						properties: {
+							street: {type: 'string'},
+							city: {type: 'string'},
+							state: {type: 'string'},
+							postalCode: {type: 'string'}
+						},
+						required: ['street', 'city', 'state', 'postalCode']
+					},
+					hobbies: {
+						type: 'array',
+						items: {type: 'string'}
+					}
+				},
+				required: ['name', 'age']
+			};
+
+			assert.deepStrictEqual(json_schema, expected);
+		});
+	});
+
+	describe('Integer vs Number type distinction', function() {
+
+		it('should use "integer" for Integer fields', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.Integer(schema, 'count', {is_nullable: false});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'integer');
+		});
+
+		it('should use "number" for Number fields', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.Number(schema, 'price', {is_nullable: false});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'number');
+		});
+
+		it('should use "integer" for BigInt fields', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.BigInt(schema, 'large_num', {is_nullable: false});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'integer');
+		});
+
+		it('should use "number" for Decimal fields', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.Decimal(schema, 'amount', {is_nullable: false});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'number');
+		});
+
+		it('should use "number" for FixedDecimal fields', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.FixedDecimal(schema, 'money', {
+				scale: 2,
+				is_nullable: false
+			});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'number');
+		});
+	});
+
+	describe('Nullable handling', function() {
+
+		it('should produce array type with null when is_nullable is true (default)', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name');
+			let json_schema = field.toJsonSchema();
+
+			assert.ok(Array.isArray(json_schema.type));
+			assert.strictEqual(json_schema.type[0], 'string');
+			assert.strictEqual(json_schema.type[1], 'null');
+		});
+
+		it('should produce simple type when is_nullable is false', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {is_nullable: false});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'string');
+		});
+
+		it('should produce simple integer type when is_nullable is false', function() {
+			let schema = alchemy.createSchema();
+			let field = new Classes.Alchemy.Field.Integer(schema, 'count', {is_nullable: false});
+			let json_schema = field.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'integer');
+		});
+	});
+
+	describe('Required fields detection', function() {
+
+		it('should include field in required array when required: true', function() {
+			let schema = alchemy.createSchema();
+			schema.addField('name', 'String', {required: true});
+			schema.addField('optional_field', 'String');
+
+			let json_schema = schema.toJsonSchema();
+
+			assert.ok(Array.isArray(json_schema.required));
+			assert.strictEqual(json_schema.required.length, 1);
+			assert.ok(json_schema.required.includes('name'));
+		});
+
+		it('should detect required from NotEmpty rule', function() {
+			let schema = alchemy.createSchema();
+			schema.addField('name', 'String');
+			schema.addField('email', 'String');
+			schema.addRule('not_empty', {fields: ['name']});
+
+			let json_schema = schema.toJsonSchema();
+
+			assert.ok(Array.isArray(json_schema.required));
+			assert.ok(json_schema.required.includes('name'));
+			assert.ok(!json_schema.required.includes('email'));
+		});
+	});
+});

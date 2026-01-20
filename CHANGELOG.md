@@ -50,6 +50,7 @@
 * Fix silent errors in fallback datasource's `_update` method - database errors were silently swallowed
 * Implement `add_groups` functionality in settings `_addToMap` (was TODO) - now properly adds groups to the map
 * Add `toEnumEntry()` method to settings Group class
+* Add `Field#toJsonSchema()` and `Schema#toJsonSchema()` methods for converting Alchemy schemas to JSON Schema format (useful for MCP tool definitions, API documentation)
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
