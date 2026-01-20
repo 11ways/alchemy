@@ -40,6 +40,7 @@
 * Move Syncable into its own namespace (`Alchemy.Syncable.Syncable`) and add `Alchemy.Syncable.Specialized` abstract class for syncables that support recreation after server restart
 * Fix MongoDB 6 driver compatibility - remove dead code using removed `fullResult` option and handle write errors as exceptions instead of result properties
 * Add support for sorting by associated model fields (e.g., `criteria.sort(['Project.name', 1])`) - previously the association prefix was silently stripped
+* Fix nested schema associations with alias names - `getCriteriaForAssociation()` now correctly uses `options.associations` instead of only checking the model's schema
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

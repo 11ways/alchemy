@@ -1449,4 +1449,116 @@ describe('Model', function() {
 			assert.strictEqual(!!data.updated, true, 'The `updated` field was not set');
 		});
 	});
+
+	describe('Nested schema with aliased associations', function() {
+
+		let ArticleWithMetadata,
+		    author_person_id,
+		    article_id;
+
+		it('should create a model with a nested schema that has an aliased belongsTo', function(done) {
+
+			// Create the model with a nested schema containing an aliased association
+			ArticleWithMetadata = Function.inherits('Alchemy.Model', 'ArticleWithMetadata');
+
+			ArticleWithMetadata.constitute(function addFields() {
+
+				// Create a nested schema with an aliased association
+				// The alias 'Author' is different from the model name 'Person'
+				let metadata_schema = alchemy.createSchema();
+				metadata_schema.belongsTo('Author', 'Person');  // alias = 'Author', model = 'Person'
+				metadata_schema.addField('published_at', 'Datetime');
+
+				this.addField('title', 'String');
+				this.addField('content', 'Text');
+				this.addField('metadata', 'Schema', {schema: metadata_schema});
+
+				done();
+			});
+		});
+
+		it('should save test data using direct datasource insert', async function() {
+
+			// First create a Person to be the author
+			let Person = Model.get('Person');
+			let author = Person.createDocument();
+			author.firstname = 'TestAuthor';
+			author.lastname = 'ForArticle';
+			await author.save();
+			author_person_id = author._id;
+
+			// Use direct database insert to bypass the valueToApp processing
+			// This allows us to test the find operation separately
+			let Article = Model.get('ArticleWithMetadata');
+			let datasource = Article.datasource;
+			
+			let data = {
+				_id: alchemy.ObjectId(),
+				title: 'Test Article With Metadata',
+				content: 'This is test content',
+				metadata: {
+					author_id: author_person_id,
+					published_at: new Date()
+				},
+				created: new Date(),
+				updated: new Date()
+			};
+
+			article_id = data._id;
+
+			// Insert directly into the database to avoid triggering the bug during save
+			let collection = await datasource.collection(Article.table);
+			await collection.insertOne(data);
+		});
+
+		it('should populate the aliased association in nested schema with recursive: 1', function(done) {
+
+			let Article = Model.get('ArticleWithMetadata');
+
+			// Find the article with recursive: 1 to trigger association population
+			// This is where the bug manifests: getAliasModel('Author') looks at the
+			// model's schema.associations instead of the nested schema's associations,
+			// causing "Model 'Author' could not be found" error
+			let criteria = Article.find();
+			criteria.where('title').equals('Test Article With Metadata');
+			criteria.setOption('recursive', 1);
+
+			Article.find('first', criteria, function(err, article) {
+
+				// The bug causes an error "Model 'Author' could not be found"
+				// When fixed, this should not throw an error
+				if (err) {
+					// This is the bug manifestation - check if it's the specific bug we're testing
+					if (err.message && err.message.includes('Model "Author" could not be found')) {
+						return done(new Error(
+							'Bug: getAliasModel fails for aliased associations in nested schemas. ' +
+							'Error: ' + err.message + '. ' +
+							'The getAliasModel method should use the nested schema\'s associations ' +
+							'(passed via criteria.options.associations) instead of the model\'s schema.associations.'
+						));
+					}
+					return done(err);
+				}
+
+				try {
+					assert.strictEqual(!!article, true, 'Article should be found');
+					assert.strictEqual(article.title, 'Test Article With Metadata');
+
+					// The metadata should have the Author association populated
+					assert.strictEqual(!!article.metadata, true, 'metadata should exist');
+					assert.strictEqual(String(article.metadata.author_id), String(author_person_id), 'author_id should match');
+
+					// This is the actual test for the bug:
+					// The Author association should be populated in the metadata
+					assert.strictEqual(!!article.metadata.Author, true, 'Author association should be populated in metadata');
+					assert.strictEqual(article.metadata.Author.firstname, 'TestAuthor', 'Author firstname should match');
+					assert.strictEqual(article.metadata.Author.lastname, 'ForArticle', 'Author lastname should match');
+
+					done();
+				} catch (assertErr) {
+					done(assertErr);
+				}
+			});
+		});
+	});
 });
