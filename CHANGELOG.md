@@ -43,6 +43,7 @@
 * Fix nested schema associations with alias names - `getCriteriaForAssociation()` now correctly uses `options.associations` instead of only checking the model's schema
 * Fix route section middleware order - parent section middleware now correctly executes before child section middleware
 * Add `register_error` option to `distinctProblem()` - when true, also calls `registerError()` to report to error tracking services (Sentry, Glitchtip)
+* Add error logging for unexpected `fs.stat` errors in `findAssetPath()` (permission denied, disk errors, etc.) - errors are reported to Sentry/Glitchtip via `registerError`, file-not-found errors are correctly ignored
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
