@@ -38,6 +38,7 @@
 * Log unknown Syncable errors instead of silently ignoring them
 * Add `Syncable.tryRecreate()` and `Syncable.recreate()` to allow Syncable subclasses to support recreation after server restart
 * Move Syncable into its own namespace (`Alchemy.Syncable.Syncable`) and add `Alchemy.Syncable.Specialized` abstract class for syncables that support recreation after server restart
+* Fix MongoDB 6 driver compatibility - remove dead code using removed `fullResult` option and handle write errors as exceptions instead of result properties
 
 ## 1.4.0-alpha.12 (2025-07-11)
 
