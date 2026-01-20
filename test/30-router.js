@@ -186,4 +186,72 @@ describe('Router', function() {
 		});
 	});
 
+	describe('nested section middleware order', function() {
+
+		// Array to track middleware execution order
+		// We need it to be accessible globally so the middleware and handler can access it
+		global.middleware_execution_order = [];
+
+		before(function() {
+			// Create the action on the Static controller
+			StaticController.setAction(function middlewareOrderTest(conduit) {
+				middleware_execution_order.push('handler');
+				conduit.end('order:' + middleware_execution_order.join(','));
+			});
+
+			// Create nested sections: parent > child
+			// Note: We need to use proper nested mount paths because getPathSection
+			// checks against mount directly, not full mount
+			let parentSection = Router.section('mw_parent', '/mw-parent');
+			let childSection = parentSection.section('mw_child', '/mw-parent/child');
+
+			// Add middleware to parent section
+			parentSection.use('/', function parentMiddleware(req, res, next) {
+				middleware_execution_order.push('parent');
+				next();
+			}, {name: 'parentMiddleware'});
+
+			// Add middleware to child section
+			childSection.use('/', function childMiddleware(req, res, next) {
+				middleware_execution_order.push('child');
+				next();
+			}, {name: 'childMiddleware'});
+
+			// Add route handler to child section
+			childSection.add({
+				name    : 'Static#middlewareOrderTest',
+				paths   : '/test',
+				methods : 'get'
+			});
+		});
+
+		it('should execute parent middleware before child middleware', function(done) {
+			// Reset execution order for this test
+			middleware_execution_order.length = 0;
+
+			let url = 'http://localhost:' + alchemy.settings.network.port + '/mw-parent/child/test';
+
+			Blast.fetch(url, function gotResponse(err, res, body) {
+				if (err) {
+					return done(err);
+				}
+
+				try {
+					// The expected order should be: parent -> child -> handler
+					// But currently the bug causes: child -> parent -> handler
+					assert.deepStrictEqual(
+						middleware_execution_order,
+						['parent', 'child', 'handler'],
+						'Middleware should execute in order: parent -> child -> handler, but got: ' + middleware_execution_order.join(' -> ')
+					);
+					assert.strictEqual(body, 'order:parent,child,handler');
+				} catch (err) {
+					return done(err);
+				}
+
+				done();
+			});
+		});
+	});
+
 });
