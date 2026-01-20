@@ -51,6 +51,7 @@
 * Implement `add_groups` functionality in settings `_addToMap` (was TODO) - now properly adds groups to the map
 * Add `toEnumEntry()` method to settings Group class
 * Add `Field#toJsonSchema()` and `Schema#toJsonSchema()` methods for converting Alchemy schemas to JSON Schema format (useful for MCP tool definitions, API documentation)
+* Add `option_prefix` option to `toJsonSchema()` for context-specific titles/descriptions (e.g., `mcp_description` for AI tooling vs `description` for UI)
 
 ## 1.4.0-alpha.12 (2025-07-11)
 

@@ -2403,3 +2403,191 @@ describe('JSON Schema specification conformance', function() {
 		});
 	});
 });
+
+describe('Field#toJsonSchema() option_prefix', function() {
+
+	describe('description with option_prefix', function() {
+
+		it('should use prefixed description when available', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'status', {
+				description: 'Status',
+				mcp_description: 'The current workflow status. Use "active" for new records.'
+			});
+
+			// Without prefix - should use regular description
+			let json_schema = field.toJsonSchema();
+			assert.strictEqual(json_schema.description, 'Status');
+
+			// With prefix - should use prefixed description
+			let mcp_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(mcp_schema.description, 'The current workflow status. Use "active" for new records.');
+		});
+
+		it('should fall back to regular description when prefixed is not available', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {
+				description: 'The name field'
+			});
+
+			// With prefix but no prefixed description available
+			let json_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(json_schema.description, 'The name field');
+		});
+	});
+
+	describe('title with option_prefix', function() {
+
+		it('should use prefixed title when available', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'status', {
+				title: 'Status',
+				mcp_title: 'Record Status'
+			});
+
+			// Without prefix - should use regular title
+			let json_schema = field.toJsonSchema();
+			assert.strictEqual(json_schema.title, 'Status');
+
+			// With prefix - should use prefixed title
+			let mcp_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(mcp_schema.title, 'Record Status');
+		});
+
+		it('should fall back to regular title when prefixed is not available', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'name', {
+				title: 'Full Name'
+			});
+
+			// With prefix but no prefixed title available
+			let json_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(json_schema.title, 'Full Name');
+		});
+
+		it('should fall back to auto-generated title when neither prefixed nor regular is available', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'user_name', {});
+
+			// With prefix but no title options set at all
+			let json_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(json_schema.title, 'User name');
+		});
+	});
+
+	describe('Schema level option_prefix passthrough', function() {
+
+		it('should pass option_prefix through to field toJsonSchema calls', function() {
+			let schema = alchemy.createSchema();
+			schema.setName('Person');
+			schema.addField('name', 'String', {
+				description: 'Name',
+				mcp_description: 'Full name of the person'
+			});
+			schema.addField('age', 'Integer', {
+				description: 'Age',
+				mcp_description: 'Age in years, must be a positive integer'
+			});
+
+			// Without prefix
+			let json_schema = schema.toJsonSchema();
+			assert.strictEqual(json_schema.properties.name.description, 'Name');
+			assert.strictEqual(json_schema.properties.age.description, 'Age');
+
+			// With prefix
+			let mcp_schema = schema.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(mcp_schema.properties.name.description, 'Full name of the person');
+			assert.strictEqual(mcp_schema.properties.age.description, 'Age in years, must be a positive integer');
+		});
+	});
+
+	describe('nested Schema field with option_prefix', function() {
+
+		it('should pass option_prefix through to nested schema', function() {
+			let address_schema = alchemy.createSchema();
+			address_schema.addField('street', 'String', {
+				description: 'Street',
+				mcp_description: 'Street address including house number'
+			});
+			address_schema.addField('city', 'String', {
+				description: 'City',
+				mcp_description: 'City or municipality name'
+			});
+
+			let person_schema = alchemy.createSchema();
+			person_schema.setName('Person');
+			person_schema.addField('address', 'Schema', {
+				schema: address_schema,
+				description: 'Address',
+				mcp_description: 'Primary residence address'
+			});
+
+			// Without prefix
+			let json_schema = person_schema.toJsonSchema();
+			assert.strictEqual(json_schema.properties.address.properties.street.description, 'Street');
+			assert.strictEqual(json_schema.properties.address.properties.city.description, 'City');
+
+			// With prefix - nested fields should also use prefixed descriptions
+			let mcp_schema = person_schema.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(mcp_schema.properties.address.properties.street.description, 'Street address including house number');
+			assert.strictEqual(mcp_schema.properties.address.properties.city.description, 'City or municipality name');
+		});
+	});
+
+	describe('custom prefix handling', function() {
+
+		it('should support any custom prefix', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.String(schema, 'status', {
+				description: 'Default description',
+				api_description: 'API documentation description',
+				openapi_description: 'OpenAPI spec description'
+			});
+
+			let api_schema = field.toJsonSchema({option_prefix: 'api_'});
+			assert.strictEqual(api_schema.description, 'API documentation description');
+
+			let openapi_schema = field.toJsonSchema({option_prefix: 'openapi_'});
+			assert.strictEqual(openapi_schema.description, 'OpenAPI spec description');
+		});
+	});
+
+	describe('Enum field with option_prefix', function() {
+
+		it('should use prefixed description for enum fields', function() {
+			let schema = new Classes.Alchemy.Schema();
+			let field = new Classes.Alchemy.Field.Enum(schema, 'status', {
+				values: {
+					active: 'Active',
+					inactive: 'Inactive'
+				},
+				description: 'Status',
+				mcp_description: 'Workflow status: "active" or "inactive"'
+			});
+
+			let json_schema = field.toJsonSchema();
+			assert.strictEqual(json_schema.description, 'Status');
+
+			let mcp_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(mcp_schema.description, 'Workflow status: "active" or "inactive"');
+		});
+	});
+
+	describe('Geopoint field with option_prefix', function() {
+
+		it('should use prefixed description for geopoint fields', function() {
+			let schema = new Classes.Alchemy.Schema();
+			schema.setName('Location');
+			let field = new Classes.Alchemy.Field.Geopoint(schema, 'position', {
+				description: 'Position',
+				mcp_description: 'Geographic coordinates in GeoJSON format'
+			});
+
+			let json_schema = field.toJsonSchema();
+			assert.strictEqual(json_schema.description, 'Position');
+
+			let mcp_schema = field.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(mcp_schema.description, 'Geographic coordinates in GeoJSON format');
+		});
+	});
+});
