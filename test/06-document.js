@@ -637,6 +637,71 @@ describe('Document', function() {
 			assert.strictEqual(subname_has_changed, true);
 			assert.strictEqual(entries_has_changed, false);
 		});
+
+		it('should detect array mutations via push(), pop(), and splice()', async function() {
+
+			var model = Model.get('WithSchemaField'),
+			    doc = model.createDocument();
+
+			doc.subschema = {
+				subname: 'subname',
+				subvalue: 'subvalue'
+			};
+
+			doc.entries = [
+				{entryname: 'first'},
+				{entryname: 'second'}
+			];
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false, 'Document should not be marked as changed after save');
+
+			// Test push()
+			doc.entries.push({entryname: 'third'});
+
+			assert.strictEqual(doc.hasChanged(), true, 'Document should be marked as changed after push()');
+			assert.strictEqual(doc.hasChanged('entries'), true, 'entries field should be marked as changed after push()');
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false, 'Document should not be marked as changed after save');
+			assert.strictEqual(doc.entries.length, 3, 'entries should have 3 elements after push and save');
+
+			// Test pop()
+			doc.entries.pop();
+
+			assert.strictEqual(doc.hasChanged(), true, 'Document should be marked as changed after pop()');
+			assert.strictEqual(doc.hasChanged('entries'), true, 'entries field should be marked as changed after pop()');
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false, 'Document should not be marked as changed after save');
+			assert.strictEqual(doc.entries.length, 2, 'entries should have 2 elements after pop and save');
+
+			// Test splice() - remove one element
+			doc.entries.splice(0, 1);
+
+			assert.strictEqual(doc.hasChanged(), true, 'Document should be marked as changed after splice() remove');
+			assert.strictEqual(doc.hasChanged('entries'), true, 'entries field should be marked as changed after splice() remove');
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false, 'Document should not be marked as changed after save');
+			assert.strictEqual(doc.entries.length, 1, 'entries should have 1 element after splice remove and save');
+
+			// Test splice() - insert element
+			doc.entries.splice(0, 0, {entryname: 'inserted'});
+
+			assert.strictEqual(doc.hasChanged(), true, 'Document should be marked as changed after splice() insert');
+			assert.strictEqual(doc.hasChanged('entries'), true, 'entries field should be marked as changed after splice() insert');
+
+			await doc.save();
+
+			assert.strictEqual(doc.hasChanged(), false, 'Document should not be marked as changed after save');
+			assert.strictEqual(doc.entries.length, 2, 'entries should have 2 elements after splice insert and save');
+			assert.strictEqual(doc.entries[0].entryname, 'inserted', 'First entry should be the inserted one');
+		});
 	});
 
 	describe('#needsToBeSaved()', function() {
