@@ -1,4 +1,4 @@
-## 1.4.0-alpha.13 (WIP)
+## 1.4.0 (2026-01-21)
 
 * Add permission checks to Linkup routes
 * Improve Task service
