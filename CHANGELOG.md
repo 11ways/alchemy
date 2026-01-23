@@ -1,3 +1,7 @@
+## 1.4.1 (WIP)
+
+* Support nested populate via dot notation (e.g., `populate('Project.Client')`) - falls back to N+1 when `$lookup` can't handle nested associations
+
 ## 1.4.0 (2026-01-21)
 
 * Add permission checks to Linkup routes

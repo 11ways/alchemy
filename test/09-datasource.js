@@ -579,6 +579,29 @@ describe('FieldConfig', function() {
 			}
 			// If no pipeline at all, that's also acceptable (means no $lookup)
 		});
+
+		it('should populate nested associations using dot notation (Parent.Parent)', async function() {
+			// This tests that nested populate paths like 'Project.Client' work correctly
+			// by using the self-referencing Person model as a proxy
+			let Person = Model.get('Person');
+			let criteria = Person.find();
+			criteria.where('firstname').equals('ChildPerson');
+			
+			// Use dot notation to populate Parent and Parent's Parent
+			criteria.populate('Parent.Parent');
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should find ChildPerson');
+			assert.strictEqual(!!records[0].Parent, true, 'Parent should be populated');
+			assert.strictEqual(records[0].Parent.firstname, 'ParentPerson', 'Parent should be ParentPerson');
+			
+			// The key test - Parent.Parent should be populated via dot notation
+			assert.strictEqual(!!records[0].Parent.Parent, true, 
+				'Parent.Parent (grandparent) should be populated via dot notation');
+			assert.strictEqual(records[0].Parent.Parent.firstname, 'Grandparent', 
+				'Grandparent should be correct');
+		});
 	});
 
 	describe('Nested OR/AND groups with associations', function() {
