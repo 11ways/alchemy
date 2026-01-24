@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 const TestHarness = require('../testing'),
+      BrowserHelper = TestHarness.BrowserHelper,
       libpath     = require('path'),
       assert      = require('assert'),
       fs          = require('fs');
@@ -11,13 +12,18 @@ const harness = new TestHarness({
 	port        : 3470,
 });
 
-// Export harness for use in other test files
+// Create browser helper with coverage enabled if coverage is active
+const browserHelper = new BrowserHelper(harness, {
+	coverage: !!global.__coverage__,
+	connect: false,  // Set to true for development (connects to existing browser)
+	log_console: false,  // Set to true when writing new tests
+});
+
+// Export harness and browser helper for use in other test files
 global.harness = harness;
+global.browserHelper = browserHelper;
 
-// Coverage tracking
-let navigations = 0,
-    coverages = [];
-
+// Legacy coverage flag
 global.do_coverage = !!global.__coverage__;
 
 // Make MongoUnit globally available (for 99-teardown.js compatibility)
@@ -26,173 +32,60 @@ global.MongoUnit = harness.getMongoUnit();
 // Test asset path
 let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
 
-// Browser connection mode (for development)
-let connect = false;
-
-/**
- * Load the browser (internal helper)
- */
-async function loadBrowser() {
-
-	let puppeteer;
-
-	try {
-		puppeteer = require('puppeteer');
-	} catch (err) {
-		throw new Error('puppeteer is required for browser testing');
-	}
-
-	if (connect) {
-		global.browser = await puppeteer.connect({
-			'browserURL': 'http://127.0.0.1:9333/',
-			defaultViewport: {
-				width: 1680,
-				height: 1050,
-			},
-			devtools: true,
-		});
-	} else {
-		global.browser = await puppeteer.launch({
-			headless: 'new',
-		});
-	}
-
-	global.page = await browser.newPage();
-
-	page.on('console', function(msg) {
-		// Only needed when writing new tests
-		return;
-
-		let pieces = ['[BROWSER]'],
-		    args = msg.args();
-
-		for (arg of args) {
-			let remote = arg._remoteObject;
-
-			if (remote.type == 'string') {
-				pieces.push(remote.value);
-			} else if (remote.subtype == 'node') {
-				pieces.push('\x1b[1m\x1b[36m<' + remote.description + '>\x1b[0m');
-			} else if (remote.className) {
-				pieces.push('\x1b[1m\x1b[33m{' + remote.type + ' ' + remote.className + '}\x1b[0m');
-			} else if (remote.value != null) {
-				pieces.push(remote.value);
-			} else {
-				pieces.push(remote);
-			}
-		}
-
-		console.log(...pieces);
-	});
-}
-
-// Console helpers
-let console_log = console.log;
-let console_error = console.error;
+// Console helpers - delegate to harness
+global.silenceConsole = function silenceConsole() {
+	harness.silenceConsole();
+};
 
 global.restoreConsole = function restoreConsole() {
-	console.log = console_log;
-	console.error = console_error;
+	harness.restoreConsole();
 };
 
-global.silenceConsole = function silenceConsole() {
-	console.log = () => {};
-	console.error = () => {};
-};
+// ============================================================================
+// Legacy global functions - delegate to BrowserHelper
+// These are kept for backward compatibility with existing tests
+// ============================================================================
 
 /**
  * Fetch browser-side coverage data
  */
-global.fetchCoverage = async function fetchCoverage() {
-
-	if (!global.page) {
-		return;
-	}
-
-	let temp = await page.evaluate(function getCoverage() {
-
-		if (typeof window.__Protoblast == 'undefined') {
-			return false;
-		}
-
-		return window.__coverage__;
-	});
-
-	if (temp) {
-		coverages.push(temp);
-	} else if (temp !== false) {
-		console.log('Failed to get coverage from browser');
-	}
-
-	return coverages;
+global.fetchCoverage = function fetchCoverage() {
+	return browserHelper.fetchCoverage();
 };
 
 /**
  * Navigate browser to a path
  */
 global.setLocation = async function setLocation(path) {
-
-	let url;
-
-	if (!global.page) {
-		await loadBrowser();
-	}
-
-	if (navigations && do_coverage) {
-		await fetchCoverage();
-	}
-
-	navigations++;
-
-	if (alchemy) {
-		// Force exposing the defaults each time,
-		// because we add routes on-the-fly during testing
-		alchemy.exposeDefaultStaticVariables();
-	}
-
-	if (path.indexOf('http') == -1) {
-		url = 'http://127.0.0.1:' + alchemy.settings.network.port + path;
-	} else {
-		url = path;
-	}
-
-	let resource = await page.goto(url);
-
-	let status = await resource.status();
-
-	if (status >= 400) {
-		throw new Error('Received a ' + status + ' error response for "' + path + '"');
-	}
+	return browserHelper.goto(path);
 };
 
 /**
  * Get full document HTML from browser
  */
-global.getDocumentHTML = async function getDocumentHTML() {
-	return await evalPage(function() {
-		return document.documentElement.outerHTML;
-	});
+global.getDocumentHTML = function getDocumentHTML() {
+	return browserHelper.getDocumentHtml();
 };
 
 /**
  * Evaluate code in browser page
  */
 global.evalPage = function evalPage(fnc, ...args) {
-	return page.evaluate(fnc, ...args);
+	return browserHelper.evaluate(fnc, ...args);
 };
 
 /**
  * Get element handle from browser
  */
 global.getElementHandle = function getElementHandle(query) {
-	return page.$(query);
+	return browserHelper.getElementHandle(query);
 };
 
 /**
  * Clean up whitespace in text
  */
 global.despace = function despace(text) {
-	return text.trim().replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
+	return TestHarness.despace(text);
 };
 
 /**
@@ -205,183 +98,64 @@ global.getRouteUrl = function getRouteUrl(route, options) {
 /**
  * Query an element and get its data
  */
-global.queryElementData = async function queryElementData(query) {
-
-	let result = await evalPage(function(query) {
-		let block = document.querySelector(query);
-
-		if (!block) {
-			return false;
-		}
-
-		let result = {
-			html       : block.outerHTML,
-			text       : block.textContent,
-			location   : document.location.pathname,
-			scroll_top : document.scrollingElement.scrollTop,
-		};
-
-		return result;
-	}, query);
-
-	return result;
+global.queryElementData = function queryElementData(query) {
+	return browserHelper.queryElement(query);
 };
 
 /**
  * Open a URL using Hawkejs client-side navigation
  */
-global.openHeUrl = async function openHeUrl(path) {
-
-	await evalPage(function(path) {
-		return hawkejs.scene.openUrl(path);
-	}, path);
-
-	let result = await evalPage(function() {
-		return {
-			location : document.location.pathname,
-		};
-	});
-
-	return result;
+global.openHeUrl = function openHeUrl(path) {
+	return browserHelper.openUrl(path);
 };
 
 /**
  * Get body innerHTML from browser
  */
 global.getBodyHtml = function getBodyHtml() {
-	return global.evalPage(function() {
-		return document.body.innerHTML;
-	});
+	return browserHelper.getBodyHtml();
 };
 
 /**
  * Create a model dynamically in tests
  */
 global.createModel = function createModel(creator) {
-
-	let name = creator.name,
-	    pledge = new Classes.Pledge();
-
-	let fnc = Function.create(name, function model(options) {
-		model.super.call(this, options);
-	});
-
-	Function.inherits('Alchemy.Model', fnc);
-
-	fnc.constitute(function() {
-		creator.call(this);
-		pledge.resolve();
-	});
-
-	return pledge;
+	return harness.createModel(creator);
 };
 
 /**
  * Set a form element's value
  */
-global.setElementValue = async function setElementValue(query, value) {
-
-	let result = await evalPage(function(query, value) {
-		let element = document.querySelector(query);
-
-		if (!element) {
-			return false;
-		}
-
-		element.value = value;
-
-		let result = {
-			html       : element.outerHTML,
-			text       : element.textContent,
-			location   : document.location.pathname,
-			scroll_top : document.scrollingElement.scrollTop,
-			value      : element.value,
-		};
-
-		return result;
-	}, query, value);
-
-	return result;
+global.setElementValue = function setElementValue(query, value) {
+	return browserHelper.setValue(query, value);
 };
 
 /**
  * Upload a file to a file input
  */
-global.setFileInputPath = async function setFileInputPath(query, path) {
-
-	let handle = await getElementHandle(query);
-
-	if (!handle) {
-		return false;
-	}
-
-	return handle.uploadFile(path);
+global.setFileInputPath = function setFileInputPath(query, path) {
+	return browserHelper.uploadFile(query, path);
 };
 
 /**
  * Set a file input's value with a blob
  */
-global.setFileInputBlob = async function setFileInputBlob(query, content) {
-
-	let result = await evalPage(function(query, content) {
-		let element = document.querySelector(query);
-
-		if (!element) {
-			return false;
-		}
-
-		element.files = [new File([new Blob([content], {type: 'text/plain'})], 'test.txt', {type: 'text/plain'})];
-
-		let result = {
-			html       : element.outerHTML,
-			text       : element.textContent,
-			location   : document.location.pathname,
-			scroll_top : document.scrollingElement.scrollTop,
-			value      : element.value,
-		};
-
-		return result;
-	}, query, content);
-
-	return result;
+global.setFileInputBlob = function setFileInputBlob(query, content) {
+	return browserHelper.setFileBlob(query, content);
 };
 
 /**
  * Set element value or throw error
  */
-global.setElementValueOrThrow = async function setElementValueOrThrow(query, value) {
-
-	let result = await setElementValue(query, value);
-
-	if (!result) {
-		throw new Error('Failed to find the `' + query + '` element, unable to set value to "' + value + '"');
-	}
-
-	if (result.value != value) {
-		throw new Error('The `' + query + '` element has the value "' + result.value + '", but "' + value + '" was expected');
-	}
-
-	return result;
+global.setElementValueOrThrow = function setElementValueOrThrow(query, value) {
+	return browserHelper.setValueOrThrow(query, value);
 };
 
 /**
  * Click an element in the browser
  */
-global.clickElement = async function clickElement(query) {
-
-	let result = await evalPage(function(query) {
-		let element = document.querySelector(query);
-
-		if (!element) {
-			return false;
-		}
-
-		element.click();
-
-		return true;
-	}, query);
-
-	return result;
+global.clickElement = function clickElement(query) {
+	return browserHelper.click(query);
 };
 
 // =============================================================================
@@ -580,7 +354,5 @@ describe('Alchemy', function() {
 
 // This will run after ALL the files have executed (not just this file)
 after(async function() {
-	if (global.browser && !connect) {
-		await browser.close();
-	}
+	await browserHelper.close();
 });

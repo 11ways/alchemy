@@ -10,7 +10,26 @@
  */
 'use strict';
 
-// Load Protoblast first (modifies native prototypes, same as Alchemy does)
-require('protoblast')(true);
+const libpath = require('path');
 
-module.exports = require('./lib/testing/harness');
+// Load Protoblast first (modifies native prototypes, same as Alchemy does)
+// The return value is the Blast instance
+const Blast = require('protoblast')(true);
+
+// The testing lib path
+const testingLibPath = libpath.resolve(__dirname, 'lib', 'testing');
+
+// Use Blast.require to load the testing modules
+// This ensures they have access to Blast, Classes, and other Protoblast globals
+const TestHarness = Blast.require('harness', {
+	pwd: testingLibPath,
+});
+
+const BrowserHelper = Blast.require('browser', {
+	pwd: testingLibPath,
+});
+
+// Make BrowserHelper available as a property of TestHarness
+TestHarness.BrowserHelper = BrowserHelper;
+
+module.exports = TestHarness;

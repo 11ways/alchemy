@@ -43,11 +43,13 @@
 	"files": [
 		"lib/",
 		"index.js",
-		"testing.js"
+		"testing.js",
+		"testing/"
 	],
 	"exports": {
 		".": "./lib/bootstrap.js",
-		"./testing": "./testing.js"
+		"./testing": "./testing.js",
+		"./testing/browser": "./testing/browser.js"
 	},
 	"optionalDependencies": {
 		"janeway"          : "~0.4.6",

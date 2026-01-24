@@ -1,21 +1,14 @@
-var assert = require('assert'),
-    fs = require('fs');
+var assert = require('assert');
 
 describe('Teardown', function() {
 	it('should stop the services', async function() {
 
 		// Handle coverage first (before stopping services)
 		if (global.__coverage__) {
-			let coverages = await fetchCoverage();
+			let count = await browserHelper.writeCoverageFiles();
 
-			if (!coverages || coverages.length == 0) {
+			if (count === 0) {
 				throw new Error('The browser-side coverage object was empty');
-			}
-
-			let i;
-
-			for (i = 0; i < coverages.length; i++) {
-				fs.writeFileSync('./.nyc_output/alchemy_' + i + '.json', JSON.stringify(coverages[i]));
 			}
 
 			await Pledge.after(500);
