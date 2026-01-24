@@ -5,6 +5,7 @@
 * `die()` will exit the process with code 1 instead of 0
 * Plugin load failures will not stop Alchemy from starting
 * `die()` will now wait 1 synchronous second before exiting
+* Fix SettingValue » GroupValue conversion in settings system
 
 ## 1.4.0 (2026-01-21)
 
