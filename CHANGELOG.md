@@ -2,6 +2,7 @@
 
 * Support nested populate via dot notation (e.g., `populate('Project.Client')`) - falls back to N+1 when `$lookup` can't handle nested associations
 * Add test harness
+* `die()` will exit the process with code 1 instead of 0
 
 ## 1.4.0 (2026-01-21)
 
