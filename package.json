@@ -42,8 +42,13 @@
 	},
 	"files": [
 		"lib/",
-		"index.js"
+		"index.js",
+		"testing.js"
 	],
+	"exports": {
+		".": "./lib/bootstrap.js",
+		"./testing": "./testing.js"
+	},
 	"optionalDependencies": {
 		"janeway"          : "~0.4.6",
 		"less"             : "~4.2.0",

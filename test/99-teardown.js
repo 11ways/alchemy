@@ -3,9 +3,8 @@ var assert = require('assert'),
 
 describe('Teardown', function() {
 	it('should stop the services', async function() {
-		MongoUnit.stop();
-		alchemy.stop();
 
+		// Handle coverage first (before stopping services)
 		if (global.__coverage__) {
 			let coverages = await fetchCoverage();
 
@@ -22,5 +21,7 @@ describe('Teardown', function() {
 			await Pledge.after(500);
 		}
 
+		// Use the harness to stop everything
+		await harness.stop();
 	});
 });

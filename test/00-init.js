@@ -1,36 +1,46 @@
 /* istanbul ignore file */
-const MongoUnit = require('mongo-unit'),
-      puppeteer = require('puppeteer'),
-      libpath   = require('path'),
-      assert    = require('assert'),
-      fs        = require('fs');
+const TestHarness = require('../testing'),
+      libpath     = require('path'),
+      assert      = require('assert'),
+      fs          = require('fs');
 
-let mongo_uri;
+// Create the test harness
+const harness = new TestHarness({
+	path_root   : libpath.resolve(__dirname, 'test_root'),
+	environment : 'dev',  // AlchemyMVC core tests use 'dev' environment
+	port        : 3470,
+});
 
-let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
+// Export harness for use in other test files
+global.harness = harness;
 
+// Coverage tracking
 let navigations = 0,
     coverages = [];
 
-// Make sure janeway doesn't start
-process.env.DISABLE_JANEWAY = 1;
-
-// Make MongoUnit a global
-global.MongoUnit = MongoUnit;
-
 global.do_coverage = !!global.__coverage__;
 
-// Do not log load warnings
-process.env.NO_ALCHEMY_LOAD_WARNING = 1;
+// Make MongoUnit globally available (for 99-teardown.js compatibility)
+global.MongoUnit = harness.getMongoUnit();
 
-process.env.PATH_ROOT = libpath.resolve(__dirname, 'test_root');
+// Test asset path
+let test_script_path = libpath.resolve(__dirname, 'assets', 'scripts', 'test.js');
 
-// Require alchemymvc
-require('../index.js');
-
+// Browser connection mode (for development)
 let connect = false;
 
+/**
+ * Load the browser (internal helper)
+ */
 async function loadBrowser() {
+
+	let puppeteer;
+
+	try {
+		puppeteer = require('puppeteer');
+	} catch (err) {
+		throw new Error('puppeteer is required for browser testing');
+	}
 
 	if (connect) {
 		global.browser = await puppeteer.connect({
@@ -50,7 +60,6 @@ async function loadBrowser() {
 	global.page = await browser.newPage();
 
 	page.on('console', function(msg) {
-
 		// Only needed when writing new tests
 		return;
 
@@ -64,7 +73,6 @@ async function loadBrowser() {
 				pieces.push(remote.value);
 			} else if (remote.subtype == 'node') {
 				pieces.push('\x1b[1m\x1b[36m<' + remote.description + '>\x1b[0m');
-				//console.log(remote.preview);
 			} else if (remote.className) {
 				pieces.push('\x1b[1m\x1b[33m{' + remote.type + ' ' + remote.className + '}\x1b[0m');
 			} else if (remote.value != null) {
@@ -78,6 +86,7 @@ async function loadBrowser() {
 	});
 }
 
+// Console helpers
 let console_log = console.log;
 let console_error = console.error;
 
@@ -89,8 +98,11 @@ global.restoreConsole = function restoreConsole() {
 global.silenceConsole = function silenceConsole() {
 	console.log = () => {};
 	console.error = () => {};
-}
+};
 
+/**
+ * Fetch browser-side coverage data
+ */
 global.fetchCoverage = async function fetchCoverage() {
 
 	if (!global.page) {
@@ -115,6 +127,9 @@ global.fetchCoverage = async function fetchCoverage() {
 	return coverages;
 };
 
+/**
+ * Navigate browser to a path
+ */
 global.setLocation = async function setLocation(path) {
 
 	let url;
@@ -146,39 +161,50 @@ global.setLocation = async function setLocation(path) {
 	let status = await resource.status();
 
 	if (status >= 400) {
-		throw new Error('Received a ' + status + ' error response for "' + path + '"')
+		throw new Error('Received a ' + status + ' error response for "' + path + '"');
 	}
 };
 
+/**
+ * Get full document HTML from browser
+ */
 global.getDocumentHTML = async function getDocumentHTML() {
 	return await evalPage(function() {
 		return document.documentElement.outerHTML;
 	});
 };
 
+/**
+ * Evaluate code in browser page
+ */
 global.evalPage = function evalPage(fnc, ...args) {
 	return page.evaluate(fnc, ...args);
 };
 
+/**
+ * Get element handle from browser
+ */
 global.getElementHandle = function getElementHandle(query) {
 	return page.$(query);
 };
 
+/**
+ * Clean up whitespace in text
+ */
 global.despace = function despace(text) {
 	return text.trim().replace(/\n/g, ' ').replace(/\s\s+/g, ' ');
 };
 
+/**
+ * Get a full URL for a named route
+ */
 global.getRouteUrl = function getRouteUrl(route, options) {
-
-	let url = Router.getUrl(route, options);
-
-	url.host = 'localhost';
-	url.protocol = 'http';
-	url.port = alchemy.settings.network.port;
-
-	return String(url);
+	return harness.getRouteUrl(route, options);
 };
 
+/**
+ * Query an element and get its data
+ */
 global.queryElementData = async function queryElementData(query) {
 
 	let result = await evalPage(function(query) {
@@ -201,6 +227,9 @@ global.queryElementData = async function queryElementData(query) {
 	return result;
 };
 
+/**
+ * Open a URL using Hawkejs client-side navigation
+ */
 global.openHeUrl = async function openHeUrl(path) {
 
 	await evalPage(function(path) {
@@ -210,18 +239,24 @@ global.openHeUrl = async function openHeUrl(path) {
 	let result = await evalPage(function() {
 		return {
 			location : document.location.pathname,
-		}
+		};
 	});
 
 	return result;
 };
 
+/**
+ * Get body innerHTML from browser
+ */
 global.getBodyHtml = function getBodyHtml() {
 	return global.evalPage(function() {
 		return document.body.innerHTML;
 	});
 };
 
+/**
+ * Create a model dynamically in tests
+ */
 global.createModel = function createModel(creator) {
 
 	let name = creator.name,
@@ -241,6 +276,9 @@ global.createModel = function createModel(creator) {
 	return pledge;
 };
 
+/**
+ * Set a form element's value
+ */
 global.setElementValue = async function setElementValue(query, value) {
 
 	let result = await evalPage(function(query, value) {
@@ -266,6 +304,9 @@ global.setElementValue = async function setElementValue(query, value) {
 	return result;
 };
 
+/**
+ * Upload a file to a file input
+ */
 global.setFileInputPath = async function setFileInputPath(query, path) {
 
 	let handle = await getElementHandle(query);
@@ -277,6 +318,9 @@ global.setFileInputPath = async function setFileInputPath(query, path) {
 	return handle.uploadFile(path);
 };
 
+/**
+ * Set a file input's value with a blob
+ */
 global.setFileInputBlob = async function setFileInputBlob(query, content) {
 
 	let result = await evalPage(function(query, content) {
@@ -300,9 +344,11 @@ global.setFileInputBlob = async function setFileInputBlob(query, content) {
 	}, query, content);
 
 	return result;
-
 };
 
+/**
+ * Set element value or throw error
+ */
 global.setElementValueOrThrow = async function setElementValueOrThrow(query, value) {
 
 	let result = await setElementValue(query, value);
@@ -318,6 +364,9 @@ global.setElementValueOrThrow = async function setElementValueOrThrow(query, val
 	return result;
 };
 
+/**
+ * Click an element in the browser
+ */
 global.clickElement = async function clickElement(query) {
 
 	let result = await evalPage(function(query) {
@@ -335,45 +384,29 @@ global.clickElement = async function clickElement(query) {
 	return result;
 };
 
+// =============================================================================
+// Test Setup
+// =============================================================================
+
 describe('require(\'alchemymvc\')', function() {
-	it('should create the global STAGES instance', function() {
-		assert.equal('object', typeof STAGES);
+	this.timeout(150000);
+
+	it('should start in-memory MongoDB', async function() {
+		await harness.startMongo();
 	});
-});
 
-describe('Mongo-unit setup', function() {
-	this.timeout(150000)
-
-	it('should create in-memory mongodb instance first', async function() {
-
-		var url = await MongoUnit.start({verbose: false});
-
-		mongo_uri = url;
-
-		if (!url) {
-			throw new Error('Failed to create mongo-unit instance');
-		}
+	it('should create the global STAGES instance', function() {
+		harness.requireAlchemy();
+		assert.equal('object', typeof STAGES);
 	});
 });
 
 describe('Alchemy', function() {
 
 	describe('#start(callback)', function() {
-		it('should start the server', function(done) {
-
-			alchemy.setSetting('network.port', 3470);
-			alchemy.setSetting('performance.postpone_requests_on_overload', false);
-
-			STAGES.getStage('datasource').addPostTask(() => {
-				Datasource.create('mongo', 'default', {uri: mongo_uri});
-			});
-
-			STAGES.getStage('load_core').addPostTask(async () => {
-
-				let pledge = alchemy.start({silent: true}, function started() {
-					done();
-				});
-			});
+		it('should start the server', async function() {
+			this.timeout(60000);
+			await harness.startServer();
 		});
 	});
 
@@ -405,20 +438,13 @@ describe('Alchemy', function() {
 			return;
 		}
 
-		it('is the middleware that compiles & serves CSS, LESS & SCSS files', function(done) {
-			var url = 'http://localhost:' + alchemy.settings.network.port + '/stylesheets/alchemy-info.css';
+		it('is the middleware that compiles & serves CSS, LESS & SCSS files', async function() {
 
-			Blast.fetch(url, function gotResponse(err, res, body) {
+			let { response, body } = await harness.fetch('/stylesheets/alchemy-info.css');
 
-				if (err) {
-					return done(err);
-				}
-
-				assert.strictEqual(res.statusCode, 200);
-				assert.strictEqual(res.headers['content-type'], 'text/css; charset=utf-8');
-				assert.strictEqual(body.length > 100, true);
-				done();
-			});
+			assert.strictEqual(response.statusCode, 200);
+			assert.strictEqual(response.headers['content-type'], 'text/css; charset=utf-8');
+			assert.strictEqual(body.length > 100, true);
 		});
 	});
 
@@ -434,23 +460,13 @@ describe('Alchemy', function() {
 			alchemy.addScriptDirectory(libpath.resolve(__dirname, 'assets', 'scripts'));
 		});
 
-		// @TODO: There no longer is a simple alchemy.js script file,
-		// should test with something else
-		it('is the middleware that serves script files', function(done) {
+		it('is the middleware that serves script files', async function() {
 
-			var url = 'http://localhost:' + alchemy.settings.network.port + '/scripts/test.js';
+			let { response, body } = await harness.fetch('/scripts/test.js');
 
-			Blast.fetch(url, function gotResponse(err, res, body) {
-
-				if (err) {
-					return done(err);
-				}
-
-				assert.strictEqual(res.statusCode, 200);
-				assert.strictEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
-				assert.strictEqual(body.length > 20, true);
-				done();
-			});
+			assert.strictEqual(response.statusCode, 200);
+			assert.strictEqual(response.headers['content-type'], 'text/javascript; charset=utf-8');
+			assert.strictEqual(body.length > 20, true);
 		});
 	});
 
@@ -511,13 +527,13 @@ describe('Alchemy', function() {
 	describe('#downloadFile(url, options, callback)', function() {
 		it('should download the file and return the filepath', async function() {
 
-			var url = 'http://localhost:' + alchemy.settings.network.port + '/scripts/test.js';
+			var url = harness.getUrl('/scripts/test.js');
 
 			let file = await alchemy.download(url);
 
 			assert.strictEqual(file.name, 'test.js');
 			assert.strictEqual(await file.getMimetype(), 'text/javascript');
-			
+
 			let result = await file.readString('utf8');
 
 			if (result.indexOf('This is a test script') == -1) {
@@ -526,7 +542,7 @@ describe('Alchemy', function() {
 		});
 
 		it('should return a 404 error when downloading non-existing path', function(done) {
-			alchemy.downloadFile('http://localhost:' + alchemy.settings.network.port + '/scripts/does_not_exist.js', function downloaded(err, filepath, name) {
+			alchemy.downloadFile(harness.getUrl('/scripts/does_not_exist.js'), function downloaded(err, filepath, name) {
 
 				assert.strictEqual(filepath, undefined);
 				assert.strictEqual(name, undefined);
@@ -544,7 +560,7 @@ describe('Alchemy', function() {
 			    second;
 
 			if (process.platform == 'win32') {
-				// @TODO: Sole this in some way?
+				// @TODO: Solve this in some way?
 				return;
 			} else {
 				wanted = 'ls';
