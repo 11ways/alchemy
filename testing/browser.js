@@ -21,6 +21,7 @@ const testingLibPath = libpath.resolve(__dirname, '..', 'lib', 'testing');
 // Use Blast.require to load the browser module
 const BrowserHelper = Blast.require('browser', {
 	pwd: testingLibPath,
+	client: false,
 });
 
 module.exports = BrowserHelper;

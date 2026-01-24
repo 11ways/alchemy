@@ -23,10 +23,12 @@ const testingLibPath = libpath.resolve(__dirname, 'lib', 'testing');
 // This ensures they have access to Blast, Classes, and other Protoblast globals
 const TestHarness = Blast.require('harness', {
 	pwd: testingLibPath,
+	client: false,
 });
 
 const BrowserHelper = Blast.require('browser', {
 	pwd: testingLibPath,
+	client: false,
 });
 
 // Make BrowserHelper available as a property of TestHarness
