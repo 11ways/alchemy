@@ -16,7 +16,7 @@ const harness = new TestHarness({
 const browserHelper = new BrowserHelper(harness, {
 	coverage: !!global.__coverage__,
 	connect: false,  // Set to true for development (connects to existing browser)
-	log_console: false,  // Set to true when writing new tests
+	log_console: false,  // Set to true when debugging browser tests
 });
 
 // Export harness and browser helper for use in other test files
