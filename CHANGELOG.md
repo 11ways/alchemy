@@ -6,6 +6,7 @@
 * Plugin load failures will not stop Alchemy from starting
 * `die()` will now wait 1 synchronous second before exiting
 * Fix SettingValue » GroupValue conversion in settings system
+* Make `Conduit#serveFile()` actually call the `options.onError` callback when an error occurs
 
 ## 1.4.0 (2026-01-21)
 
