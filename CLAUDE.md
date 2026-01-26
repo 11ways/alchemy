@@ -528,6 +528,62 @@ Key methods:
 - `compileCriteria()` - Converts Criteria to MongoDB query/pipeline
 - `organizeResultItems()` - Restructures `$lookup` results into document format
 
+### Datasource Method Signatures (1.4.0+)
+
+All CRUD methods receive an `OperationalContext` object instead of individual parameters:
+
+```javascript
+// Read - must return {rows, available}
+_read(context) -> Pledge<{rows: Array, available: number|null}>
+
+// Create - returns saved data
+_create(context) -> Pledge<Object>
+
+// Update - returns updated data  
+_update(context) -> Pledge<Object>
+
+// Remove - returns success boolean
+_remove(context) -> Pledge<boolean>
+```
+
+### Context Object Methods
+
+**ReadDocumentFromDatasource** (for `_read`):
+- `context.getModel()` - Get the model instance
+- `context.getCriteria()` - Get the Criteria object
+- `context.getDatasource()` - Get the datasource instance
+
+**SaveToDatasource** (for `_create`, `_update`):
+- `context.getModel()` - Get the model instance
+- `context.getConvertedData()` - Get data already converted for datasource
+- `context.getSaveOptions()` - Get options like `{override_created: bool}`
+
+**RemoveFromDatasource** (for `_remove`):
+- `context.getModel()` - Get the model instance
+- `context.getQuery()` - Get the query object (e.g., `{_id: '...'}`)
+
+### compileCriteria() Return Values
+
+The `compileCriteria()` method from the Nosql base class can return:
+1. **Plain query object** `{field: value}` - for simple queries
+2. **Pipeline object** with `.pipeline` property - when associations require MongoDB aggregation
+
+Datasources that don't support aggregation should check for `.pipeline` and handle gracefully.
+
+### Swift.waterfall() Pattern
+
+Datasource methods typically use this pattern for chaining async operations:
+
+```javascript
+return Swift.waterfall(
+    this.collection(model.table),
+    async collection => {
+        // work with collection
+        return result;
+    }
+);
+```
+
 ## Key APIs
 
 ```javascript
