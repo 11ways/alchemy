@@ -8,6 +8,7 @@
 * Fix SettingValue » GroupValue conversion in settings system
 * Make `Conduit#serveFile()` actually call the `options.onError` callback when an error occurs
 * Add `ImportStreamParser` class, deduplicating logic in both alchemy.js and model.js
+* Add `Alchemy#addModuleSearchPath(path)` method to add custom module search paths
 
 ## 1.4.0 (2026-01-21)
 
