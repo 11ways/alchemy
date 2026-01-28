@@ -350,6 +350,59 @@ describe('Alchemy', function() {
 			assert.strictEqual(second, result);
 		});
 	});
+
+	describe('#isStream(obj)', function() {
+
+		it('should use Classes.Stream.Stream which equals require("stream").Stream', function() {
+			const stream = require('stream');
+			assert.strictEqual(Classes.Stream.Stream, stream.Stream);
+		});
+
+		it('should return true for PassThrough streams', function() {
+			const passthrough = new Classes.Stream.PassThrough();
+			assert.strictEqual(alchemy.isStream(passthrough), true);
+		});
+
+		it('should return true for Readable streams', function() {
+			const readable = new Classes.Stream.Readable({read() {}});
+			assert.strictEqual(alchemy.isStream(readable), true);
+		});
+
+		it('should return true for Writable streams', function() {
+			const writable = new Classes.Stream.Writable({write(chunk, enc, cb) { cb(); }});
+			assert.strictEqual(alchemy.isStream(writable), true);
+		});
+
+		it('should return false for null', function() {
+			assert.strictEqual(alchemy.isStream(null), false);
+		});
+
+		it('should return false for undefined', function() {
+			assert.strictEqual(alchemy.isStream(undefined), false);
+		});
+
+		it('should return false for plain objects', function() {
+			assert.strictEqual(alchemy.isStream({}), false);
+		});
+
+		it('should return false for strings', function() {
+			assert.strictEqual(alchemy.isStream('not a stream'), false);
+		});
+
+		it('should return false for numbers', function() {
+			assert.strictEqual(alchemy.isStream(42), false);
+		});
+
+		it('should return true for duck-typed readable objects (has _read and on)', function() {
+			const duckTyped = {_read: function() {}, on: function() {}};
+			assert.strictEqual(alchemy.isStream(duckTyped), true);
+		});
+
+		it('should return true for duck-typed writable objects (has write, end, on)', function() {
+			const duckTyped = {write: function() {}, end: function() {}, on: function() {}};
+			assert.strictEqual(alchemy.isStream(duckTyped), true);
+		});
+	});
 });
 
 // This will run after ALL the files have executed (not just this file)
