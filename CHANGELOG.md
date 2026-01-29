@@ -10,6 +10,7 @@
 * Add `ImportStreamParser` class, deduplicating logic in both alchemy.js and model.js
 * Add `Alchemy#addModuleSearchPath(path)` method to add custom module search paths
 * Fix SCSS custom importer failing on certain relative paths
+* MongoDB Connection failures are now retried after 5 seconds (configurable via `options.retry_delay`)
 
 ## 1.4.0 (2026-01-21)
 
