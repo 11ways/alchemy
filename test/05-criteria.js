@@ -576,4 +576,96 @@ describe('Criteria', function() {
 
 	});
 
+	describe('FieldExpression#setTargetPath() association detection', function() {
+
+		it('should detect valid associations when path starts with uppercase', function() {
+			// Create a criteria with a model that has a Parent association
+			let criteria = Person.find();
+			
+			// When we use where() with an association path, it should detect the association
+			criteria.where('Parent.firstname').equals('Griet');
+			
+			// Get the expression that was created
+			let expressions = criteria.all_expressions;
+			assert.strictEqual(expressions.length, 1, 'Should have one expression');
+			
+			let expr = expressions[0];
+			assert.strictEqual(expr.association, 'Parent', 'Should detect Parent as association');
+			assert.strictEqual(expr.target_path, 'firstname', 'Should set target_path to the field after association');
+		});
+
+		it('should treat uppercase field as regular field when association does not exist', function() {
+			// Create a criteria with a model
+			let criteria = Person.find();
+			
+			// Use a path that starts with uppercase but is NOT a valid association
+			// Note: This tests the validation when the model is available
+			criteria.where('NonExistentAssoc.somefield').equals('test');
+			
+			let expressions = criteria.all_expressions;
+			assert.strictEqual(expressions.length, 1, 'Should have one expression');
+			
+			let expr = expressions[0];
+			
+			// Since NonExistentAssoc is not a valid association on Person model,
+			// it should be treated as a field path (with the model validation)
+			// With our fix, if model is available, it validates and treats it as a field
+			assert.strictEqual(!expr.association, true, 
+				'Should not detect invalid association when model is available');
+			assert.strictEqual(expr.target_path, 'NonExistentAssoc.somefield', 
+				'Should treat entire path as field when association is invalid');
+		});
+
+		it('should not detect association for lowercase field paths', function() {
+			let criteria = Person.find();
+			
+			// lowercase paths should never be detected as associations
+			criteria.where('firstname').equals('Jelle');
+			
+			let expressions = criteria.all_expressions;
+			assert.strictEqual(expressions.length, 1, 'Should have one expression');
+			
+			let expr = expressions[0];
+			assert.strictEqual(!expr.association, true, 'Should not detect association for lowercase field');
+			assert.strictEqual(expr.target_path, 'firstname', 'Should set target_path to the field');
+		});
+
+		it('should handle nested field paths without association', function() {
+			let criteria = Person.find();
+			
+			// nested lowercase path - no association
+			criteria.where('some.nested.field').equals('value');
+			
+			let expressions = criteria.all_expressions;
+			let expr = expressions[0];
+			
+			assert.strictEqual(!expr.association, true, 'Should not detect association');
+			assert.strictEqual(expr.target_path, 'some.nested.field', 'Should preserve nested path');
+		});
+
+		it('should provide clear error when normalizing non-existent association', async function() {
+			// This tests the improved error message in normalizeAssociationValues
+			let criteria = Person.find();
+			
+			// Manually create an expression with a fake association to test error handling
+			let FieldExpression = Classes.Alchemy.Criteria.Expression.Field;
+			// Pass a dummy field to avoid setTargetPath error, then override
+			let expr = new FieldExpression(criteria, 'dummy');
+			expr.association = 'FakeAssociation';
+			expr.target_path = 'somefield';
+			expr.addItem('equals', 'test');
+			
+			try {
+				await expr.normalizeAssociationValues();
+				assert.fail('Should have thrown an error');
+			} catch (err) {
+				assert.strictEqual(err.message.includes('FakeAssociation'), true,
+					'Error should mention the invalid association name');
+				assert.strictEqual(err.message.includes('Person'), true,
+					'Error should mention the model name');
+			}
+		});
+
+	});
+
 });
