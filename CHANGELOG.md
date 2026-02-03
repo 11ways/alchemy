@@ -1,4 +1,4 @@
-## 1.4.1 (WIP)
+## 1.4.1 (2026-02-03)
 
 * Support nested populate via dot notation (e.g., `populate('Project.Client')`) - falls back to N+1 when `$lookup` can't handle nested associations
 * Add test harness

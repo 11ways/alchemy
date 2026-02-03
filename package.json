@@ -1,7 +1,7 @@
 {
 	"name": "alchemymvc",
 	"description": "MVC framework for Node.js",
-	"version": "1.4.1-alpha",
+	"version": "1.4.1",
 	"author": "Jelle De Loecker <jelle@elevenways.be>",
 	"keywords": [
 		"alchemy",
@@ -32,7 +32,7 @@
 		"ncp"              : "~2.0.0",
 		"postcss"          : "~8.5.6",
 		"postcss-prune-var": "~1.1.2",
-		"protoblast"       : "~0.9.6",
+		"protoblast"       : "~0.9.8",
 		"semver"           : "~7.7.2",
 		"socket.io"        : "~4.7.5",
 		"@11ways/socket.io-stream" : "~0.9.2",
