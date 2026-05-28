@@ -76,6 +76,243 @@ describe('Controller', function() {
 		});
 	});
 
+	describe('#end(data)', function() {
+
+		before(() => {
+			Router.add({
+				name    : 'ConduitTest#endJsonObject',
+				paths   : '/conduit/end_json_object',
+				methods : 'get',
+			});
+
+			Router.add({
+				name    : 'ConduitTest#endString',
+				paths   : '/conduit/end_string',
+				methods : 'get',
+			});
+
+			Router.add({
+				name    : 'ConduitTest#endArray',
+				paths   : '/conduit/end_array',
+				methods : 'get',
+			});
+
+			ConduitTestController.setAction(function endJsonObject(conduit) {
+				conduit.end({status: 'ok', count: 42});
+			});
+
+			ConduitTestController.setAction(function endString(conduit) {
+				conduit.end('plain text response');
+			});
+
+			ConduitTestController.setAction(function endArray(conduit) {
+				conduit.end([{id: 1, name: 'first'}, {id: 2, name: 'second'}]);
+			});
+		});
+
+		it('should respond with a JSON object', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#endJsonObject');
+			let { response, body } = await harness.fetch(url);
+
+			assert.strictEqual(response.statusCode, 200, 'Should return 200');
+
+			let parsed = typeof body === 'string' ? JSON.parse(body) : body;
+			assert.strictEqual(parsed.status, 'ok');
+			assert.strictEqual(parsed.count, 42);
+		});
+
+		it('should respond with a plain string', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#endString');
+			let { response, body } = await harness.fetch(url);
+
+			assert.strictEqual(response.statusCode, 200, 'Should return 200');
+			assert.strictEqual(body, 'plain text response');
+		});
+
+		it('should respond with a JSON array', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#endArray');
+			let { response, body } = await harness.fetch(url);
+
+			assert.strictEqual(response.statusCode, 200, 'Should return 200');
+
+			let parsed = typeof body === 'string' ? JSON.parse(body) : body;
+			assert.strictEqual(Array.isArray(parsed), true, 'Should be an array');
+			assert.strictEqual(parsed.length, 2);
+			assert.strictEqual(parsed[0].id, 1);
+			assert.strictEqual(parsed[1].name, 'second');
+		});
+	});
+
+	describe('#status', function() {
+
+		before(() => {
+			Router.add({
+				name    : 'ConduitTest#statusTest',
+				paths   : '/conduit/status_test',
+				methods : 'get',
+			});
+
+			ConduitTestController.setAction(function statusTest(conduit) {
+				let code = parseInt(conduit.param('code'));
+				conduit.status = code;
+				conduit.end({requested_status: code});
+			});
+		});
+
+		it('should allow setting a custom status code', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#statusTest');
+			url += '?code=201';
+
+			let { response, body } = await harness.fetch(url);
+
+			assert.strictEqual(response.statusCode, 201, 'Should return the custom 201 status code');
+
+			let parsed = typeof body === 'string' ? JSON.parse(body) : body;
+			assert.strictEqual(parsed.requested_status, 201);
+		});
+	});
+
+	describe('#notFound()', function() {
+
+		before(() => {
+			Router.add({
+				name    : 'ConduitTest#notFoundTest',
+				paths   : '/conduit/not_found_test',
+				methods : 'get',
+			});
+
+			ConduitTestController.setAction(function notFoundTest(conduit) {
+				conduit.notFound();
+			});
+		});
+
+		it('should return a 404 status code', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#notFoundTest');
+			let threw = false;
+			let errorNumber;
+
+			try {
+				await harness.fetch(url);
+			} catch (err) {
+				threw = true;
+				errorNumber = err.number;
+			}
+
+			assert.strictEqual(threw, true, 'Should throw an error for 404');
+			assert.strictEqual(errorNumber, 404, 'Should return 404 status code');
+		});
+	});
+
+	describe('#error(status, message)', function() {
+
+		before(() => {
+			Router.add({
+				name    : 'ConduitTest#errorTest',
+				paths   : '/conduit/error_test',
+				methods : 'get',
+			});
+
+			ConduitTestController.setAction(function errorTest(conduit) {
+				let code = parseInt(conduit.param('code')) || 500;
+				conduit.error(code, 'Test error message');
+			});
+		});
+
+		it('should return a 500 error status code', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#errorTest');
+			url += '?code=500';
+
+			let threw = false;
+			let errorNumber;
+
+			try {
+				await harness.fetch(url);
+			} catch (err) {
+				threw = true;
+				errorNumber = err.number;
+			}
+
+			assert.strictEqual(threw, true, 'Should throw an error for 500');
+			assert.strictEqual(errorNumber, 500, 'Should return 500 status code');
+		});
+
+		it('should return a custom error status code', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#errorTest');
+			url += '?code=403';
+
+			let threw = false;
+			let errorNumber;
+
+			try {
+				await harness.fetch(url);
+			} catch (err) {
+				threw = true;
+				errorNumber = err.number;
+			}
+
+			assert.strictEqual(threw, true, 'Should throw an error for 403');
+			assert.strictEqual(errorNumber, 403, 'Should return 403 status code');
+		});
+	});
+
+	describe('#redirect(status, url)', function() {
+
+		before(() => {
+			Router.add({
+				name    : 'ConduitTest#redirectTest',
+				paths   : '/conduit/redirect_test',
+				methods : 'get',
+			});
+
+			Router.add({
+				name    : 'ConduitTest#redirectTarget',
+				paths   : '/conduit/redirect_target',
+				methods : 'get',
+			});
+
+			ConduitTestController.setAction(function redirectTest(conduit) {
+				let target = conduit.param('target') || '/conduit/redirect_target';
+				conduit.redirect(target);
+			});
+
+			ConduitTestController.setAction(function redirectTarget(conduit) {
+				conduit.end({redirected: true});
+			});
+		});
+
+		it('should redirect to the target URL', async function() {
+
+			let url = global.getRouteUrl('ConduitTest#redirectTest');
+
+			// Use Node's http module directly to check redirect without following
+			let http = require('http');
+			let parsed = new URL(url);
+
+			let result = await new Promise((resolve, reject) => {
+				let req = http.get({
+					hostname : parsed.hostname,
+					port     : parsed.port,
+					path     : parsed.pathname + parsed.search,
+				}, function(res) {
+					resolve(res);
+				});
+
+				req.on('error', reject);
+			});
+
+			assert.strictEqual(result.statusCode, 302, 'Should return 302 redirect');
+			assert.strictEqual(result.headers.location, '/conduit/redirect_target',
+				'Should set the Location header to the target URL');
+		});
+	});
+
 	describe('#serveFile', function() {
 
 		let serve_file_pledge;
@@ -202,7 +439,6 @@ async function testFormSubmission(post_pledge, enctype) {
 		await setLocation(actual_url);
 
 		let html = await getDocumentHTML();
-		console.log(html)
 
 		await queryElementData('.form-wrapper');
 
