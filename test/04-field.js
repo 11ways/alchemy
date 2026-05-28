@@ -1,5 +1,4 @@
 var assert = require('assert');
-const { cp } = require('fs');
 
 function sameContents(a, b, message) {
 
@@ -338,6 +337,241 @@ describe('Field', function() {
 
 });
 
+describe('Schema', function() {
+
+	describe('#isFieldRequired(field_name)', function() {
+
+		it('should return true for fields marked with required: true', function() {
+
+			let schema = alchemy.createSchema();
+			schema.addField('title', 'String', {required: true});
+			schema.addField('body', 'String');
+
+			assert.strictEqual(schema.isFieldRequired('title'), true);
+			assert.strictEqual(schema.isFieldRequired('body'), false);
+		});
+
+		it('should return true for fields with a NotEmpty rule', function() {
+
+			// The Person model has a NotEmpty rule on firstname
+			assert.strictEqual(Person.schema.isFieldRequired('firstname'), true);
+			assert.strictEqual(Person.schema.isFieldRequired('lastname'), false);
+		});
+
+		it('should return false for non-existent fields', function() {
+			assert.strictEqual(Person.schema.isFieldRequired('nonexistent'), false);
+		});
+	});
+
+	describe('#getFieldChain(name)', function() {
+
+		it('should return a chain for a dotted path', function() {
+
+			let WithSchema = Model.get('WithSchemaField');
+			let chain = WithSchema.schema.getFieldChain('subschema.subname');
+
+			assert.strictEqual(Array.isArray(chain), true, 'getFieldChain should return an array');
+			assert.strictEqual(chain.length, 2, 'Expected 2 entries in the chain for subschema.subname');
+			assert.strictEqual(chain[0].name, 'subschema');
+			assert.strictEqual(chain[1].name, 'subname');
+		});
+
+		it('should return a single-element chain for a top-level field', function() {
+
+			let WithSchema = Model.get('WithSchemaField');
+			let chain = WithSchema.schema.getFieldChain('name');
+
+			assert.strictEqual(Array.isArray(chain), true);
+			assert.strictEqual(chain.length, 1);
+			assert.strictEqual(chain[0].name, 'name');
+		});
+
+		it('should handle deeply nested paths', function() {
+
+			let WithSchema = Model.get('WithSchemaField');
+			let chain = WithSchema.schema.getFieldChain('entries.sub_sub.lorem');
+
+			assert.strictEqual(chain.length, 3);
+			assert.strictEqual(chain[0].name, 'entries');
+			assert.strictEqual(chain[1].name, 'sub_sub');
+			assert.strictEqual(chain[2].name, 'lorem');
+		});
+
+		it('should return a short chain for a non-existent field path', function() {
+
+			let WithSchema = Model.get('WithSchemaField');
+			let chain = WithSchema.schema.getFieldChain('nonexistent.path');
+
+			// When the first piece doesn't match, current becomes undefined and the loop breaks
+			assert.strictEqual(Array.isArray(chain), true);
+			assert.strictEqual(chain.length, 0);
+		});
+	});
+
+	describe('#toJsonSchema(options)', function() {
+
+		it('should convert the schema to a JSON Schema object', function() {
+
+			let json_schema = Person.schema.toJsonSchema();
+
+			assert.strictEqual(json_schema.type, 'object');
+			assert.strictEqual(typeof json_schema.properties, 'object');
+
+			// Person has firstname, lastname, nicknames, birthdate, male fields
+			assert.strictEqual(json_schema.properties.firstname != null, true, 'Should have a firstname property');
+			assert.strictEqual(json_schema.properties.lastname != null, true, 'Should have a lastname property');
+			assert.strictEqual(json_schema.properties.male != null, true, 'Should have a male property');
+			assert.strictEqual(json_schema.properties.birthdate != null, true, 'Should have a birthdate property');
+		});
+
+		it('should detect required fields', function() {
+
+			let json_schema = Person.schema.toJsonSchema();
+
+			// Person has a NotEmpty rule on firstname
+			assert.strictEqual(Array.isArray(json_schema.required), true, 'Should have a required array');
+			assert.strictEqual(json_schema.required.includes('firstname'), true, 'firstname should be required');
+			assert.strictEqual(json_schema.required.includes('lastname'), false, 'lastname should not be required');
+		});
+
+		it('should include a title when schema has a name', function() {
+
+			let json_schema = Person.schema.toJsonSchema();
+
+			// Person schema should have a name/title
+			assert.strictEqual(typeof json_schema.title, 'string');
+		});
+
+		it('should return correct types for different field types', function() {
+
+			let json_schema = Person.schema.toJsonSchema();
+
+			// firstname is a String field
+			let firstname = json_schema.properties.firstname;
+			assert.strictEqual(Array.isArray(firstname.type) ? firstname.type[0] : firstname.type, 'string');
+
+			// male is a Boolean field
+			let male = json_schema.properties.male;
+			assert.strictEqual(Array.isArray(male.type) ? male.type[0] : male.type, 'boolean');
+		});
+
+		it('should handle array fields properly', function() {
+
+			let json_schema = Person.schema.toJsonSchema();
+
+			// nicknames is a String array
+			let nicknames = json_schema.properties.nicknames;
+			assert.strictEqual(nicknames != null, true, 'nicknames should be present');
+			assert.strictEqual(nicknames.type, 'array', 'nicknames should be an array type');
+			assert.strictEqual(nicknames.items != null, true, 'nicknames should have items');
+		});
+
+		it('should handle the option_prefix for descriptions', function() {
+
+			let schema = alchemy.createSchema();
+			schema.addField('name', 'String', {
+				description: 'Regular description',
+				mcp_description: 'MCP-specific description',
+			});
+
+			let json_schema = schema.toJsonSchema({option_prefix: 'mcp_'});
+			assert.strictEqual(json_schema.properties.name.description, 'MCP-specific description');
+
+			let plain_schema = schema.toJsonSchema();
+			assert.strictEqual(plain_schema.properties.name.description, 'Regular description');
+		});
+	});
+
+	describe('#addComputedField(name, type, options)', function() {
+
+		it('should throw when given less than 3 arguments', function() {
+
+			let schema = alchemy.createSchema();
+
+			assert.throws(function() {
+				schema.addComputedField('test', 'String');
+			}, /expects at least 3 arguments/);
+		});
+
+		it('should throw when no compute_method is provided', function() {
+
+			let schema = alchemy.createSchema();
+
+			assert.throws(function() {
+				schema.addComputedField('test', 'String', {required_fields: ['something']});
+			}, /expects a compute_method/);
+		});
+
+		it('should throw when added to a non-root schema', function() {
+
+			let schema = alchemy.createSchema();
+
+			assert.throws(function() {
+				schema.addComputedField('test', 'String', {
+					compute_method: 'computeTest',
+					required_fields: ['something'],
+				});
+			}, /root schema/);
+		});
+
+		it('should increment has_computed_fields', function() {
+			let ComputedPerson = Model.get('ComputedPerson', false);
+			assert.strictEqual(ComputedPerson.schema.has_computed_fields, 2);
+		});
+	});
+
+	describe('#getFieldNames()', function() {
+
+		it('should return all field names', function() {
+
+			let names = Person.schema.getFieldNames();
+
+			assert.strictEqual(Array.isArray(names), true);
+			assert.strictEqual(names.includes('firstname'), true);
+			assert.strictEqual(names.includes('lastname'), true);
+			assert.strictEqual(names.includes('male'), true);
+		});
+	});
+
+	describe('#field_count', function() {
+
+		it('should return the number of fields', function() {
+
+			let schema = alchemy.createSchema();
+			schema.addField('one', 'String');
+			schema.addField('two', 'Number');
+
+			assert.strictEqual(schema.field_count, 2);
+
+			schema.addField('three', 'Boolean');
+
+			assert.strictEqual(schema.field_count, 3);
+		});
+	});
+
+	describe('.isSchema(value)', function() {
+
+		it('should return true for a Schema instance', function() {
+
+			let schema = alchemy.createSchema();
+			let Schema = Classes.Alchemy.Client.Schema;
+
+			assert.strictEqual(Schema.isSchema(schema), true);
+		});
+
+		it('should return false for non-schema values', function() {
+
+			let Schema = Classes.Alchemy.Client.Schema;
+
+			assert.strictEqual(Schema.isSchema(null), false);
+			assert.strictEqual(Schema.isSchema(undefined), false);
+			assert.strictEqual(Schema.isSchema({}), false);
+			assert.strictEqual(Schema.isSchema('not a schema'), false);
+			assert.strictEqual(Schema.isSchema(42), false);
+		});
+	});
+});
+
 describe('Field.String', function() {
 
 	var schema,
@@ -459,6 +693,45 @@ describe('Field.DateTime', function() {
 		});
 
 		assert.strictEqual(unit_query_result.length, 0);
+	});
+});
+
+describe('Field.Time', function() {
+
+	var tf_model,
+	    Tf;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		Tf = Function.inherits('Alchemy.Model', function Tf(options) {
+			Tf.super.call(this, options);
+		});
+
+		Tf.constitute(function addFields() {
+			this.addField('name', 'String');
+			this.addField('start_time', 'Time');
+			next();
+		});
+	});
+
+	it('should be able to create a document with a Time field without stack overflow', async function() {
+
+		tf_model = Model.get('Tf');
+
+		var input_doc = tf_model.createDocument();
+
+		input_doc.name = 'time_test';
+		input_doc.start_time = '14:30:00';
+
+		await input_doc.save();
+
+		assert.strictEqual(String(input_doc._id).isObjectId(), true);
+
+		var output_doc = await tf_model.find('first');
+
+		assert.strictEqual(output_doc.name, 'time_test');
+		assert.strictEqual(Date.isDate(output_doc.start_time), true);
 	});
 });
 
@@ -2591,3 +2864,490 @@ describe('Field#toJsonSchema() option_prefix', function() {
 		});
 	});
 });
+
+describe('Field.Boolean', function() {
+
+	let schema,
+	    field,
+	    non_nullable_field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('BoolTest');
+		field = new Classes.Alchemy.Field.Boolean(schema, 'active');
+		non_nullable_field = new Classes.Alchemy.Field.Boolean(schema, 'required_flag', {is_nullable: false});
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should cast true and false correctly', function() {
+			assert.strictEqual(field.cast(true), true);
+			assert.strictEqual(field.cast(false), false);
+		});
+
+		it('should return null for null/undefined on nullable fields', function() {
+			assert.strictEqual(field.cast(null), null);
+			assert.strictEqual(field.cast(undefined), null);
+		});
+
+		it('should cast null to false on non-nullable fields', function() {
+			assert.strictEqual(non_nullable_field.cast(null), false);
+		});
+
+		it('should cast truthy values to true', function() {
+			assert.strictEqual(field.cast(1), true);
+			assert.strictEqual(field.cast('true'), true);
+			assert.strictEqual(field.cast('anything'), true);
+			assert.strictEqual(field.cast(42), true);
+		});
+
+		it('should cast falsy values to false', function() {
+			assert.strictEqual(field.cast(0), false);
+			assert.strictEqual(field.cast(''), null, 'Empty string on non-string field becomes null');
+			assert.strictEqual(non_nullable_field.cast(''), false, 'Empty string becomes false when not nullable');
+		});
+
+		it('should cast the string "false" to true (JavaScript Boolean coercion)', function() {
+			assert.strictEqual(field.cast('false'), true);
+		});
+
+		it('should cast the string "0" to true (JavaScript Boolean coercion)', function() {
+			assert.strictEqual(field.cast('0'), true);
+		});
+
+		it('should cast an empty object to true', function() {
+			assert.strictEqual(field.cast({}), true);
+		});
+
+		it('should cast an empty array to true', function() {
+			assert.strictEqual(field.cast([]), true);
+		});
+	});
+
+	describe('#valueHasContent(value)', function() {
+
+		it('should return true for boolean values, including false', function() {
+			assert.strictEqual(field.valueHasContent(true), true);
+			assert.strictEqual(field.valueHasContent(false), true);
+			assert.strictEqual(field.valueHasContent(null), true);
+		});
+
+		it('should return false for undefined', function() {
+			assert.strictEqual(field.valueHasContent(undefined), false);
+		});
+	});
+});
+
+describe('Field.Enum', function() {
+
+	let schema,
+	    field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('EnumTest');
+		field = new Classes.Alchemy.Field.Enum(schema, 'status', {
+			values: {active: 'Active', inactive: 'Inactive', pending: 'Pending'}
+		});
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should cast values to strings', function() {
+			assert.strictEqual(field.cast('active'), 'active');
+			assert.strictEqual(field.cast('inactive'), 'inactive');
+		});
+
+		it('should return null for null on nullable fields', function() {
+			assert.strictEqual(field.cast(null), null);
+		});
+
+		it('should cast numbers to strings', function() {
+			assert.strictEqual(field.cast(123), '123');
+		});
+
+		it('should cast non-matching values to strings without validation', function() {
+			assert.strictEqual(field.cast('bogus_value'), 'bogus_value');
+		});
+
+		it('should keep empty string on nullable enum field since datatype is string', function() {
+			let result = field.cast('');
+			assert.strictEqual(result, '');
+		});
+	});
+
+	describe('#getValues()', function() {
+
+		it('should return an EnumMap with all configured values', function() {
+			let values = field.getValues();
+			assert.ok(values, 'Should return enum values');
+
+			assert.strictEqual(typeof values.get, 'function', 'Should have a get() method');
+
+			let active = values.get('active');
+			assert.ok(active, 'Should be able to get the "active" value');
+			assert.strictEqual(active.title, 'Active');
+
+			let inactive = values.get('inactive');
+			assert.ok(inactive, 'Should be able to get the "inactive" value');
+			assert.strictEqual(inactive.title, 'Inactive');
+
+			let pending = values.get('pending');
+			assert.ok(pending, 'Should be able to get the "pending" value');
+			assert.strictEqual(pending.title, 'Pending');
+		});
+
+		it('should return undefined for non-existent values', function() {
+			let values = field.getValues();
+			let nonexistent = values.get('nonexistent');
+			assert.ok(!nonexistent, 'Should not find a non-existent value');
+		});
+	});
+
+	describe('#getValueConfiguration(value)', function() {
+
+		it('should return configuration for a valid enum value', function() {
+			let config = field.getValueConfiguration('active');
+			assert.ok(config, 'Should return config for "active"');
+			assert.strictEqual(config.title, 'Active');
+		});
+
+		it('should return falsy for an invalid enum value', function() {
+			let config = field.getValueConfiguration('nonexistent');
+			assert.ok(!config, 'Should return falsy for non-existent value');
+		});
+	});
+});
+
+describe('Field.Number', function() {
+
+	let schema,
+	    field,
+	    non_nullable_field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('NumberTest');
+		field = new Classes.Alchemy.Field.Number(schema, 'amount');
+		non_nullable_field = new Classes.Alchemy.Field.Number(schema, 'required_amount', {is_nullable: false});
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should cast numeric values correctly', function() {
+			assert.strictEqual(field.cast(42), 42);
+			assert.strictEqual(field.cast(3.14), 3.14);
+			assert.strictEqual(field.cast(-10), -10);
+			assert.strictEqual(field.cast(0), 0);
+		});
+
+		it('should return null for null on nullable fields', function() {
+			assert.strictEqual(field.cast(null), null);
+			assert.strictEqual(field.cast(undefined), null);
+		});
+
+		it('should cast null to 0 on non-nullable fields', function() {
+			assert.strictEqual(non_nullable_field.cast(null), 0);
+		});
+
+		it('should cast string numbers to numbers', function() {
+			assert.strictEqual(field.cast('42'), 42);
+			assert.strictEqual(field.cast('3.14'), 3.14);
+			assert.strictEqual(field.cast('-5'), -5);
+		});
+
+		it('should cast NaN-producing strings to NaN', function() {
+			assert.strictEqual(Number.isNaN(field.cast('not a number')), true);
+		});
+
+		it('should handle Infinity', function() {
+			assert.strictEqual(field.cast(Infinity), Infinity);
+			assert.strictEqual(field.cast(-Infinity), -Infinity);
+		});
+
+		it('should handle empty string as null for nullable fields', function() {
+			assert.strictEqual(field.cast(''), null);
+		});
+
+		it('should handle empty string as 0 for non-nullable fields', function() {
+			assert.strictEqual(non_nullable_field.cast(''), 0);
+		});
+
+		it('should cast NaN to NaN', function() {
+			assert.strictEqual(Number.isNaN(field.cast(NaN)), true);
+		});
+
+		it('should cast boolean true to 1', function() {
+			assert.strictEqual(field.cast(true), 1);
+		});
+
+		it('should cast boolean false to 0', function() {
+			assert.strictEqual(field.cast(false), 0);
+		});
+
+		it('should handle very large numbers', function() {
+			assert.strictEqual(field.cast(Number.MAX_SAFE_INTEGER), Number.MAX_SAFE_INTEGER);
+			assert.strictEqual(field.cast(-Number.MAX_SAFE_INTEGER), -Number.MAX_SAFE_INTEGER);
+		});
+
+		it('should cast "Infinity" string to Infinity', function() {
+			let result = field.cast('Infinity');
+			assert.strictEqual(result, Infinity);
+		});
+	});
+});
+
+describe('Field.Integer', function() {
+
+	let schema,
+	    field,
+	    non_nullable_field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('IntegerTest');
+		field = new Classes.Alchemy.Field.Integer(schema, 'count');
+		non_nullable_field = new Classes.Alchemy.Field.Integer(schema, 'required_count', {is_nullable: false});
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should cast integer values correctly', function() {
+			assert.strictEqual(field.cast(42), 42);
+			assert.strictEqual(field.cast(0), 0);
+			assert.strictEqual(field.cast(-10), -10);
+		});
+
+		it('should round float values', function() {
+			assert.strictEqual(field.cast(3.14), 3);
+			assert.strictEqual(field.cast(3.5), 4);
+			assert.strictEqual(field.cast(3.9), 4);
+			assert.strictEqual(field.cast(-2.7), -3);
+		});
+
+		it('should return null for null on nullable fields', function() {
+			assert.strictEqual(field.cast(null), null);
+		});
+
+		it('should cast null to 0 on non-nullable fields', function() {
+			assert.strictEqual(non_nullable_field.cast(null), 0);
+		});
+
+		it('should cast NaN-producing strings to NaN', function() {
+			assert.strictEqual(Number.isNaN(field.cast('hello')), true);
+		});
+
+		it('should round string decimal numbers', function() {
+			assert.strictEqual(field.cast('123.456'), 123);
+			assert.strictEqual(field.cast('123.789'), 124);
+		});
+
+		it('should cast Infinity to Infinity (not rounded)', function() {
+			assert.strictEqual(field.cast(Infinity), Infinity);
+			assert.strictEqual(field.cast(-Infinity), -Infinity);
+		});
+
+		it('should cast boolean true to 1', function() {
+			assert.strictEqual(field.cast(true), 1);
+		});
+
+		it('should cast boolean false to 0', function() {
+			assert.strictEqual(field.cast(false), 0);
+		});
+	});
+
+	describe('#getJsonSchemaType()', function() {
+
+		it('should return "integer" type', function() {
+			assert.strictEqual(field.getJsonSchemaType(), 'integer');
+		});
+	});
+});
+
+describe('Field.Password', function() {
+
+	let PasswordModel;
+
+	before(function(next) {
+		next = Function.regulate(next);
+
+		PasswordModel = Function.inherits('Alchemy.Model', 'PasswordTester');
+
+		PasswordModel.constitute(function addFields() {
+			this.addField('username', 'String');
+			this.addField('password', 'Password');
+			next();
+		});
+	});
+
+	it('should hash the password before saving', async function() {
+
+		let model = Model.get('PasswordTester');
+		let doc = model.createDocument();
+
+		doc.username = 'testuser';
+		doc.password = 'mysecretpassword';
+
+		await doc.save();
+
+		assert.strictEqual(String(doc._id).isObjectId(), true);
+
+		// Re-fetch from database
+		let saved = await model.find('first', {conditions: {username: 'testuser'}});
+
+		assert.strictEqual(saved.username, 'testuser');
+		// The password should be hashed (bcrypt hashes start with $2)
+		assert.strictEqual(saved.password.startsWith('$2'), true,
+			'Password should be bcrypt hashed, got: ' + saved.password);
+		assert.notStrictEqual(saved.password, 'mysecretpassword',
+			'Password should not be stored in plain text');
+	});
+
+	it('should not re-hash an already hashed password', async function() {
+
+		let model = Model.get('PasswordTester');
+		let saved = await model.find('first', {conditions: {username: 'testuser'}});
+
+		let hashed = saved.password;
+
+		// Save again without changing the password
+		saved.username = 'testuser_updated';
+		await saved.save();
+
+		let resaved = await model.find('first', {conditions: {username: 'testuser_updated'}});
+
+		assert.strictEqual(resaved.password, hashed,
+			'The hashed password should remain unchanged when not modified');
+	});
+});
+
+describe('Field.Url', function() {
+
+	let schema,
+	    field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('UrlTest');
+		field = new Classes.Alchemy.Field.Url(schema, 'website');
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should pass through URL strings', function() {
+			// Url field has no custom cast, so it uses default (pass-through)
+			assert.strictEqual(field.cast('https://example.com'), 'https://example.com');
+			assert.strictEqual(field.cast('http://test.org/path'), 'http://test.org/path');
+		});
+
+		it('should return null for null on nullable fields', function() {
+			assert.strictEqual(field.cast(null), null);
+		});
+
+		it('should keep empty strings since datatype is string', function() {
+			// Url has datatype 'string', so empty string is kept as-is
+			assert.strictEqual(field.cast(''), '');
+		});
+	});
+
+	describe('#augmentJsonSchema()', function() {
+
+		it('should set format to "uri"', function() {
+			let json_schema = {};
+			field.augmentJsonSchema(json_schema);
+			assert.strictEqual(json_schema.format, 'uri');
+		});
+	});
+});
+
+describe('Field.Geopoint', function() {
+
+	let schema,
+	    field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('GeoTest');
+		field = new Classes.Alchemy.Field.Geopoint(schema, 'location');
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should cast an array of coordinates', function() {
+			let result = field.cast([51.0, 3.0]);
+
+			assert.strictEqual(result.type, 'Point');
+			assert.deepStrictEqual(result.coordinates, [51.0, 3.0]);
+		});
+
+		it('should cast a GeoJSON-like object', function() {
+			let result = field.cast({type: 'Point', coordinates: [51.0, 3.0]});
+
+			assert.strictEqual(result.type, 'Point');
+			assert.deepStrictEqual(result.coordinates, [51.0, 3.0]);
+		});
+
+		it('should extract coordinates from a point wrapper', function() {
+			let result = field.cast({point: {type: 'Point', coordinates: [10.0, 20.0]}});
+
+			assert.strictEqual(result.type, 'Point');
+			assert.deepStrictEqual(result.coordinates, [10.0, 20.0]);
+		});
+
+		it('should return null for falsy values', function() {
+			assert.strictEqual(field.cast(null), null);
+			assert.strictEqual(field.cast(undefined), null);
+			assert.strictEqual(field.cast(0), null);
+			assert.strictEqual(field.cast(''), null);
+		});
+	});
+});
+
+describe('Field.Time (cast edge cases)', function() {
+
+	let schema,
+	    field;
+
+	before(function() {
+		schema = new Classes.Alchemy.Schema();
+		schema.setName('TimeCastTest');
+		field = new Classes.Alchemy.Field.Time(schema, 'start_time');
+	});
+
+	describe('#cast(value)', function() {
+
+		it('should cast a short time string like "14:30:00"', function() {
+			let result = field.cast('14:30:00');
+			assert.strictEqual(Date.isDate(result), true);
+		});
+
+		it('should cast a numeric timestamp value', function() {
+			let timestamp = Date.now();
+			let result = field.cast(timestamp);
+			assert.strictEqual(Date.isDate(result), true);
+		});
+
+		it('should cast a Date object', function() {
+			let date = new Date();
+			let result = field.cast(date);
+			assert.strictEqual(Date.isDate(result), true);
+		});
+
+		it('should return null for null/undefined', function() {
+			assert.strictEqual(field.cast(null), null);
+			assert.strictEqual(field.cast(undefined), null);
+		});
+
+		it('should handle a short time string "08:00"', function() {
+			let result = field.cast('08:00');
+			assert.strictEqual(Date.isDate(result), true);
+		});
+
+		it('should handle a time string with milliseconds by falling through to Date.create', function() {
+			// Strings with length >= 9 go to Date.create instead of setTimestring
+			let result = field.cast('14:30:00.000');
+			assert.strictEqual(Date.isDate(result), true);
+		});
+	});
+});
+
