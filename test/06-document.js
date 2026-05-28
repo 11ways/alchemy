@@ -772,6 +772,45 @@ describe('Document', function() {
 			assert.strictEqual(client_doc.lastname,      person_doc.lastname);
 			assert.strictEqual(client_doc.familiar_name, undefined);
 		});
+
+		it('should assign $record to result when cloned record is empty', function() {
+
+			// Test that toHawkejs handles the case where $record
+			// cloning returns an empty object (already being cloned scenario).
+			// The bug on line 430 was: `record.$record = record` (self-reference
+			// on local var) instead of `result.$record = record`.
+
+			let PersonModel = Classes.Alchemy.Model.Person;
+			let ServerDocClass = PersonModel.Document;
+			let ClientDocClass = ServerDocClass.getClientDocumentClass();
+
+			// Create a document with a $record that has a toHawkejs method
+			// that returns an empty object, simulating the "already being cloned" case
+			let doc = new ServerDocClass();
+			doc.setDataRecord({Person: {firstname: 'Test'}});
+
+			// Replace $record with an object whose toHawkejs returns empty
+			doc.$record = {
+				toHawkejs: function(wm) {
+					return {};
+				}
+			};
+
+			let result = doc.toHawkejs();
+
+			// When the cloned record is empty, toHawkejs should set
+			// result.$record to the empty cloned record (an empty {}).
+			// Before the fix, `record.$record = record` left result.$record
+			// as the constructor default ({Person: {}}) instead.
+			assert.ok(result.$record != null, 'result.$record should exist');
+
+			// After the fix, result.$record should be the empty clone,
+			// not the constructor default which has a 'Person' key
+			assert.strictEqual(result.$record.Person, undefined,
+				'result.$record should be the empty cloned record, not the constructor default');
+			assert.deepStrictEqual(Object.keys(result.$record), [],
+				'result.$record should have no keys (empty cloned record)');
+		});
 	});
 
 	describe('#get(field_name)', function() {
@@ -882,5 +921,33 @@ describe('Client.Document', function() {
 			client = JSON.clone(doc, 'toHawkejs');
 			assert.strictEqual(client.title, 'TEST');
 		});
+	});
+});
+
+describe('Document#toJSON()', function() {
+
+	it('should return the $record object', async function() {
+
+		let person = await Model.get('Person').find('first');
+		let json = person.toJSON();
+
+		assert.strictEqual(typeof json, 'object');
+		assert.strictEqual(json.Person != null, true, 'toJSON should contain the model alias');
+		assert.strictEqual(json.Person.firstname, person.firstname);
+		assert.strictEqual(json.Person.lastname, person.lastname);
+	});
+
+	it('should reflect changes made to the document', async function() {
+
+		let person = await Model.get('Person').find('first');
+		let original_name = person.firstname;
+
+		person.firstname = 'TemporaryName';
+
+		let json = person.toJSON();
+		assert.strictEqual(json.Person.firstname, 'TemporaryName');
+
+		// Restore
+		person.firstname = original_name;
 	});
 });
