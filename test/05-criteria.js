@@ -668,4 +668,352 @@ describe('Criteria', function() {
 
 	});
 
+	describe('#in(values)', function() {
+		it('selects records where the field value is in the given array', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').in(['Jelle', 'Griet']);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 2, 'Should find both Jelle and Griet');
+
+			let names = records.map(r => r.firstname).sort();
+			assert.deepStrictEqual(names, ['Griet', 'Jelle']);
+		});
+
+		it('returns no records when no values match', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').in(['NonExistent', 'AlsoNotThere']);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 0, 'Should find no records');
+		});
+
+		it('works with a single-element array', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').in(['Jelle']);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1);
+			assert.strictEqual(records[0].firstname, 'Jelle');
+		});
+	});
+
+	describe('#gt() / #gte() / #lt() / #lte()', function() {
+		it('selects records where the field is greater than a value', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('birthdate').gt(new Date('1980-01-01'));
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Only Jelle was born after 1980');
+			assert.strictEqual(records[0].firstname, 'Jelle');
+		});
+
+		it('selects records where the field is greater than or equal to a value', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('birthdate').gte(new Date('1967-04-14'));
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 2, 'Both Griet and Jelle were born on or after 1967-04-14');
+		});
+
+		it('selects records where the field is less than a value', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('birthdate').lt(new Date('1980-01-01'));
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length >= 1, true, 'At least Griet was born before 1980');
+
+			for (let record of records) {
+				assert.strictEqual(new Date(record.birthdate) < new Date('1980-01-01'), true,
+					record.firstname + ' should have birthdate before 1980');
+			}
+		});
+
+		it('selects records where the field is less than or equal to a value', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('birthdate').lte(new Date('1987-10-29'));
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 2, 'Both were born on or before 1987-10-29');
+		});
+	});
+
+	describe('#limit() and #skip()', function() {
+		it('limits the number of results returned', async function() {
+
+			var criteria = Person.find();
+			criteria.where('firstname').in(['Jelle', 'Griet']);
+			criteria.sort(['firstname', 1]);
+			criteria.limit(1);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should only return 1 record');
+			assert.strictEqual(records[0].firstname, 'Griet', 'First alphabetically should be Griet');
+		});
+
+		it('skips the specified number of records', async function() {
+
+			var criteria = Person.find();
+			criteria.where('firstname').in(['Jelle', 'Griet']);
+			criteria.sort(['firstname', 1]);
+			criteria.skip(1);
+			criteria.limit(1);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should only return 1 record after skip');
+			assert.strictEqual(records[0].firstname, 'Jelle', 'After skipping Griet, Jelle should be returned');
+		});
+
+		it('reports the available count when limiting', async function() {
+
+			var criteria = Person.find();
+			criteria.limit(1);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should return 1 record');
+			assert.strictEqual(records.available >= 2, true, 'Available should be at least 2');
+		});
+	});
+
+	describe('find(\'count\')', function() {
+		it('returns a count of matching records', async function() {
+
+			let count = await Person.find('count');
+
+			assert.strictEqual(typeof count, 'number', 'Count should be a number');
+			assert.strictEqual(count >= 2, true, 'Should count at least 2 Person records');
+		});
+
+		it('returns a count of records matching a criteria', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').equals('Jelle');
+
+			let count = await Person.find('count', criteria);
+
+			assert.strictEqual(count, 1, 'Should count exactly 1 record named Jelle');
+		});
+
+		it('returns 0 when no records match', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').equals('NonExistentPerson');
+
+			let count = await Person.find('count', criteria);
+
+			assert.strictEqual(count, 0, 'Should count 0 records');
+		});
+	});
+
+	describe('#clone()', function() {
+		it('creates a separate copy that can be modified independently', async function() {
+
+			var original = Person.find();
+			original.where('firstname').equals('Jelle');
+			original.limit(10);
+
+			var cloned = original.clone();
+
+			// Modify the clone
+			cloned.limit(1);
+
+			// Verify the original is unchanged
+			assert.strictEqual(original.options.limit, 10, 'Original limit should be unchanged');
+			assert.strictEqual(cloned.options.limit, 1, 'Cloned limit should be updated');
+
+			// Both should still return Jelle
+			let original_records = await Person.find('all', original);
+			let cloned_records = await Person.find('all', cloned);
+
+			assert.strictEqual(original_records[0].firstname, 'Jelle');
+			assert.strictEqual(cloned_records[0].firstname, 'Jelle');
+		});
+
+		it('cloned criteria conditions do not affect the original', async function() {
+
+			var original = Person.find();
+			original.where('firstname').equals('Jelle');
+
+			var cloned = original.clone();
+			cloned.where('male').equals(false);
+
+			// Original should still find Jelle
+			let original_records = await Person.find('all', original);
+			assert.strictEqual(original_records.length, 1, 'Original should find 1 record');
+			assert.strictEqual(original_records[0].firstname, 'Jelle');
+
+			// Clone has an extra condition, so should find 0 records
+			// (Jelle is male: true, so adding male: false should exclude him)
+			let cloned_records = await Person.find('all', cloned);
+			assert.strictEqual(cloned_records.length, 0, 'Clone should find 0 records (Jelle is male)');
+		});
+
+		it('cloned sort does not affect the original', async function() {
+
+			var original = Person.find();
+			original.where('firstname').in(['Jelle', 'Griet']);
+			original.sort(['firstname', 1]);
+
+			var cloned = original.clone();
+			cloned.sort(['firstname', -1]);
+
+			let original_records = await Person.find('all', original);
+			let cloned_records = await Person.find('all', cloned);
+
+			// Original should be ascending (Griet first)
+			assert.strictEqual(original_records[0].firstname, 'Griet', 'Original should be sorted ascending');
+
+			// Clone should be descending (Jelle first)
+			assert.strictEqual(cloned_records[0].firstname, 'Jelle', 'Clone should be sorted descending');
+		});
+	});
+
+	describe('#select(array)', function() {
+
+		it('selects multiple fields from an array', async function() {
+
+			var criteria = Person.find();
+			criteria.select(['firstname', 'lastname']);
+
+			let records = await Person.find(criteria);
+
+			assert.strictEqual(records.length >= 2, true, 'Should have at least 2 Person records');
+
+			let record = records[0];
+
+			assert.strictEqual(!!record._id, true, 'The _id should always be selected');
+			assert.strictEqual(typeof record.firstname, 'string', 'firstname should be selected');
+			assert.strictEqual(typeof record.lastname, 'string', 'lastname should be selected');
+			assert.strictEqual(record.birthdate, null, 'birthdate should not be selected');
+			assert.strictEqual(record.male, null, 'male should not be selected');
+		});
+	});
+
+	describe('#where(field).not().isEmpty()', function() {
+
+		it('selects records where the field is not empty', async function() {
+
+			var criteria = Person.find();
+			criteria.where('firstname').not().isEmpty();
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length >= 2, true, 'Should find at least 2 records with non-empty firstname');
+
+			for (let record of records) {
+				assert.strictEqual(typeof record.firstname, 'string', 'All records should have a firstname');
+				assert.strictEqual(record.firstname.length > 0, true, 'All firstnames should be non-empty');
+			}
+		});
+	});
+
+	describe('#where(field).in([]) with empty array', function() {
+
+		it('returns no records when given an empty array', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').in([]);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 0, 'Empty in() array should return no records');
+		});
+	});
+
+	describe('chaining: where().equals() + sort() + limit()', function() {
+
+		it('supports full chaining of where, sort, and limit', async function() {
+
+			var criteria = Person.find();
+			criteria.where('male').equals(true);
+			criteria.sort(['firstname', 1]);
+			criteria.limit(1);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 1, 'Should return exactly 1 record');
+			assert.strictEqual(records[0].male, true, 'Record should be male');
+		});
+	});
+
+	describe('#skip() and #limit() with edge values', function() {
+
+		it('skip(0) should have no effect', async function() {
+
+			var criteria = Person.find();
+			criteria.where('firstname').in(['Jelle', 'Griet']);
+			criteria.sort(['firstname', 1]);
+			criteria.skip(0);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 2, 'skip(0) should not skip any records');
+			assert.strictEqual(records[0].firstname, 'Griet', 'First should be Griet (ascending)');
+		});
+
+		it('skip beyond total records returns empty result', async function() {
+
+			var criteria = Person.find();
+			criteria.skip(1000);
+			criteria.limit(10);
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 0, 'Should return no records when skip exceeds total');
+		});
+
+	});
+
+	describe('find(\'first\')', function() {
+
+		it('returns a single document', async function() {
+
+			let record = await Person.find('first');
+
+			assert.strictEqual(record instanceof Classes.Alchemy.Document.Document, true, 'Should be a Document instance');
+			assert.strictEqual(typeof record.firstname, 'string');
+		});
+
+		it('returns null when no records match', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').equals('NonExistentPersonXYZ');
+
+			let record = await Person.find('first', criteria);
+
+			assert.strictEqual(record, null, 'Should return null for no match');
+		});
+	});
+
+	describe('find(\'all\') with empty result set', function() {
+
+		it('returns an empty DocumentList', async function() {
+
+			var criteria = makeCriteria();
+			criteria.where('firstname').equals('TotallyNonExistentNameXYZ');
+
+			let records = await Person.find('all', criteria);
+
+			assert.strictEqual(records.length, 0, 'Should return empty result');
+			assert.strictEqual(records instanceof Classes.Alchemy.DocumentList, true, 'Should be a DocumentList even when empty');
+		});
+	});
+
 });
