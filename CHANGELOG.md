@@ -1,4 +1,4 @@
-## 1.4.2 (WIP)
+## 1.4.2 (2026-05-28)
 
 * Record task failures on the history document (`had_error`, `error_message`, `error_stack`) and always close out `ended_at` / `is_running` via `finally{}`, so failed runs stop looking identical to forever-running ones
 * Fix `Datasource#read` cache pledge leaking on failure - subsequent identical queries no longer hang on a never-resolving cache
