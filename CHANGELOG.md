@@ -8,6 +8,7 @@
 * Null-guard `conduit.rewriteRequestRouteParam` in `Model.checkPathValue`
 * Fix `Document#toHawkejs` writing `$record` onto the source document instead of the clone result, so the client-side clone never carried the back-reference
 * Declare the loop `key` variable in `Router#getPrefix` - it was leaking to the global scope
+* Declare the loop `paramName` variable in `Connection.fill` - it was leaking to the global scope
 * Fix `Time` field constructor infinite recursion (`Time.call` → `Time.super.call`)
 * Fix dead-branch type check in `Schema#addIndex` order parsing (was checking `typeof number` then comparing to `'asc'`/`'desc'` strings)
 * Fix `File.getMimetype` leaving its pledge unresolved when mmmagic isn't loaded - now falls back to `guessMimetypeFromPath`
