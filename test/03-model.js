@@ -1090,6 +1090,28 @@ describe('Model', function() {
 	});
 
 	/**
+	 * Get a field, including through associations
+	 */
+	describe('.getField(name)', function() {
+		it('should return local fields by name', function() {
+			let firstname_field = Person.getField('firstname');
+
+			assert.strictEqual(firstname_field instanceof Classes.Alchemy.Field.Field, true, 'Should return a Field instance');
+			assert.strictEqual(firstname_field.name, 'firstname');
+		});
+
+		it('should return fields through association dotted paths', function() {
+			// Person has belongsTo('Parent', 'Person')
+			// So Person.getField('Parent.firstname') should resolve to
+			// the firstname field on the associated Person model
+			let parent_firstname = Person.getField('Parent.firstname');
+
+			assert.strictEqual(parent_firstname instanceof Classes.Alchemy.Field.Field, true, 'Should return a Field instance for association path');
+			assert.strictEqual(parent_firstname.name, 'firstname', 'Should have resolved to the firstname field on the associated model');
+		});
+	});
+
+	/**
 	 * Add Document methods
 	 */
 	describe('.setDocumentMethod(fnc)', function() {
@@ -1559,6 +1581,52 @@ describe('Model', function() {
 					done(assertErr);
 				}
 			});
+		});
+	});
+
+	describe('Model.find() query methods', function() {
+
+		it('find(\'count\') should return a number', async function() {
+			let count = await Model.get('Person').find('count');
+			assert.strictEqual(typeof count, 'number', 'Count should be a number');
+			assert.strictEqual(count >= 2, true, 'Should have at least 2 Person records');
+		});
+
+		it('find(\'count\') with criteria should return correct count', async function() {
+			let criteria = Model.get('Person').find();
+			criteria.where('firstname').equals('Jelle');
+
+			let count = await Model.get('Person').find('count', criteria);
+			assert.strictEqual(count, 1, 'Should count exactly 1 Jelle');
+		});
+
+		it('find(\'first\') should return a single Document', async function() {
+			let record = await Model.get('Person').find('first');
+			assert.strictEqual(record instanceof Classes.Alchemy.Document.Document, true, 'Should return a Document');
+			assert.strictEqual(typeof record.firstname, 'string');
+		});
+
+		it('find(\'first\') should return null when no records match', async function() {
+			let criteria = Model.get('Person').find();
+			criteria.where('firstname').equals('NonExistentPersonForModelTest');
+
+			let record = await Model.get('Person').find('first', criteria);
+			assert.strictEqual(record, null, 'Should return null when no match');
+		});
+
+		it('find(\'all\') with empty result set should return empty DocumentList', async function() {
+			let criteria = Model.get('Person').find();
+			criteria.where('firstname').equals('NonExistentPersonForModelTest');
+
+			let records = await Model.get('Person').find('all', criteria);
+			assert.strictEqual(records.length, 0, 'Should return empty result set');
+			assert.strictEqual(records instanceof Classes.Alchemy.DocumentList, true, 'Should still be a DocumentList');
+		});
+
+		it('find(\'all\') should return all matching records', async function() {
+			let records = await Model.get('Person').find('all');
+			assert.strictEqual(records.length >= 2, true, 'Should return at least 2 Person records');
+			assert.strictEqual(records instanceof Classes.Alchemy.DocumentList, true, 'Should be a DocumentList');
 		});
 	});
 });
