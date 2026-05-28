@@ -1,3 +1,19 @@
+## 1.4.2 (WIP)
+
+* Record task failures on the history document (`had_error`, `error_message`, `error_stack`) and always close out `ended_at` / `is_running` via `finally{}`, so failed runs stop looking identical to forever-running ones
+* Fix `Datasource#read` cache pledge leaking on failure - subsequent identical queries no longer hang on a never-resolving cache
+* Fix wrong context passed to `lower.read()` in `Fallback#read` and rewrite stale callback-style `getRecordsToSync` to the modern context-based API
+* Fix wrong arg shape passed to `Swift.waterfall` in `Datasource#update`
+* Fix `Model.getField` reading the first character of a dotted path instead of the first segment (`'Project.title'` produced alias `'P'`)
+* Null-guard `conduit.rewriteRequestRouteParam` in `Model.checkPathValue`
+* Fix `Document#toHawkejs` writing `$record` onto the source document instead of the clone result, so the client-side clone never carried the back-reference
+* Declare the loop `key` variable in `Router#getPrefix` - it was leaking to the global scope
+* Fix `Time` field constructor infinite recursion (`Time.call` → `Time.super.call`)
+* Fix dead-branch type check in `Schema#addIndex` order parsing (was checking `typeof number` then comparing to `'asc'`/`'desc'` strings)
+* Fix `File.getMimetype` leaving its pledge unresolved when mmmagic isn't loaded - now falls back to `guessMimetypeFromPath`
+* Fix `Postponement#putInQueue` off-by-one (double-subtracted one from `QUEUE.push()`)
+* Add Task / Controller-Conduit / Criteria / Model / Document / Field / Router / Datasource test coverage
+
 ## 1.4.1 (2026-02-03)
 
 * Support nested populate via dot notation (e.g., `populate('Project.Client')`) - falls back to N+1 when `$lookup` can't handle nested associations
