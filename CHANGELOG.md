@@ -14,6 +14,10 @@
 * Fix `File.getMimetype` leaving its pledge unresolved when mmmagic isn't loaded - now falls back to `guessMimetypeFromPath`
 * Fix `Postponement#putInQueue` off-by-one (double-subtracted one from `QUEUE.push()`)
 * Add Task / Controller-Conduit / Criteria / Model / Document / Field / Router / Datasource test coverage
+* `TestHarness` now forces the `wiredTiger` storage engine for mongo-unit (its `ephemeralForTest` default was removed in MongoDB 6.0), accepts `mongo_unit_options` (e.g. `version`, `dbpath`), and gracefully shuts the mongod down before the signal-kill
+* `TestHarness` refuses to start the server when `use_mongo_unit` is set but no mongo URI is available, instead of silently falling back to whatever default datasource is configured (which could be a real database)
+* `System.TaskHistory` gains `getStatus()`, `getDuration()` and `findRecent({type, status, since, limit, offset})` helpers
+* Bump dev dependencies for Node 26 compatibility (`mongo-unit` ^3.4.0, `mocha` ^11.7.5)
 
 ## 1.4.1 (2026-02-03)
 

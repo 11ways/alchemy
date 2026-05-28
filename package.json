@@ -63,8 +63,8 @@
 	"devDependencies": {
 		"codecov"                 : "~3.8.1",
 		"istanbul-lib-instrument" : "~6.0.1",
-		"mocha"                   : "~10.2.0",
-		"mongo-unit"              : "~3.3.0",
+		"mocha"                   : "^11.7.5",
+		"mongo-unit"              : "^3.4.0",
 		"nyc"                     : "^15.1.0",
 		"puppeteer"               : "~21.3.6",
 		"source-map"              : "~0.7.3"
