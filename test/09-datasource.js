@@ -389,6 +389,268 @@ describe('Mongo Datasource', function() {
 			alchemy.distinct_problems.delete('test-shouldStringify-error');
 		});
 	});
+
+	describe('Query cache error handling', function() {
+
+		it('should reject cache_pledge when _read() fails, so subsequent queries do not hang', async function() {
+
+			this.timeout(10000);
+
+			let Person = Model.get('Person');
+
+			// Make sure caching is enabled
+			let original_duration = Person.constructor.cache_duration;
+			Person.constructor.cache_duration = '10 seconds';
+			Person.constructor._cache = null;
+			Person.cache = Person.constructor.cache;
+
+			let ds = Person.datasource;
+
+			// Store the original _read method
+			let original_read = ds._read;
+
+			// Make _read fail on the first call, then restore for the second call
+			let call_count = 0;
+
+			ds._read = function failingRead(context) {
+				call_count++;
+
+				if (call_count === 1) {
+					return Pledge.reject(new Error('Simulated datasource read error'));
+				}
+
+				// Restore original on second call
+				return original_read.call(this, context);
+			};
+
+			try {
+				// First call: should fail, but cache_pledge should be rejected too
+				let criteria = Person.find();
+				criteria.where('firstname').equals('CacheTestNonExistent');
+
+				let first_err;
+
+				try {
+					await Person.find('all', criteria);
+				} catch (err) {
+					first_err = err;
+				}
+
+				assert.ok(first_err, 'First query should have failed');
+				assert.strictEqual(first_err.message, 'Simulated datasource read error');
+
+				// Second call with the same criteria:
+				// Without the fix, this would hang forever because the cached pledge
+				// was never resolved or rejected.
+				// With the fix, the cache_pledge was rejected, so the cache entry
+				// should return an error and not hang.
+				let second_err;
+				let second_result;
+
+				let timeout_promise = new Promise((resolve, reject) => {
+					setTimeout(() => reject(new Error('Query hung - cache_pledge was never rejected')), 5000);
+				});
+
+				try {
+					second_result = await Promise.race([
+						Person.find('all', criteria),
+						timeout_promise,
+					]);
+				} catch (err) {
+					second_err = err;
+				}
+
+				// The second query should either succeed (if cache was cleared)
+				// or fail with the original error (if cache propagated the rejection).
+				// It should NOT hang.
+				if (second_err) {
+					assert.notStrictEqual(
+						second_err.message,
+						'Query hung - cache_pledge was never rejected',
+						'Query should not hang when cache_pledge was rejected'
+					);
+				}
+			} finally {
+				// Always restore the original _read method and cache duration
+				ds._read = original_read;
+				Person.constructor.cache_duration = original_duration;
+				Person.constructor._cache = null;
+			}
+		});
+	});
+
+	describe('update() toDatasource wrapping', function() {
+
+		it('should wrap toDatasource in an arrow function like create() does', function() {
+
+			let Person = Model.get('Person');
+			let ds = Person.datasource;
+
+			// Store the original toDatasource method
+			let original_toDatasource = ds.toDatasource;
+
+			// Override toDatasource to throw synchronously
+			ds.toDatasource = function throwingToDatasource(context) {
+				throw new Error('Simulated toDatasource sync error');
+			};
+
+			try {
+				// Build a minimal context object for the update() call
+				let context = new Classes.Alchemy.OperationalContext.SaveDocumentToDatasource();
+				context.setDatasource(ds);
+				context.setModel(Person);
+				context.setRootData({firstname: 'test'});
+				context.setSaveOptions({});
+
+				// Call update() directly on the datasource.
+				// If toDatasource is called eagerly (not wrapped in arrow function),
+				// the throw will propagate synchronously out of update().
+				// If properly wrapped (like create() does), the throw will be caught
+				// by Swift.waterfall and returned as a rejected pledge.
+				let threw_sync = false;
+				let result;
+
+				try {
+					result = ds.update(context);
+				} catch (err) {
+					threw_sync = true;
+				}
+
+				// The call should NOT throw synchronously - it should return
+				// a rejected pledge, consistent with how create() behaves.
+				assert.strictEqual(threw_sync, false,
+					'update() should not throw synchronously when toDatasource throws; ' +
+					'it should return a rejected pledge like create() does');
+
+				// Verify the result is a rejected pledge
+				assert.ok(result, 'Should return a pledge');
+				assert.strictEqual(typeof result.then, 'function', 'Result should be thenable');
+
+				// Catch the rejection to avoid unhandled promise rejection
+				result.catch(() => {});
+
+			} finally {
+				ds.toDatasource = original_toDatasource;
+			}
+		});
+	});
+});
+
+describe('Datasource', function() {
+
+	describe('.setSupport() and .supports()', function() {
+
+		it('should return null when no support flags are set', function() {
+			let BaseDatasource = Classes.Alchemy.Datasource.Datasource;
+			assert.strictEqual(BaseDatasource.supports('nonexistent'), null);
+		});
+
+		it('should reflect flags set via setSupport on the Mongo datasource', function() {
+			let MongoDatasource = Classes.Alchemy.Datasource.Mongo;
+			assert.strictEqual(MongoDatasource.supports('objectid'), true);
+			assert.strictEqual(MongoDatasource.supports('querying_associations'), true);
+		});
+
+		it('should return undefined for an unsupported flag on Mongo', function() {
+			let MongoDatasource = Classes.Alchemy.Datasource.Mongo;
+			let result = MongoDatasource.supports('this_flag_does_not_exist');
+			assert.strictEqual(result, undefined, 'Unknown support flag should return undefined');
+		});
+	});
+
+	describe('#supports() (instance method)', function() {
+
+		it('should delegate to the static supports method', function() {
+			let Person = Model.get('Person');
+			let ds = Person.datasource;
+
+			// The instance method should delegate to the constructor's static method
+			assert.strictEqual(ds.supports('objectid'), ds.constructor.supports('objectid'));
+			assert.strictEqual(ds.supports('querying_associations'), ds.constructor.supports('querying_associations'));
+		});
+	});
+
+	describe('.get()', function() {
+
+		it('should return all datasource instances when called with no arguments', function() {
+			let all = Datasource.get();
+			assert.strictEqual(typeof all, 'object', 'Should return an object');
+			assert.strictEqual('default' in all, true, 'Should contain the "default" datasource');
+		});
+
+		it('should return a datasource instance when called with a string name', function() {
+			let ds = Datasource.get('default');
+			assert.strictEqual(ds instanceof Classes.Alchemy.Datasource.Datasource, true);
+			assert.strictEqual(ds.name, 'default');
+		});
+
+		it('should return the same instance when called with a Datasource instance', function() {
+			let ds = Datasource.get('default');
+			let same = Datasource.get(ds);
+			assert.strictEqual(ds, same);
+		});
+
+		it('should throw when called with invalid arguments', function() {
+			assert.throws(function() {
+				Datasource.get(null);
+			}, /Wrong arguments/);
+		});
+	});
+
+	describe('#queryCache', function() {
+
+		it('should return a boolean value', function() {
+			let ds = Datasource.get('default');
+			let result = ds.queryCache;
+			assert.strictEqual(typeof result, 'boolean');
+		});
+	});
+
+	describe('#allows(name)', function() {
+
+		it('should return true for actions that the datasource implements', function() {
+			let ds = Datasource.get('default');
+			// Mongo datasource overrides _read, _create, _update, _remove
+			assert.strictEqual(ds.allows('read'), true);
+			assert.strictEqual(ds.allows('create'), true);
+		});
+
+		it('should return false for actions explicitly disabled in options', function() {
+			let ds = Datasource.get('default');
+			// Save the original option
+			let original = ds.options.read;
+
+			ds.options.read = false;
+			assert.strictEqual(ds.allows('read'), false);
+
+			// Restore
+			ds.options.read = original;
+		});
+
+		it('should return a boolean for any action name', function() {
+			let ds = Datasource.get('default');
+			let result = ds.allows('ensureIndex');
+			assert.strictEqual(typeof result, 'boolean');
+		});
+	});
+
+	describe('#hashString(str)', function() {
+
+		it('should return a consistent checksum for the same input', function() {
+			let ds = Datasource.get('default');
+			let hash1 = ds.hashString('test-string');
+			let hash2 = ds.hashString('test-string');
+			assert.strictEqual(hash1, hash2);
+			assert.strictEqual(typeof hash1, 'string');
+		});
+
+		it('should return different checksums for different inputs', function() {
+			let ds = Datasource.get('default');
+			let hash1 = ds.hashString('first');
+			let hash2 = ds.hashString('second');
+			assert.notStrictEqual(hash1, hash2);
+		});
+	});
 });
 
 describe('FieldConfig', function() {
