@@ -1,3 +1,10 @@
+## 1.4.3-alpha (2026-06-02)
+
+* Reconcile orphaned setting groups at boot: a config-file override (default/env/local.js) of a setting group whose definition is registered later (an app's `bootstrap.js`, or a plugin) used to leave an ad-hoc, action-less value node with its sub-groups missing - breaking nested values and the group's leaf actions. A new `settings.reconcile` stage now rebuilds any such node from its real definition (silently preserving the overridden values) before the database values are applied and before actions fire, so apps are robust no matter where they define their settings
+* Add `Setting.GroupValue#rebuildSubGroup` and `#reconcileOrphanGroups`, and route `Plugin#loadSettingDefinitions` through the shared `rebuildSubGroup` (one implementation of the orphan-fix instead of plugin-only bespoke code)
+* `Setting.GroupValue#forceValueInstanceAtPath` now creates missing intermediate group values instead of throwing on an undefined parent
+* Don't swallow real `app/config/routes.js` errors in the `routes.app_routes` stage - only a genuinely missing file warns, any other error is rethrown
+
 ## 1.4.2 (2026-05-28)
 
 * Record task failures on the history document (`had_error`, `error_message`, `error_stack`) and always close out `ended_at` / `is_running` via `finally{}`, so failed runs stop looking identical to forever-running ones
