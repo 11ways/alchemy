@@ -5,6 +5,7 @@
 * `Setting.GroupValue#forceValueInstanceAtPath` now creates missing intermediate group values instead of throwing on an undefined parent
 * Don't swallow real `app/config/routes.js` errors in the `routes.app_routes` stage - only a genuinely missing file warns, any other error is rethrown
 * Fix `Fallback#storeInUpperDatasource` caching the raw app-side record instead of the datasource-converted one: it ran `toDatasource()` but never set the result back on the context, so the upper datasource's `_create`/`_update` stored the original working values. A class-typed field (e.g. a custom field that resolves to a class instance) was then structured-cloned by IndexedDB into a plain, prototype-less object, which threw when revived on the next read from the offline cache. Now sets the converted data on the context before storing, matching the normal `create()`/`update()` flow
+* Fix `PaginateComponent#find` storing an empty `PageInfo` object and only mutating it afterwards: the renderer's internal store now snapshots/transforms the value on set, so the later `PageInfo[name] = entry` mutation never reached the view and `Pagination.show()` rendered nothing but inactive arrows. Now populates the entry first and stores `PageInfo` once
 
 ## 1.4.2 (2026-05-28)
 
