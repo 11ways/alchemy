@@ -1,4 +1,4 @@
-## 1.4.3-alpha (2026-06-02)
+## 1.4.3 (2026-06-24)
 
 * Reconcile orphaned setting groups at boot: a config-file override (default/env/local.js) of a setting group whose definition is registered later (an app's `bootstrap.js`, or a plugin) used to leave an ad-hoc, action-less value node with its sub-groups missing - breaking nested values and the group's leaf actions. A new `settings.reconcile` stage now rebuilds any such node from its real definition (silently preserving the overridden values) before the database values are applied and before actions fire, so apps are robust no matter where they define their settings
 * Add `Setting.GroupValue#rebuildSubGroup` and `#reconcileOrphanGroups`, and route `Plugin#loadSettingDefinitions` through the shared `rebuildSubGroup` (one implementation of the orphan-fix instead of plugin-only bespoke code)
