@@ -1,5 +1,6 @@
 ## 1.4.4-alpha (WIP)
 
+* Add a `--migrate` startup flag that applies pending migrations (`app/migrations/`) without starting the HTTP server, then exits
 * Fix `Document#hasChanged()` falsely reporting cast/normalized fields as changed on every load (re-saving them): it now compares the datasource form, and skips computed fields and fields declaring `track_changes: false`
 
 ## 1.4.3 (2026-06-24)
