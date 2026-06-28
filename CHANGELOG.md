@@ -1,4 +1,4 @@
-## 1.4.4-alpha (WIP)
+## 1.4.4 (2026-06-28)
 
 * Fix `addIndex` silently never creating indexes: `Mongo#_ensureIndex` used the removed callback form of `collection()`, so `createIndex` never ran (and reconcile conflicting indexes, mongo error 85/86, by dropping and recreating from the schema)
 * Make that index reconciliation converge on a single boot: it now identifies the conflicting index by name or key (not by parsing the error message) and loops until the create succeeds, so a drifted index no longer logs transient `Error ensuring index` lines across boots
