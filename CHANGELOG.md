@@ -1,6 +1,7 @@
 ## 1.4.4-alpha (WIP)
 
 * Fix `addIndex` silently never creating indexes: `Mongo#_ensureIndex` used the removed callback form of `collection()`, so `createIndex` never ran (and reconcile conflicting indexes, mongo error 85/86, by dropping and recreating from the schema)
+* Make that index reconciliation converge on a single boot: it now identifies the conflicting index by name or key (not by parsing the error message) and loops until the create succeeds, so a drifted index no longer logs transient `Error ensuring index` lines across boots
 * Add a `--migrate` startup flag that applies pending migrations (`app/migrations/`) without starting the HTTP server, then exits
 * Raise the remote datasource's default request timeout from 3.5s to 15s (still overridable via `max_timeout`), since 3.5s was too aggressive for an internet round-trip to a hosted instance
 * Fix `Document#hasChanged()` falsely reporting cast/normalized fields as changed on every load (re-saving them): it now compares the datasource form, and skips computed fields and fields declaring `track_changes: false`
