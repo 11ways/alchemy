@@ -1,5 +1,9 @@
 ## 1.4.6-alpha (WIP)
 
+* Fix `saveRecord()` saving every associated `$record` entry through the LAST association's model: the deferred save tasks shared one closure variable, so a document whose `$record` held multiple populated aliases at save time (e.g. a `beforeSave` hook calling `populate()`) created empty records in the wrong collection. Each entry now saves through its own association's model
+* Skip re-saving populated association documents that have no changes: saving a parent no longer re-saves (and bumps `updated` on) every alias document a hook happened to populate. Deliberate tradeoff: an UNCHANGED existing Document attached as a `hasOne` alias no longer gets its foreign key stamped by the parent's save cascade - set the child's foreign key (or modify the child) explicitly in that case
+* Only stamp the association foreign key onto an associated entry when the parent actually has a value for it: an `_id: undefined` entry made behaviours that look up the existing record (like Sluggable) throw "Invalid pk given"
+
 ## 1.4.5 (2026-07-03)
 
 * Don't warn about uncaught rejections when the error was already delivered via callback: `issueEvent()` reports a failing event method through BOTH the `next` callback and its returned pledge, so callers passing a callback (like `issueDataEvent`) discarded that pledge and every handled model-hook error (a `beforeSave` throw, a validation refusal) still logged a spurious "Uncaught Pledge error" with a full stack trace. When `next` is given, the pledge now sets `warn_uncaught_errors: false`

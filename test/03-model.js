@@ -283,6 +283,102 @@ describe('Model', function() {
 		});
 	});
 
+	describe('#saveRecord() with associated data in $record', function() {
+
+		let AssocSaveTest;
+
+		before(function(done) {
+			AssocSaveTest = Function.inherits('Alchemy.Model', 'AssocSaveTest');
+
+			AssocSaveTest.constitute(function addFields() {
+				this.addField('name', 'String');
+				this.belongsTo('Owner', 'Person');
+				this.belongsTo('Project');
+				done();
+			});
+		});
+
+		// Later tests assert on the whole Person/Project collections,
+		// so the records these tests create have to go again
+		after(async function() {
+
+			let person = await Model.get('Person').findByValues({firstname: 'AssocOwner'});
+
+			if (person) {
+				await person.remove();
+			}
+
+			let project = await Model.get('Project').findByValues({name: 'assoc-closure-project'});
+
+			if (project) {
+				await project.remove();
+			}
+		});
+
+		it('should save each associated entry through its own model (regression: shared closure variable used the last association for all entries)', async function() {
+
+			const AST = Model.get('AssocSaveTest'),
+			      Person = Model.get('Person'),
+			      Project = Model.get('Project');
+
+			let doc = AST.createDocument();
+			doc.name = 'assoc-closure-test';
+
+			// Mimic what a beforeSave hook that populates aliases causes:
+			// alias entries present in $record at saveRecord time.
+			// Plain objects without a pk have to be created in their OWN model.
+			doc.$record.Owner = {
+				firstname : 'AssocOwner',
+				lastname  : 'ClosureTest',
+			};
+
+			doc.$record.Project = {
+				name : 'assoc-closure-project',
+			};
+
+			let persons_before = await Person.find('count'),
+			    projects_before = await Project.find('count');
+
+			await AST.saveRecord(doc, {});
+
+			let persons_after = await Person.find('count'),
+			    projects_after = await Project.find('count');
+
+			assert.strictEqual(persons_after, persons_before + 1, 'The Owner entry should have created a Person');
+			assert.strictEqual(projects_after, projects_before + 1, 'The Project entry should have created a Project');
+
+			let created_person = await Person.findByValues({firstname: 'AssocOwner'});
+			assert.strictEqual(created_person?.lastname, 'ClosureTest');
+		});
+
+		it('should not re-save populated documents that have no changes', async function() {
+
+			const AST = Model.get('AssocSaveTest'),
+			      Person = Model.get('Person');
+
+			let person = await Person.findByValues({firstname: 'AssocOwner'});
+
+			let doc = AST.createDocument();
+			doc.name = 'assoc-unchanged-test';
+			doc.owner_id = person.$pk;
+
+			await doc.save();
+
+			doc = await AST.findByPk(doc.$pk);
+			await doc.populate('Owner');
+
+			assert.strictEqual(doc.$record.Owner?.firstname, 'AssocOwner', 'The Owner alias should be populated');
+
+			let updated_before = Number(doc.$record.Owner.updated);
+
+			doc.name = 'assoc-unchanged-test-2';
+			await AST.saveRecord(doc, {});
+
+			let person_after = await Person.findByPk(person.$pk);
+			assert.strictEqual(Number(person_after.updated), updated_before, 'The unchanged populated Owner should not have been re-saved');
+		});
+	});
+
 	/**
 	 * Adding more fields to the new Model
 	 */
