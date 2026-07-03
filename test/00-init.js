@@ -5,11 +5,16 @@ const TestHarness = require('../testing'),
       assert      = require('assert'),
       fs          = require('fs');
 
-// Create the test harness
+// Create the test harness.
+// The MongoDB version is pinned because mongo-unit's own default binary links
+// against OpenSSL 1.1, which modern systems no longer ship.
 const harness = new TestHarness({
 	path_root   : libpath.resolve(__dirname, 'test_root'),
 	environment : 'dev',  // AlchemyMVC core tests use 'dev' environment
 	port        : 3470,
+	mongo_unit_options : {
+		version : process.env.MONGOMS_VERSION || '7.0.14',
+	},
 });
 
 // Create browser helper with coverage enabled if coverage is active

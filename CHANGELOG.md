@@ -2,6 +2,12 @@
 
 * Don't warn about uncaught rejections when the error was already delivered via callback: `issueEvent()` reports a failing event method through BOTH the `next` callback and its returned pledge, so callers passing a callback (like `issueDataEvent`) discarded that pledge and every handled model-hook error (a `beforeSave` throw, a validation refusal) still logged a spurious "Uncaught Pledge error" with a full stack trace. When `next` is given, the pledge now sets `warn_uncaught_errors: false`
 * Only long-cache template responses for the current app version: unversioned or stale-versioned `/hawkejs/templates` requests got the same 1h `cache-control` as versioned ones, so browsers could serve an old template for up to an hour after a deploy. Such requests now get `no-cache`; only `?v=<current app_version>` responses are cacheable
+* Apply the same fix to `Model#eachRecord()`: errors are delivered via both the callback and the returned pledge, so callers passing a callback (like `Migration#processRecords()`) got a spurious "Uncaught Pledge error" log for errors they already handled
+* Await the revision insert in the Revision behaviour's `afterSave`: it was fire-and-forget, so a `revert()` (or any read of the revision model) right after a save could miss the newest revision, and insert errors were silently swallowed
+* Remove an unreachable `auditRecord()` call in the client-side `saveRecord()` (dead since a 2023 refactor; the server-side call site is still live)
+* Pin the test MongoDB version to 7.0.14 so `mongo-unit` no longer downloads a binary that needs OpenSSL 1.1
+* Bump the `puppeteer` devDependency to v24: v21's `@puppeteer/browsers` pulled a `yargs` that cannot be required on modern Node, which made every browser test fail with "puppeteer is required"
+* Refresh the lockfile via `npm audit fix` (52 -> 21 advisories, the critical one gone; the rest live in dev-only tooling like codecov/nyc/socket.io test pins)
 
 ## 1.4.4 (2026-06-28)
 

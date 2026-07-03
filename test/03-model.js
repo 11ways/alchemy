@@ -1629,4 +1629,49 @@ describe('Model', function() {
 			assert.strictEqual(records instanceof Classes.Alchemy.DocumentList, true, 'Should be a DocumentList');
 		});
 	});
+
+	describe('#eachRecord(options, task, callback)', function() {
+
+		it('should visit every record', function(done) {
+
+			let seen = 0;
+
+			let pledge = Model.get('Person').eachRecord({}, function task(record, index, next) {
+				seen++;
+				next();
+			}, function finished(err) {
+
+				if (err) {
+					return done(err);
+				}
+
+				try {
+					assert.strictEqual(seen >= 2, true, 'The task should have been called for each record');
+				} catch (assert_err) {
+					return done(assert_err);
+				}
+
+				done();
+			});
+		});
+
+		it('should not warn about an uncaught pledge error when a callback handles it', function(done) {
+
+			let expected_error = new Error('task failure');
+
+			let pledge = Model.get('Person').eachRecord({}, function task(record, index, next) {
+				next(expected_error);
+			}, function finished(err) {
+
+				try {
+					assert.strictEqual(err, expected_error, 'The callback should receive the task error');
+					assert.strictEqual(pledge.warn_uncaught_errors, false, 'The (discarded) pledge should not report an uncaught rejection on top of the callback');
+				} catch (assert_err) {
+					return done(assert_err);
+				}
+
+				done();
+			});
+		});
+	});
 });
