@@ -1,3 +1,5 @@
+## 1.4.6-alpha (WIP)
+
 ## 1.4.5 (2026-07-03)
 
 * Don't warn about uncaught rejections when the error was already delivered via callback: `issueEvent()` reports a failing event method through BOTH the `next` callback and its returned pledge, so callers passing a callback (like `issueDataEvent`) discarded that pledge and every handled model-hook error (a `beforeSave` throw, a validation refusal) still logged a spurious "Uncaught Pledge error" with a full stack trace. When `next` is given, the pledge now sets `warn_uncaught_errors: false`
