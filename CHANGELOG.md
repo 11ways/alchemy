@@ -8,6 +8,8 @@
 * Pin the test MongoDB version to 7.0.14 so `mongo-unit` no longer downloads a binary that needs OpenSSL 1.1
 * Bump the `puppeteer` devDependency to v24: v21's `@puppeteer/browsers` pulled a `yargs` that cannot be required on modern Node, which made every browser test fail with "puppeteer is required"
 * Refresh the lockfile via `npm audit fix` (52 -> 21 advisories, the critical one gone; the rest live in dev-only tooling like codecov/nyc/socket.io test pins)
+* Make `BrowserHelper#load()` fall back to a working system Chrome/Chromium when puppeteer's own bundled download is broken or incomplete: `puppeteer.launch()` would otherwise hang until its connect-timeout instead of failing fast, since a bad binary can still pass a bare `--version` check
+* Bump the declared `protoblast` dependency to `~0.9.9` and `hawkejs` to `~2.4.3`
 
 ## 1.4.4 (2026-06-28)
 
