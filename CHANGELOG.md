@@ -1,4 +1,4 @@
-## 1.4.5-alpha (WIP)
+## 1.4.5 (2026-07-03)
 
 * Don't warn about uncaught rejections when the error was already delivered via callback: `issueEvent()` reports a failing event method through BOTH the `next` callback and its returned pledge, so callers passing a callback (like `issueDataEvent`) discarded that pledge and every handled model-hook error (a `beforeSave` throw, a validation refusal) still logged a spurious "Uncaught Pledge error" with a full stack trace. When `next` is given, the pledge now sets `warn_uncaught_errors: false`
 * Only long-cache template responses for the current app version: unversioned or stale-versioned `/hawkejs/templates` requests got the same 1h `cache-control` as versioned ones, so browsers could serve an old template for up to an hour after a deploy. Such requests now get `no-cache`; only `?v=<current app_version>` responses are cacheable
