@@ -205,4 +205,74 @@ describe('Task', function() {
 			assert.strictEqual(test_task.can_be_stopped, true);
 		});
 	});
+
+	describe('#start() terminal state', function() {
+
+		it('should mark the task as stopped and settle the running pledge', async function() {
+
+			let task = new TestTask();
+
+			let result = await task.start();
+
+			assert.strictEqual(result, 'done');
+			assert.strictEqual(task.has_stopped, true, 'has_stopped should be true after the run');
+		});
+
+		it('should deregister the task from the shared running array', async function() {
+
+			const running = alchemy.shared('Task.running', 'Array');
+
+			let before = running.length;
+
+			let task = new TestTask();
+			await task.start();
+
+			assert.strictEqual(running.length, before, 'the running array should not keep finished tasks');
+			assert.strictEqual(running.includes(task), false);
+		});
+
+		it('should also stop failed tasks and reject start()', async function() {
+
+			const FailingTask = Function.inherits('Alchemy.Task', function FailingTaskXyz() {
+				FailingTaskXyz.super.call(this);
+			});
+
+			await new Promise(resolve => FailingTask.constitute(function setSchema() {
+				this.schema = new Classes.Alchemy.Schema(this);
+				resolve();
+			}));
+
+			FailingTask.setMethod(async function executor() {
+				throw new Error('exploded');
+			});
+
+			let task = new FailingTask();
+
+			await assert.rejects(() => task.start(), /exploded/);
+
+			assert.strictEqual(task.has_stopped, true, 'a failed task should count as stopped');
+
+			const running = alchemy.shared('Task.running', 'Array');
+			assert.strictEqual(running.includes(task), false);
+		});
+	});
+
+	describe('Task.execute(name, options, callback)', function() {
+		it('should call back with the result when the task finishes', function(done) {
+
+			// Task classes register in the group with the `Task` suffix
+			// stripped: TestTask is the member `test`
+			Classes.Alchemy.Task.Task.execute('test', {}, function finished(err, result) {
+
+				try {
+					assert.strictEqual(err, null);
+					assert.strictEqual(result, 'done');
+					done();
+				} catch (assertion_err) {
+					done(assertion_err);
+				}
+			});
+		});
+	});
+
 });

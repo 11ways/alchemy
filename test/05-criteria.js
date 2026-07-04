@@ -1016,4 +1016,41 @@ describe('Criteria', function() {
 		});
 	});
 
+
+	describe('multiple conditions on one field', function() {
+		it('combines all conditions instead of keeping only the last one', async function() {
+
+			await createModel(function ComboCondTester() {
+				this.addField('nr', 'Number');
+			});
+
+			const ComboCondTester = Model.get('ComboCondTester');
+
+			for (let nr of [1, 2, 3, 4, 5]) {
+				let doc = ComboCondTester.createDocument();
+				doc.nr = nr;
+				await doc.save();
+			}
+
+			// gte + lte (always worked, both mutate the same operator object)
+			let crit = ComboCondTester.find();
+			crit.where('nr').gte(2).lte(4);
+			let records = await ComboCondTester.find('all', crit);
+			assert.strictEqual(records.length, 3, 'gte+lte should intersect');
+
+			// gte + in: `in` used to REPLACE the accumulated conditions,
+			// silently dropping the gte bound
+			crit = ComboCondTester.find();
+			crit.where('nr').gte(3).in([1, 2, 3, 4]);
+			records = await ComboCondTester.find('all', crit);
+			assert.strictEqual(records.length, 2, 'gte should still apply next to in');
+
+			// gte + equals: `equals` used to replace everything too
+			crit = ComboCondTester.find();
+			crit.where('nr').gte(3).equals(2);
+			records = await ComboCondTester.find('all', crit);
+			assert.strictEqual(records.length, 0, 'contradictory conditions should match nothing');
+		});
+	});
+
 });

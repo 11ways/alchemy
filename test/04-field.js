@@ -3351,3 +3351,70 @@ describe('Field.Time (cast edge cases)', function() {
 	});
 });
 
+
+describe('Field.AssociationAlias', function() {
+
+	// Loading a document whose sub-schema has associations attaches the
+	// populated alias (a full Document wrapper) to each entry at runtime.
+	// The save path must never persist those meta fields: doing so stores
+	// $options/$record/model-instance blobs in the datasource, and a
+	// self-referencing object graph in there makes the BSON serializer
+	// throw "Cannot convert circular structure to BSON".
+	it('should not be persisted to the datasource on re-save', async function() {
+
+		this.timeout(10000);
+
+		const AliasLeakOwner = Function.inherits('Alchemy.Model', 'AliasLeakOwner');
+		AliasLeakOwner.constitute(function addFields() {
+			this.addField('title', 'String');
+		});
+
+		let constituted = new Pledge();
+
+		const AliasLeakParent = Function.inherits('Alchemy.Model', 'AliasLeakParent');
+		AliasLeakParent.constitute(function addFields() {
+
+			this.addField('title', 'String');
+
+			let lines = alchemy.createSchema();
+			lines.belongsTo('AliasLeakOwner');
+			lines.addField('amount', 'Number');
+
+			this.addField('lines', lines, {array: true});
+
+			constituted.resolve();
+		});
+
+		await constituted;
+
+		const Owner = Model.get('AliasLeakOwner');
+		const Parent = Model.get('AliasLeakParent');
+
+		let owner = Owner.createDocument();
+		owner.title = 'The owner';
+		await owner.save();
+
+		let parent = Parent.createDocument();
+		parent.title = 'The parent';
+		parent.lines = [{alias_leak_owner_id: owner.$pk, amount: 7}];
+		await parent.save();
+
+		// Load fresh: this attaches the populated AliasLeakOwner document
+		// to the line entry (the runtime feature under test).
+		let fresh = await Parent.find('first');
+		assert.strictEqual(String(fresh.lines[0].alias_leak_owner_id), String(owner.$pk));
+
+		// Re-save the loaded document, then inspect the RAW stored record.
+		await fresh.save();
+
+		let collection = await Parent.datasource.collection(Parent.table);
+		let raw = await collection.findOne({_id: fresh.$pk});
+
+		let keys = Object.keys(raw.lines[0]);
+
+		assert.strictEqual(keys.includes('AliasLeakOwner'), false,
+			'the runtime-attached association alias leaked into the datasource (got keys: ' + keys.join(', ') + ')');
+		assert.strictEqual(keys.includes('alias_leak_owner_id'), true);
+		assert.strictEqual(keys.includes('amount'), true);
+	});
+});
