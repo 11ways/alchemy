@@ -1,4 +1,4 @@
-## 1.4.6-alpha (WIP)
+## 1.4.6 (2026-07-04)
 
 * Fix the criteria compiler silently dropping conditions when one field carries multiple "object-reassigning" operators: `equals`/`in`/`contains`/`isNull` REPLACED the condition object a previous item had accumulated (so `where('x').gte(3).in([...])` lost the `gte` bound), and the same `field_entry` reference was pushed once per item, duplicating the last condition. Each item now compiles to its own entry, combined through the surrounding `$and`
 * Fix `Model#save()` mutating the shared options object in its multi-document loop: the FIRST document's newness set `options.create` for every following document, so `save([new_doc, existing_doc])` tried to re-CREATE the existing document (duplicate key error) - and the flag leaked into the caller's reused options object
