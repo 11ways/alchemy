@@ -1,4 +1,4 @@
-## 1.4.7 (WIP)
+## 1.4.7 (2026-07-06)
 
 * Fix every `beforeSave` hook (model methods AND behaviours) running TWICE per save: a 1.4.0 refactor made `saveRecord` issue the mapped `beforeSave` data event on top of the canonical post-validation one in `createRecord`/`updateRecord` - and the duplicate call dropped the `creating` argument, sending behaviours like Sluggable down the wrong path. `saveRecord` emits the plain `saving` event again, and the canonical call now passes `creating`
 * Fix `Model#createDocument()` silently dropping every populated `$record` association entry when re-wrapping an existing Document: `save()` of a parent with attached children never reached the associated documents at all
