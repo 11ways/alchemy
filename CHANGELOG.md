@@ -1,3 +1,8 @@
+## 1.4.8 (WIP)
+
+* Fix `DocumentList#push` throwing "Cannot set property length ... which has only a getter": `length` is getter-only since 1.1.0, so every length-writing Array mutator broke while read-only Array methods kept working. Push now appends to `records` and mirrors the index
+* Fix the `default` of settings defined AFTER `loadSettings()` (i.e. every app-defined setting) silently never reaching `alchemy.settings`: `createGroup` retro-added late groups into the generated value tree, but `addSetting` never retro-added the setting's default value. Config-file and DB values masked this
+
 ## 1.4.7 (2026-07-06)
 
 * Fix every `beforeSave` hook (model methods AND behaviours) running TWICE per save: a 1.4.0 refactor made `saveRecord` issue the mapped `beforeSave` data event on top of the canonical post-validation one in `createRecord`/`updateRecord` - and the duplicate call dropped the `creating` argument, sending behaviours like Sluggable down the wrong path. `saveRecord` emits the plain `saving` event again, and the canonical call now passes `creating`
