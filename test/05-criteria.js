@@ -1053,4 +1053,69 @@ describe('Criteria', function() {
 		});
 	});
 
+	describe('nested groups inside $or conditions', function() {
+
+		let NestedGroupTester;
+
+		before(async function() {
+
+			await createModel(function NestedGroupTester() {
+				this.addField('a', 'Number');
+				this.addField('b', 'Number');
+			});
+
+			NestedGroupTester = Model.get('NestedGroupTester');
+
+			for (let [a, b] of [[1, 1], [2, 2], [2, 5], [3, 3], [5, 9]]) {
+				let doc = NestedGroupTester.createDocument();
+				doc.a = a;
+				doc.b = b;
+				await doc.save();
+			}
+		});
+
+		it('keeps AND semantics for an explicit $and inside an $or', async function() {
+
+			// A single-item group compiles to its collapsed item; the parent
+			// used to unwrap a resulting {$and: [...]} and rewrap it with its
+			// OWN operator, silently turning `a AND b` into `a OR b`.
+			let count = await NestedGroupTester.find('count', {
+				conditions: {
+					$or: [{$and: [{a: {$gte: 2}}, {b: {$lte: 3}}]}],
+				},
+			});
+
+			assert.strictEqual(count, 2, '$and inside $or must intersect, not union (broken compile matches 5)');
+		});
+
+		it('binds sibling keys of a nested $or into the same branch', async function() {
+
+			// `{a: ..., $or: [...]}` used to attach the nested $or to the
+			// ENCLOSING group, so inside an $or branch the sibling condition
+			// stopped constraining it: range queries built this way matched
+			// entire collections.
+			let count = await NestedGroupTester.find('count', {
+				conditions: {
+					$or: [
+						{a: {$gte: 2}, $or: [{b: 2}, {b: 3}]},
+						{a: {$lte: 0}},
+					],
+				},
+			});
+
+			assert.strictEqual(count, 2, 'sibling key must AND with its nested $or (broken compile matches 4)');
+		});
+
+		it('still compiles flat multi-key $or branches correctly', async function() {
+
+			let count = await NestedGroupTester.find('count', {
+				conditions: {
+					$or: [{a: 2, b: 5}, {a: 1}],
+				},
+			});
+
+			assert.strictEqual(count, 2, 'flat multi-key branches must stay AND-bound');
+		});
+	});
+
 });
