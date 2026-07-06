@@ -65,6 +65,44 @@ describe('DocumentList', function() {
 		});
 	});
 
+	describe('#push(document)', function() {
+		it('should append documents and keep length, index access & iteration in sync', async function() {
+
+			let Person = Model.get('Person');
+			let list = await Person.find('all', {sort: {created: -1}, limit: 2});
+			let extra = (await Person.find('all', {sort: {created: 1}, limit: 1}))[0];
+
+			let original_length = list.length;
+			let result = list.push(extra);
+
+			assert.strictEqual(result, original_length + 1, 'push should return the new length');
+			assert.strictEqual(list.length, original_length + 1);
+			assert.strictEqual(list[original_length], extra, 'the document should be index-accessible');
+
+			let seen = 0;
+
+			for (let doc of list) {
+				if (doc === extra) seen++;
+			}
+
+			assert.strictEqual(seen, 1, 'for...of should include the pushed document');
+			assert.strictEqual(list.some(doc => doc === extra), true);
+		});
+
+		it('should support pushing multiple documents at once', async function() {
+
+			let Person = Model.get('Person');
+			let list = await Person.find('all', {sort: {created: -1}, limit: 1});
+			let extras = (await Person.find('all', {sort: {created: 1}, limit: 2})).toArray();
+
+			let result = list.push(...extras);
+
+			assert.strictEqual(result, 1 + extras.length);
+			assert.strictEqual(list.length, 1 + extras.length);
+			assert.strictEqual(list[list.length - 1], extras[extras.length - 1]);
+		});
+	});
+
 	describe('#toArray()', function() {
 		it('should return a plain array of documents', function() {
 
