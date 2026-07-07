@@ -1,8 +1,22 @@
 ## 1.4.8 (WIP)
 
 * Fix `DocumentList#push` throwing "Cannot set property length ... which has only a getter": `length` is getter-only since 1.1.0, so every length-writing Array mutator broke while read-only Array methods kept working. Push now appends to `records` and mirrors the index
+* Implement the remaining `DocumentList` Array mutators too: `pop`, `shift`, `unshift` and `splice` (all previously threw the same getter-only-length error). Mutators resync the own numeric index properties (entries are exposed via `Object.assign` in initData, so shrinking/shifting must delete stale indexes) and growth keeps the `available >= length` invariant without touching a paginated datasource total on shrink
 * Fix the `default` of settings defined AFTER `loadSettings()` (i.e. every app-defined setting) silently never reaching `alchemy.settings`: `createGroup` retro-added late groups into the generated value tree, but `addSetting` never retro-added the setting's default value. Config-file and DB values masked this
 * AI devmode `/_dev/inspect` now accepts multiline and multi-STATEMENT input: expression form is tried first (its value is the result), a syntax error falls back to statement form (which must `return` its own result). Newlines around the expression also stop a trailing `//` comment from eating the wrapper
+* Fix `DocumentList` inherited `sort`/`reverse` silently desyncing the own index properties from `records`: they did not throw (no length write) but only reordered the indexes, so iteration/toDry/toHawkejs/clone all served the pre-sort order. Both now operate on `records` and resync
+* Fix `DocumentList#concat` treating the list as a single element (`list.concat(x)` returned `[list, x]`): the class is not `Array.isArray`, so it now declares `Symbol.isConcatSpreadable`
+* Fix `Base.getClientClass()` always returning the SERVER class: a truthy `indexOf` check made every server class take the "already client-side" early return, and the `'.Alchemy.'` replacement never matched a namespace (they carry no leading dot)
+* Fix the server `DocumentList#clone()` losing `available` (a paginated clone under-reported its total to e.g. the paginate component) and downcasting subclasses to the base class
+* Fix `DocumentList#findNextBatch` - dead since the Criteria refactor (it guarded on a `query_options` property nothing ever set, so it ALWAYS errored). Rewritten against Criteria: pages forward via `page + 1` or `skip + limit`, returns a Pledge, still accepts a callback
+* Fix values applied BEFORE their setting's definition exists staying poisoned forever: such an "orphan" leaf sits on an ad-hoc type-less/action-less definition, so its value was never cast (a config `'false'` stayed a truthy string) and its action never fired - not even for later DB edits, which reuse the orphan instance. `createGroup` now rebuilds an orphan sub-tree in place (so the live value registers in `weak_values` and later retro-adds can reach it), `addSetting` rebinds orphan leaves to the real definition (re-casting the value), and the `settings.reconcile` stage heals leaf orphans too (it previously only healed groups)
+* Fix `Group#get` stripping the leading path piece for ANY group instead of only the root: a child setting named after its (non-root) parent group could never be created ("already exists") nor reached
+* Fix `alchemy.setSetting()` not refreshing the `alchemy.settings` snapshot between the settings stage and `alchemy.started` - writes in that window (routes stage, plugin boot) were invisible in `alchemy.settings` until an unrelated refresh
+* Array-type settings now actually cast: a scalar value is wrapped in an array and every element is cast to the `array_type` (previously `array_type` was only used by the editor schema)
+* Boolean settings now cast the string `'0'` to `false` (env-var-sourced `"0"` config values were truthy)
+* Callable setting defaults are resolved by calling them (mirroring Schema fields' `getDefault()` semantics) - the function object itself no longer leaks through as the value
+
+Compat note for 1.4.7: the beforeSave double-fire fix also moved the surviving `beforeSave` invocation AFTER schema validation. A model whose `beforeSave` populates a field checked by a validation rule (e.g. `not_empty`) now fails validation - populate such fields in `beforeValidate` instead.
 
 ## 1.4.7 (2026-07-06)
 
