@@ -1,4 +1,4 @@
-## 1.4.8 (WIP)
+## 1.4.8 (2026-07-07)
 
 * Fix `DocumentList#push` throwing "Cannot set property length ... which has only a getter": `length` is getter-only since 1.1.0, so every length-writing Array mutator broke while read-only Array methods kept working. Push now appends to `records` and mirrors the index
 * Implement the remaining `DocumentList` Array mutators too: `pop`, `shift`, `unshift` and `splice` (all previously threw the same getter-only-length error). Mutators resync the own numeric index properties (entries are exposed via `Object.assign` in initData, so shrinking/shifting must delete stale indexes) and growth keeps the `available >= length` invariant without touching a paginated datasource total on shrink
