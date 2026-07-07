@@ -1,3 +1,6 @@
+## 1.4.9 (WIP)
+
+
 ## 1.4.8 (2026-07-07)
 
 * Fix `DocumentList#push` throwing "Cannot set property length ... which has only a getter": `length` is getter-only since 1.1.0, so every length-writing Array mutator broke while read-only Array methods kept working. Push now appends to `records` and mirrors the index
