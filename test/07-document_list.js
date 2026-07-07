@@ -103,6 +103,108 @@ describe('DocumentList', function() {
 		});
 	});
 
+	describe('#pop() / #shift() / #unshift() / #splice()', function() {
+
+		async function getList(limit) {
+			let Person = Model.get('Person');
+			return Person.find('all', {sort: {created: -1}, limit});
+		}
+
+		it('pop() removes and returns the last document, clearing its index', async function() {
+
+			let list = await getList(3);
+			let last = list[list.length - 1];
+			let original_length = list.length;
+
+			let popped = list.pop();
+
+			assert.strictEqual(popped, last);
+			assert.strictEqual(list.length, original_length - 1);
+			assert.strictEqual(list[original_length - 1], undefined, 'the stale index property is gone');
+			assert.strictEqual((original_length - 1) in list, false, 'the stale index is deleted, not just undefined');
+			assert.strictEqual([...list].length, original_length - 1, 'iteration follows');
+		});
+
+		it('pop() on an empty list returns undefined', function() {
+			let list = new Classes.Alchemy.DocumentList([]);
+			assert.strictEqual(list.pop(), undefined);
+			assert.strictEqual(list.length, 0);
+		});
+
+		it('shift() removes the first document and reindexes the rest', async function() {
+
+			let list = await getList(3);
+			let first = list[0];
+			let second = list[1];
+			let original_length = list.length;
+
+			let shifted = list.shift();
+
+			assert.strictEqual(shifted, first);
+			assert.strictEqual(list.length, original_length - 1);
+			assert.strictEqual(list[0], second, 'indexes reindexed after the shift');
+			assert.strictEqual((original_length - 1) in list, false, 'the stale trailing index is gone');
+			assert.strictEqual([...list][0], second, 'iteration follows');
+		});
+
+		it('unshift() prepends documents and reindexes', async function() {
+
+			let list = await getList(2);
+			let old_first = list[0];
+			let Person = Model.get('Person');
+			let extra = (await Person.find('all', {sort: {created: 1}, limit: 1}))[0];
+
+			let result = list.unshift(extra);
+
+			assert.strictEqual(result, 3, 'unshift returns the new length');
+			assert.strictEqual(list.length, 3);
+			assert.strictEqual(list[0], extra);
+			assert.strictEqual(list[1], old_first);
+			assert.strictEqual(list.available >= list.length, true, 'available keeps the >= length invariant');
+		});
+
+		it('splice() removes/inserts at an index and returns the removed docs', async function() {
+
+			let list = await getList(3);
+			let victim = list[1];
+			let after = list[2];
+
+			let removed = list.splice(1, 1);
+
+			assert.strictEqual(Array.isArray(removed), true, 'removed docs come back as a plain array');
+			assert.strictEqual(removed.length, 1);
+			assert.strictEqual(removed[0], victim);
+			assert.strictEqual(list.length, 2);
+			assert.strictEqual(list[1], after, 'later entries reindexed');
+			assert.strictEqual(2 in list, false, 'the stale trailing index is gone');
+
+			// Insert it back in the middle
+			list.splice(1, 0, victim);
+			assert.strictEqual(list.length, 3);
+			assert.strictEqual(list[1], victim);
+			assert.strictEqual(list[2], after);
+		});
+
+		it('push()/unshift() bump available so it never drops below length', async function() {
+
+			let Person = Model.get('Person');
+			let list = new Classes.Alchemy.DocumentList([]);
+			let extra = (await Person.find('all', {limit: 1}))[0];
+
+			list.push(extra);
+			assert.strictEqual(list.available >= list.length, true);
+
+			list.unshift(extra);
+			assert.strictEqual(list.available >= list.length, true);
+
+			// Shrinking leaves the datasource total alone
+			let paginated = await Person.find('all', {limit: 2});
+			let total_before = paginated.available;
+			paginated.pop();
+			assert.strictEqual(paginated.available, total_before, 'pop does not touch the datasource total');
+		});
+	});
+
 	describe('#toArray()', function() {
 		it('should return a plain array of documents', function() {
 
