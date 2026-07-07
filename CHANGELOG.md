@@ -2,6 +2,7 @@
 
 * Fix `DocumentList#push` throwing "Cannot set property length ... which has only a getter": `length` is getter-only since 1.1.0, so every length-writing Array mutator broke while read-only Array methods kept working. Push now appends to `records` and mirrors the index
 * Fix the `default` of settings defined AFTER `loadSettings()` (i.e. every app-defined setting) silently never reaching `alchemy.settings`: `createGroup` retro-added late groups into the generated value tree, but `addSetting` never retro-added the setting's default value. Config-file and DB values masked this
+* AI devmode `/_dev/inspect` now accepts multiline and multi-STATEMENT input: expression form is tried first (its value is the result), a syntax error falls back to statement form (which must `return` its own result). Newlines around the expression also stop a trailing `//` comment from eating the wrapper
 
 ## 1.4.7 (2026-07-06)
 
