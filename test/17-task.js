@@ -218,6 +218,16 @@ describe('Task', function() {
 			assert.strictEqual(task.has_stopped, true, 'has_stopped should be true after the run');
 		});
 
+		it('should persist the executor result on the history row', async function() {
+
+			let task = new TestTask();
+			await task.start();
+
+			let row = await Model.get('System.TaskHistory').findByPk(task.id);
+
+			assert.strictEqual(row.result, 'done', 'the executor return value should land in TaskHistory.result');
+		});
+
 		it('should deregister the task from the shared running array', async function() {
 
 			const running = alchemy.shared('Task.running', 'Array');

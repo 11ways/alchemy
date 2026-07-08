@@ -1,5 +1,6 @@
 ## 1.4.9 (WIP)
 
+* Persist the executor's return value on the `System.TaskHistory` row (new `result` Mixed field, saved in `Task#start`'s terminal bookkeeping): without it a task run that wrote NOTHING was indistinguishable from one that did everything - the run record only said `done`. A non-cloneable result degrades to an explanatory string instead of breaking the history save
 * Fix `GroupValue#rebuildSubGroup` replaying UNTOUCHED generated defaults as explicit values, wiping every `usePlugin()` option (1.4.8 regression): since the `addSetting`/`createGroup` retro-add materialises the value tree when a plugin's settings file registers its definitions, the replay step overwrote the plugin's `default_settings` (e.g. the media plugin's `fontawesome_pro` URL fell back to the free icon font). The replay now only re-applies EXPLICITLY-set values (config overrides, `setSetting`, DB edits) via the new `GroupValue#getExplicitValues()`, mirroring `rebuildLeaf`'s `has_default_value` guard
 
 
