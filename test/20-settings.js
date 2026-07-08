@@ -155,6 +155,58 @@ describe('Setting', function() {
 		});
 	});
 
+	describe('GroupValue#rebuildSubGroup(name, group, hardcoded_defaults)', function() {
+
+		it('should keep hardcoded defaults over untouched generated values (the usePlugin options case)', function() {
+
+			// Since the addSetting/createGroup retro-add, registering the
+			// definitions materialises a fully-generated value tree - all
+			// leaves at their definition default. This is exactly what a
+			// plugin's config/settings.js does.
+			let group = Classes.Alchemy.Setting.SYSTEM.createGroup('plugin_defaults_test');
+
+			group.addSetting('icon_url', {
+				type    : 'string',
+				default : null,
+			});
+
+			group.addSetting('max_width', {
+				type    : 'integer',
+				default : null,
+			});
+
+			group.addSetting('overridden', {
+				type    : 'string',
+				default : 'the-default',
+			});
+
+			// One value IS explicitly set (like a local.js config override)
+			alchemy.setSetting('plugin_defaults_test.overridden', 'from-config');
+
+			// What Plugin#loadSettingDefinitions does with the usePlugin()
+			// options: rebuild the sub-group with the hardcoded defaults.
+			// The replay of the pre-existing generated tree must NOT let the
+			// untouched all-default leaves overwrite those hardcoded defaults
+			// (this regression nulled out every usePlugin() option, e.g. the
+			// media plugin's fontawesome_pro URL).
+			alchemy.system_settings.rebuildSubGroup('plugin_defaults_test', group, {
+				icon_url  : 'https://example.com/icons.css',
+				max_width : 1600,
+			});
+
+			alchemy.refreshSettingsObject();
+
+			assert.strictEqual(alchemy.settings.plugin_defaults_test.icon_url, 'https://example.com/icons.css', 'the hardcoded default must survive the replay');
+			assert.strictEqual(alchemy.settings.plugin_defaults_test.max_width, 1600);
+			assert.strictEqual(alchemy.settings.plugin_defaults_test.overridden, 'from-config', 'explicitly-set values still win over hardcoded defaults');
+
+			// The untouched leaf keeps counting as a default, so a LATER
+			// default-application may still adjust it
+			let live = alchemy.system_settings.getPath('plugin_defaults_test.icon_url');
+			assert.strictEqual(live.has_default_value, true, 'a hardcoded default still counts as a default value');
+		});
+	});
+
 	describe('callable defaults', function() {
 
 		it('should resolve a function default by calling it', function() {
