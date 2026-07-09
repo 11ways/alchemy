@@ -83,6 +83,50 @@ describe('Setting', function() {
 			assert.deepStrictEqual(action_calls, [true], 'the action fires for later writes');
 		});
 
+		it('should recover an object config value on an object-TYPE leaf declared later', function() {
+
+			// The regression: a config file / early setSetting supplies a
+			// nested object for a setting whose real definition (declared
+			// later, in bootstrap) is an object-TYPE LEAF. The orphan loader
+			// groupifies the object, then rebuildLeaf saw a group-value on a
+			// leaf and DROPPED it ("...is a leaf but received a group override
+			// value; ignoring it") - which silently killed Arcana's
+			// google.credentials (Gmail + Calendar) on live. It must be
+			// recovered as the leaf's object value instead.
+			alchemy.setSetting('object_leaf_group.credentials', {
+				client_email : 'svc@example.com',
+				private_key  : '-----BEGIN PRIVATE KEY-----\nX\n-----END PRIVATE KEY-----\n',
+			});
+
+			let group = Classes.Alchemy.Setting.SYSTEM.createGroup('object_leaf_group');
+
+			group.addSetting('credentials', {
+				type        : 'object',
+				description : 'An opaque object blob (e.g. service-account JSON)',
+			});
+
+			let value = alchemy.settings.object_leaf_group?.credentials;
+
+			assert.ok(value && typeof value === 'object', 'the object value survived the leaf rebuild');
+			assert.strictEqual(value.client_email, 'svc@example.com', 'its keys are intact');
+			assert.ok(/BEGIN PRIVATE KEY/.test(value.private_key || ''), 'the private_key resolves');
+		});
+
+		it('should still drop an object override on a genuine SCALAR leaf', function() {
+
+			// The recovery must NOT extend to scalar leaves: an object landing
+			// on a string/boolean leaf is genuinely malformed and stays dropped.
+			alchemy.setSetting('scalar_leaf_group.name', {unexpected: 'object'});
+
+			let group = Classes.Alchemy.Setting.SYSTEM.createGroup('scalar_leaf_group');
+			group.addSetting('name', {type: 'string', default: 'fallback'});
+
+			// Assert the authoritative setting value (the static alchemy.settings
+			// snapshot is separately known to lag an ad-hoc drop).
+			let value = alchemy.system_settings.getPath('scalar_leaf_group.name')?.get();
+			assert.strictEqual(value, 'fallback', 'the malformed object override was dropped, default stands');
+		});
+
 		it('should allow a child setting named after its (non-root) parent group', function() {
 
 			let group = Classes.Alchemy.Setting.SYSTEM.createGroup('samename_test');
